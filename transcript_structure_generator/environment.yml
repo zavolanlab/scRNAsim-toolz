@@ -1,0 +1,13 @@
+name: transcript-structure-generator
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - matplotlib
+  - pandas
+  - flake8-docstrings
+  - mypy
+  - flake8
+  - pytest
+  - coverage
