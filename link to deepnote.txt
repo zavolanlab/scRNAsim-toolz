@@ -1,8 +1,0 @@
-Deepnote notebook to edit our code like a google doc : 
-https://deepnote.com/workspace/hugo-gillet-752854cc-8778-45fb-8656-61de4b2eeee9/project/SampleTranscript-f912b75c-1264-41b6-809b-3778a7312105
-
-I made a first draft using the information on the following page : 
-https://git.scicore.unibas.ch/zavolan_group/pipelines/scrna-seq-simulation/-/issues/28
-
-
-Contact me on Slack (Hugo Gillet) for any issue 
