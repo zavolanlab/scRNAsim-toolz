@@ -1,0 +1,3 @@
+RIblast ris result
+input:queryRNA.fa,database:test_db,RepeatFlag:0,MaximalSpan:70,MinAccessibleLength:5,MaxSeedLength:20,InteractionEnergyThreshold:-4,HybridEnergyThreshold:-6,FinalThreshold:-8,DropOutLengthWoGap:5,DropOutLengthWGap:16
+Id,Query name, Query Length, Target name, Target Length, Accessibility Energy, Hybridization Energy, Interaction Energy, BasePair
