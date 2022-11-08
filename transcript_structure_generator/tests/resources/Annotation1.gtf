@@ -1,0 +1,5 @@
+1	havana	gene	1	100	.	+	.	gene_id "GENE1";
+1	havana	transcript	1	100	.	+	.	gene_id "GENE1"; transcript_id "TRANSCRIPT1"; transcript_support_level "1";
+1	havana	exon	1	20	.	+	.	gene_id "GENE1"; transcript_id "TRANSCRIPT1"; exon_number "1"; exon_id "ENSE00002234944"; transcript_support_level "1";
+1	havana	exon	50	70	.	+	.	gene_id "GENE1"; transcript_id "TRANSCRIPT1"; exon_number "2"; exon_id "ENSE00003582793"; transcript_support_level "1";
+1	havana	exon	80	100	.	+	.	gene_id "GENE1"; transcript_id "TRANSCRIPT1"; exon_number "3"; exon_id "ENSE00002312635"; transcript_support_level "1";

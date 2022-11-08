@@ -40,3 +40,12 @@ transcript-generator --transcripts <transcripts_file> --annotation <annotations_
 ```
 
 where the transcripts file should be csv-formatted, the annotation file gtf-formatted and the inclusion probability for introns a float in the range [0,1].
+
+
+# Development
+
+To perform all tests, make sure your environment corresponds to the `environment.yml` file and run
+
+```
+pytest tests
+```
