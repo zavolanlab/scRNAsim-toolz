@@ -2,7 +2,7 @@ import argparse
 import logging
 from pathlib import Path
 
-from .main import sample_transcripts
+from tsg.main import sample_transcripts
 
 
 def setup_logging(loglevel: str=None) -> None:
@@ -40,7 +40,7 @@ def output_filename(filename: str) -> str:
         return "generated_" + filepath.name
 
 
-def cli():
+def app():
     args = get_args()
 
     setup_logging(args.log)
@@ -51,7 +51,3 @@ def cli():
         output_filename(args.transcripts),
         output_filename(args.annotation),
     )
-
-
-if __name__ == "__main__":
-    cli()

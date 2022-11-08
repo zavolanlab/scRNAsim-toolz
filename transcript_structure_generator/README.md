@@ -27,15 +27,11 @@ To install package, run
 pip install .
 ```
 
-Afterwards, it can be imported using
-
-```python
-import tsg
-```
-
-To generate the sampled transcripts, run
+To generate the sampled transcripts, open a new shell, activate your environment and run
 
 ```
+conda activate transcript-structure-generator
+
 transcript-generator --transcripts <transcripts_file> --annotation <annotations_file> --prob_inclusion=<probability_inclusion>
 ```
 

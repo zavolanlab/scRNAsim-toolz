@@ -1,0 +1,21 @@
+[project]
+name = "tsg"
+version = "0.1.0"
+authors = [
+  { name="Michael Zimmermann", email="michael.zimmermann@unibas.ch" },
+  { name="Andri Fraenkl", email="andri.fraenkl@unibas.ch" },
+  { name="Larissa Glass", email="larissa.glass@unibas.ch" },
+]
+description = "Transcript Structure Generator"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+dependencies = [
+    "pandas",
+]
+
+[project.urls]
+"Homepage" = "https://git.scicore.unibas.ch/zavolan_group/tools/transcript-structure-generator"
+
+[project.scripts]
+transcript-generator = "tsg.cli:app"
