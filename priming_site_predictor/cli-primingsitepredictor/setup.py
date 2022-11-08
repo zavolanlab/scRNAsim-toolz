@@ -1,6 +1,6 @@
 from setuptools import setup
 setup(
-    name = 'CLI',
+    name = 'cli-primingsitepredictor',
     url = 'https://git.scicore.unibas.ch/zavolan_group/tools/priming-site-predictor/-/tree/main/CLI',
     author = 'Robin_Christen',
     author_email = 'robin.christen@stud.unibas.ch',
