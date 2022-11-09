@@ -2,6 +2,8 @@ import logging
 
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
+
 
 LOG = logging.getLogger(__name__)
 
@@ -288,7 +290,7 @@ def sample_transcripts(
     # Set up output file, write header once and append data in loop
     write_header(output_annotations_file)
 
-    for _, row in transcripts.iterrows():
+    for _, row in tqdm(transcripts.iterrows()):
         transcript_id = row["id"]
         transcript_count = row["count"]
 
