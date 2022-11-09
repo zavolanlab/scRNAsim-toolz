@@ -34,11 +34,13 @@ def get_args():
 
 def output_filename(filename: str) -> str:
     filepath = Path(filename)
-    if filename.endswith(".csv") or filename.endswith(".tsv"):
-        return "generated_" + filepath.stem + ".csv"
-    if filename.endswith(".gtf"):
-        return "generated_" + filepath.name
-
+    if filepath.suffix == ".csv" or filepath.suffix == ".tsv":
+        outfile = "generated_" + filepath.stem + ".csv"
+    elif filepath.suffix == ".gtf":
+        outfile = "generated_" + filepath.name
+    else:
+        raise NotImplementedError()
+    return outfile
 
 def app():
     args = get_args()
