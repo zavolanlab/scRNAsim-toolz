@@ -13,5 +13,8 @@
    install_requires=[
        "random",
        "sys"
-   ],
+   ], 
+    entry_points = {
+        'console_scripts': ['read_sequencer_package/cli.py:parser'],
+    }
 )
