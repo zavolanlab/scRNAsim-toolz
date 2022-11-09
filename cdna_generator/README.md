@@ -15,11 +15,19 @@ Copy_number_file:
 - id of original transcript (without intron inclusions)
 count
 
+_Eample_
+[id of generated transcript]    [ID]    [Count]
+
 
 transcript_sequences_file:
 
 - fasta-formatted file 
 
+- id of generated transcript? (in the header)
+
+_Eample_
+> [id of generated transcript]
+AGUGACGUUAGACCAGAUAGAC....
 
 priming_site_file:
 
@@ -29,7 +37,8 @@ priming_site_file:
 
 - position of priming site and binding likelihood 
 
-
+_Eample_
+[id of generated transcript]    ... [position of priming site]... [binding likelihood ]
 
 
 
