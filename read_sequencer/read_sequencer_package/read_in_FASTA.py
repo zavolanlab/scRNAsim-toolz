@@ -16,7 +16,7 @@ def read_in_fasta(file_path):
     f = open(file_path)
     for line in f:
         if line[0] == '>':
-            defline = line.srtip()
+            defline = line.strip()
             defline = defline.replace('>', '')
         else:
             if defline not in sequences:
