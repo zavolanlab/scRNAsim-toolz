@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import argparse
+import re
 
 def transcript_ID_finder (entry):
     index_transcript_id = entry.find("transcript_id")
