@@ -18,7 +18,6 @@ def transcript_sampling(total_transcript, transcripts):
     #read file containing representative transcript levels and id
 
     transcript = pd.read_csv(transcripts)
-    transcript = transcripts
     levels = []
 
     #poisson sampling for each gene, proportional to expression levels
@@ -36,7 +35,3 @@ def transcript_sampling(total_transcript, transcripts):
     pd.DataFrame.to_csv(transcript_numbers, "representative_transcript_numbers.csv")
 
 
-'''
-This function writes keeps the representative transcripts from the original input file (gtf)
-and writes them to an output.
-'''
