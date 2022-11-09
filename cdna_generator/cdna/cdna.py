@@ -79,6 +79,7 @@ class GTF_entry:
     def __init__(self, string):
         self.string = string
         self.values = self.string.split("\t")
+        self.id = self.values[0]
         self.start = int(self.values[3])
         self.end = int(self.values[4])
         self.score = float(0.5) #self.values[5]
