@@ -32,10 +32,10 @@ To generate the sampled transcripts, open a new shell, activate your environment
 ```
 conda activate transcript-structure-generator
 
-transcript-generator --transcripts <transcripts_file> --annotation <annotations_file> --prob_inclusion=<probability_inclusion>
+transcript-generator --transcripts <transcripts_file> --annotation <annotations_file> --prob_inclusion=<probability_inclusion> [--log "INFO"]
 ```
 
-where the transcripts file should be csv-formatted, the annotation file gtf-formatted and the inclusion probability for introns a float in the range [0,1].
+where the transcripts file should be csv-formatted, the annotation file gtf-formatted and the inclusion probability for introns a float in the range [0,1]. The log parameter is optional and can be one of `["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]`. The default is `INFO`.
 
 
 # Development

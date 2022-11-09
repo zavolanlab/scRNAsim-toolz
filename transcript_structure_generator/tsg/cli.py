@@ -5,13 +5,19 @@ from pathlib import Path
 from tsg.main import sample_transcripts
 
 
-def setup_logging(loglevel: str=None) -> None:
+def setup_logging(loglevel: str = None) -> None:
     # Set up logging
     if loglevel:
         numeric_level = getattr(logging, loglevel.upper())
         if not isinstance(numeric_level, int):
             raise ValueError("Invalid log level: %s" % loglevel)
-        logging.basicConfig(level=numeric_level)
+    else:
+        numeric_level = getattr(logging, "INFO")
+
+    logging.basicConfig(
+        format='[%(asctime)s: %(levelname)s] %(message)s (module "%(module)s")',
+        level=numeric_level,
+    )
 
 
 def build_arg_parser():
@@ -41,6 +47,7 @@ def output_filename(filename: str) -> str:
     else:
         raise NotImplementedError()
     return outfile
+
 
 def app():
     args = get_args()

@@ -229,12 +229,16 @@ class TranscriptGenerator:
         if self.strand == "+":
             origninal_end = df_generated["end"]
             df_generated["end"] = np.where(
-                inclusions, df_generated["start"].shift(periods=-1, fill_value=-1) - 1, origninal_end
+                inclusions,
+                df_generated["start"].shift(periods=-1, fill_value=-1) - 1,
+                origninal_end,
             )
         if self.strand == "-":
             origninal_start = df_generated["start"]
             df_generated["start"] = np.where(
-                inclusions, df_generated["end"].shift(periods=-1, fill_value=-1) + 1, origninal_start
+                inclusions,
+                df_generated["end"].shift(periods=-1, fill_value=-1) + 1,
+                origninal_start,
             )
 
         original_id = df_generated["exon_id"]
@@ -269,7 +273,7 @@ class TranscriptGenerator:
             df = reverse_parse_free_text(df)
 
             write_gtf(df, filename)
-            LOG.info(f"Transcript {self.id} sampled")
+            LOG.debug(f"Transcript {self.id} sampled")
         except ValueError:
             LOG.error(f"Transcript {self.id} could not be sampled.")
 
@@ -283,10 +287,13 @@ def sample_transcripts(
 ):
     transcripts = read_abundances(input_transcripts_file)
 
+    LOG.info("Parsing annotations...")
     annotations = Gtf()
     annotations.read_file(input_annotations_file)
     annotations.parse_free_text()
+    LOG.info("Done parsing...")
 
+    LOG.info("Start sampling transcripts...")
     # Set up output file, write header once and append data in loop
     write_header(output_annotations_file)
 
@@ -303,3 +310,4 @@ def sample_transcripts(
         )
         transcripts.generate_annotations(output_annotations_file)
         transcripts.generate_transcripts(output_transcripts_file)
+    LOG.info("Done.")

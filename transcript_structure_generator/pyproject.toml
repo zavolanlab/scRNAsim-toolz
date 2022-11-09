@@ -15,6 +15,9 @@ dependencies = [
     "tqdm",
 ]
 
+[tool.setuptools]
+packages = ["tsg"]
+
 [project.urls]
 "Homepage" = "https://git.scicore.unibas.ch/zavolan_group/tools/transcript-structure-generator"
 
