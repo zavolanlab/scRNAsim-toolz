@@ -16,7 +16,8 @@ Copy_number_file:
 count
 
 _Eample_
-[id of generated transcript]    [ID]    [Count]
+
+`[id of generated transcript]    [ID]    [Count]`
 
 
 transcript_sequences_file:
@@ -26,8 +27,10 @@ transcript_sequences_file:
 - id of generated transcript? (in the header)
 
 _Eample_
-> [id of generated transcript]
-AGUGACGUUAGACCAGAUAGAC....
+
+`> [id of generated transcript]
+AGUGACGUUAGACCAGAUAGAC....`
+
 
 priming_site_file:
 
@@ -38,7 +41,8 @@ priming_site_file:
 - position of priming site and binding likelihood 
 
 _Eample_
-[id of generated transcript]    ... [position of priming site]... [binding likelihood ]
+
+`[id of generated transcript]    ... [position of priming site]... [binding likelihood ]`
 
 
 
