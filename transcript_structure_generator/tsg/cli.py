@@ -46,6 +46,10 @@ def output_filename(filename: str) -> str:
         outfile = "generated_" + filepath.name
     else:
         raise NotImplementedError()
+
+    if Path(outfile).exists():
+        raise FileExistsError(f"The output file {outfile} already exists.")
+        
     return outfile
 
 

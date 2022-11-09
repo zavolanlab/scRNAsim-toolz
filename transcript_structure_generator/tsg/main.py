@@ -22,6 +22,8 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
         return pd.read_table(transcripts_file, header=None, names=cols)
     elif transcripts_file.endswith(".csv"):
         return pd.read_csv(transcripts_file, header=None, names=cols)
+    else:
+        raise ValueError("File type needs to be either csv or tsv")
 
 
 def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
@@ -117,6 +119,9 @@ class Gtf:
 
     def read_file(self, annotations_file: str) -> None:
         # for large annotation files, iterate over lines and filter before saving to dataframe
+        if not annotations_file.endswith("gtf"):
+            raise ValueError("File type needs to be gtf")
+
         reader = pd.read_table(
             annotations_file,
             sep="\t",
@@ -260,7 +265,7 @@ class TranscriptGenerator:
         ids, inclusions, counts = self._get_unique_inclusions()
         with open(filename, "a") as fh:
             for transcript_id, transcript_count in zip(ids, counts):
-                fh.write(f"{transcript_id},{transcript_count}\n")
+                fh.write(f"{transcript_id},{self.id},{transcript_count}\n")
 
     def generate_annotations(self, filename: str) -> None:
         ids, inclusions, counts = self._get_unique_inclusions()
