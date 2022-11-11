@@ -19,7 +19,7 @@ remotes::install_github(".../Read_Sequencer")
 
 ## Contributors and Contact Information
 
-Christop Hamel - christoph.harmel@unibas.ch
-Michael Sandholzer - michael.sandholzer@unibas.ch
-Clara Serger - c.serger@unibas.ch
+Christoph Harmel - christoph.harmel@unibas.ch  
+Michael Sandholzer - michael.sandholzer@unibas.ch  
+Clara Serger - c.serger@unibas.ch  
 
