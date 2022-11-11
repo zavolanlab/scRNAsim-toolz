@@ -3,8 +3,64 @@
 ### Called Packages ###
 import re
 import os
+import time
 
 ### Functions ###
+
+
+
+def __parameter_editor(file_name,source_pathway_name,deposit_pathway_name):
+    """This function allows for chaging the parameters after running the program"""
+    while True:
+        print("The program will run with the following parameters:\nFile name:\t\t",file_name,"\nSource pathway:\t",source_pathway_name,"\nDeposit pathway:\t",deposit_pathway_name,"\n")
+        parameter_conformation = input("To continue with these parameters input [continue or c] to change them input [edit]\n>")
+        if parameter_conformation == "continue"or parameter_conformation =="c":
+            break
+        elif parameter_conformation == "edit":
+            #edit the parameters
+            while True: 
+                change_question = input("select the parameter you want to change [nfile/spath/dpath] or input [b] to go back\n>")
+                if change_question == "nfile":
+                    #This condition allows the user to chenge the file name 
+                    file_name = input("Please input the new file name\n>")
+                    break
+                elif  change_question == "spath":
+                    #This condition allows the user to change the source path
+                    source_pathway_name = input("Please input the new source path\n>")
+                    
+                    does_source_pathway_exist = os.path.exists(source_pathway_name)
+                    if does_source_pathway_exist:
+                        break
+                    else: 
+                        print("The new source pathway:",source_pathway_name,"does not exist\nThe source pathway was returned to default:",os.getcwd())
+                        source_pathway_name = os.getcwd()
+                elif  change_question == "dpath":
+                    #This condition allows the user to change output file location
+                    deposit_pathway_name = input("Please input the new output file path name\n>")
+                    does_deposit_pathway_exist = os.path.exists(deposit_pathway_name)
+                    if does_deposit_pathway_exist:
+                        break
+                    else:
+                        print("The new deposit pathway:",deposit_pathway_name,"does not existe\nThe deposit pathway was returnt to default:",source_pathway_name)
+                        deposit_pathway_name = source_pathway_name
+                    #The block above test if the new deposit pathway is valid
+                elif  change_question == "b":
+                    # This condition allows the user to return to the main loop
+                    break             
+                else:
+                    #This condition covers all non valid inputs into the secund loop
+                    print("The input",change_question,"is not valid. Please use one of the specified commands") 
+                    
+        else: 
+            #This condition covers all non valid input for the main loop 
+           print("The input",parameter_conformation,"is not valide please use one of the specified comands\n") 
+    return(file_name,source_pathway_name,deposit_pathway_name)    
+    
+    
+    
+    
+    
+    
     
 def __searche_for_preexisting_files(file_name,deposit_pathway_name = os.getcwd()):
     """This function searches for preexisting files of the same name as the results file of the current program. It allows the user to choose to move on with the pre-existing file """
@@ -23,7 +79,7 @@ def __searche_for_preexisting_files(file_name,deposit_pathway_name = os.getcwd()
                     generat_new_file = True
                     break
                 else: 
-                    print("Sorry this was not a valid input\nPlease press [y] if you want to generate a new file or [n] if you want to use the preexisting file")
+                    print("Invalid input\nPlease press [y] if you want to generate a new file or [n] if you want to use the preexisting file")
             break
         else: 
             continue
@@ -34,6 +90,18 @@ def __searche_for_preexisting_files(file_name,deposit_pathway_name = os.getcwd()
     else:            
         print("No pre-existing intermediate file based on the currend file have been found.\nA new file will be generated please wait...\n")
     return(File_of_same_name_found)
+
+def bar_builder(percentage = 0,length_multiplyer = 2,start_time = time.time(),bar = str()):
+    if percentage == 100:
+        bar = bar.replace("-","#")
+        print("\r"+bar+"\t"+"100%\t\t"+str(int(time.time()-start_time)))
+    elif percentage > 0:
+        bar = bar.replace("-","#",length_multiplyer)
+        print("\r"+bar+"\t"+str(percentage)+"%", end='',flush=True)
+    elif percentage == 0: 
+        bar = "["+"-"*length_multiplyer*10+"]"
+        print(bar+"\t", end='',flush=True)
+    return(bar,start_time)
 
 def __test_file_name(file_name,source_pathway_name = os.getcwd()):
     """This function validates that the source file exists at the source path. It turns the file name input in a standardized format that can be used in the next steps"""
@@ -96,31 +164,23 @@ def __do_pathways_exist__(source_pathway_name,deposit_pathway_name):
     return(source_pathway_name,deposit_pathway_name)
         
 def gene_ID_finder(entry):
-    """This function is supposed to finde the gen ID of a known gen entry"""
+    """This function is supposed to find the gene ID of a known gene entry"""
     index_gene_id = entry.find("gene_id")
-    #This line determines where the transcript ID is 
     find_gene_id_name = re.compile("\"\S{1,25}\"")
-    #This line defines the pattern of a transcript ID
     sub_entry = entry[index_gene_id:]
-    #This line generates a subentra starting at the locatind of the tanscript ID
     try_find_gene_id_name = find_gene_id_name.search(sub_entry)   
     gene_ID = try_find_gene_id_name[0].replace("\"","")
-    #The block above findes the transcript ID and changes it into a usable format
     return (gene_ID)
        
 def transcript_ID_finder (entry):
     """This function is supposed to finde the transcript ID in a known transcript entry"""
     index_transcript_id = entry.find("transcript_id")
-    #This line determines where the transcript ID is 
     find_transcript_id_name = re.compile("\"\S{1,25}\"")
-    #This line defines the pattern of a transcript ID
     sub_entry = entry[index_transcript_id:]
-    #This line generates a subentra starting at the locatind of the tanscript ID
     try_find_transcript_id_name = find_transcript_id_name.search(sub_entry)   
     
     try: 
         transcript_ID = try_find_transcript_id_name[0].replace("\"","")
-        #The block above findes the transcript ID and changes it into a usable format
     except:
         transcript_ID = ""
     return (transcript_ID)
@@ -131,19 +191,18 @@ def transcript_support_level_finder(entry):
     sub_entry = entry[transcript_support_level_start_ID:]
     
     try:
-        #the try and except clauses are there for the case that there is 
-        #no actual score given
-        score_fidner = re.compile("\W\w{1,16}\W{2}")
-        try_score_finder = score_fidner.search(sub_entry)              
+        score_finder = re.compile("\W\w{1,16}\W{2}")
+        try_score_finder = score_finder.search(sub_entry)              
         Pre_score_1 = try_score_finder[0]
         Pre_score_2 = Pre_score_1.replace("\"","")
         Pre_score_2 = Pre_score_2.replace("(","")
         transcript_support_level = Pre_score_2.replace(";","")
-        if transcript_support_level == "NA":
+        if "NA" in transcript_support_level:
             transcript_support_level = 100
+        #I changed This tell laura
+        
 
     except:
-        #will give NA if no numerical score is found 
         transcript_support_level = 100
     return (transcript_support_level)
 
@@ -151,121 +210,55 @@ def transcript_support_level_finder(entry):
 
     
 def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name): 
-    """This funtion extracts the transcript number ,transcript ID, the transcript support level, the transcrip length and the line index from a gtf file of a given name and saves tham as a new file name given_name_intermediat_file.txt. It only works in the directory of the skript at this point"""
+    """This functi extracts the transcript number ,transcript ID, the transcript support level, the transcrip length and the line index from a gtf file of a given name and saves tham as a new file name given_name_intermediat_file.txt. It only works in the directory of the skript at this point"""
+    with open(source_pathway_name+"\\"+file_name+".gtf", 'r') as f:      
+        total_entrys =len(f.readlines())
     with open(source_pathway_name+"\\"+file_name+".gtf", 'r') as f:
-        #this line opens the file in question 
+        current_entry = 0 
+        percentage_done = 0 
+        bar,start_time = bar_builder(length_multiplyer = 3)
+        
         
         Old_gen_ID = str() 
         #stand-in as the first couple entrys are not genes
-        with open(deposit_pathway_name+"\\"+file_name+"_"+"intermediat_file"+".txt","w") as IMF:
-            #creates a new file that will have the same name as the source file 
-            #but with an added _inter_mediat_file
+        with open(deposit_pathway_name+"\\"+file_name+"_"+"intermediate_file"+".txt","w") as IMF:
             transcript_number = 0
             for entry in f: 
-                #this loop reads all lines in the source file one by one 
-                Gen_finder = re.compile("gene_id") 
-                try_gen_finder = Gen_finder.search(entry)
-                #the lines above determin if the is a "gene_name" collumn 
-                #in the current entry
-                if (try_gen_finder):
+
+                
+                current_entry += 1
+                current_percentage_done = 100* current_entry/total_entrys
+                if current_percentage_done > percentage_done +10: 
+                    bar,start_time = bar_builder(percentage=percentage_done+10,length_multiplyer = 3,start_time=start_time,bar =bar)
+                    percentage_done = int(current_percentage_done)  
+                
+                if "gene_id" in entry:
                     Gen_ID = gene_ID_finder(entry)
                 else:
                     Gen_ID = Old_gen_ID
-                #determins the gene_name using the function showen futher up 
+  
                 if Gen_ID != Old_gen_ID:
-                    #chachs if the gene is new or if it is an entry belonging 
-                    #to the previous gen e.g. a transkript, exon ...
-                    Gen_entry = ">"+str(Gen_ID)+"\n"
+                    Gen_entry = ">"+ Gen_ID +"\n"
                     IMF.write(Gen_entry)
-                    #if the Gen is new a new line is inserted in the intermediat 
-                    #file to seperate the transcripts belonging to the different genes
                     transcript_number = 0
-                    #the transcript number indicates how many transcripts have
-                    #been found of the same gene befor the current one it starts 
-                    #at 1 for each new gene 
                     Old_gen_ID = Gen_ID
-                    #the new_name is set as the Old meaning current name 
                 
-                transkript_finder = re.compile("\ttranscript\t")
-                try_transkript_finder = transkript_finder.search(entry)
-                #the lines above serve to identify if the current entry blonges 
-                #to a transcript 
-                
-                if try_transkript_finder: 
-                    #this confition is activated if the entry belongs to a transcript 
+                if "\ttranscript\t" in entry:
                     transcript_number += 1
-                    #the transcript number is updated (starting at on given that t
-                    #he default is 0)
-                    Transcript_ID  = transcript_ID_finder (entry)
+                    Transcript_ID  = transcript_ID_finder(entry)
                     #the function that determins the transcript ID is called
                     transcript_support_level = transcript_support_level_finder(entry)
                     #the function that determins the transcript support level is called
                     New_entry = str(transcript_number)+"\t"+str(Transcript_ID)+"\t"+str(transcript_support_level)+"\t"+"\t\n"
                     IMF.write(New_entry)
-                    #this lines assemble the transcript number ,transcript ID 
-                    #and the transcript support level into a new line for the 
-                    #intermediat file and adds them in
-        print("The transcripts have been collected")
+        bar_builder(100,length_multiplyer = 3,start_time=start_time,bar =bar)
+        print("The transcripts have been collected") 
         
-def __parameter_editor(file_name,source_pathway_name,deposit_pathway_name):
-    """This funtion allows for chaging the parameters after running the program"""
-    while True:
-        #This is the main loot wich allows show the current partameters and 
-        #allows the usert to shouse if the want to use edit the paremeters or 
-        #to continue with the given parameters
-        print("The program will run with the following parameters:\nFile name:\t\t",file_name,"\nSource pathway:\t",source_pathway_name,"\nDeposit pathway:\t",deposit_pathway_name,"\n")
-        parameter_conformation = input("To continue with these parameters input [continue or c] to change them input [edit]\n>")
-        #The block above incluts  the "table" whith the current parameters as well as the input prompt
-        if parameter_conformation == "continue"or parameter_conformation =="c":
-            #This if clause will end the main loop and the funtion 
-            break
-        elif parameter_conformation == "edit":
-            #This conditin lead into the secundary loop which allows the user to edit the parameters
-            while True: 
-                change_question = input("select the parameter you want to change [nfile/spath/dpath] or input [b] to go back\n>")
-                #This is the input prompt for the secundary loop 
-                if change_question == "nfile":
-                    #This condition allows the user to chenge the file name 
-                    file_name = input("Pleas input the new file name\n>")
-                    break
-                elif  change_question == "spath":
-                    #This condition allows the user to change the source path
-                    source_pathway_name = input("Pleas input the new source path\n>")
-                    
-                    does_source_pathway_exist = os.path.exists(source_pathway_name)
-                    if does_source_pathway_exist:
-                        break
-                    else: 
-                        print("The new source pathway:",source_pathway_name,"does not existe\nThe source pathway was returnt to default:",os.getcwd())
-                        source_pathway_name = os.getcwd()
-                    #The block above test that if the new source pathway is valid
-                elif  change_question == "dpath":
-                    #This condition allows the user to change the deposit path
-                    deposit_pathway_name = input("Pleas input the new deposit path name\n>")
-                    
-                    does_deposit_pathway_exist = os.path.exists(deposit_pathway_name)
-                    if does_deposit_pathway_exist:
-                        break
-                    else:
-                        print("The new deposit pathway:",deposit_pathway_name,"does not existe\nThe deposit pathway was returnt to default:",source_pathway_name)
-                        deposit_pathway_name = source_pathway_name
-                    #The block above test if the new deposit pathway is valid
-                elif  change_question == "b":
-                    # This condition allows the user to return to the main loop
-                    break             
-                else:
-                    #This condition covers all non valid inputs into the secund loop
-                    print("The input",change_question,"is not valide please use one of the specifyed comands") 
-                    
-        else: 
-            #This condition covers all non valid input for the main loop 
-           print("The input",parameter_conformation,"is not valide please use one of the specifyed comands\n") 
-    return(file_name,source_pathway_name,deposit_pathway_name)
         
-def extract_transkript (file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = False): 
+def extract_transkript (file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = True): 
    """This it the overall exetutable funtion that will execute the transcript extraction process for a given file with all checks. 
    The default file name is "test". This function will also return the file name, the source pathway and the depisti pathway that have been used to generate the intermediat file"""
-   if deposit_pathway_name == False: 
+   if deposit_pathway_name and type(deposit_pathway_name) != str : 
        deposit_pathway_name = source_pathway_name  
    file_name,source_pathway_name,deposit_pathway_name = __parameter_editor(file_name,source_pathway_name,deposit_pathway_name)
    source_pathway_name,deposit_pathway_name =__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
