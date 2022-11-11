@@ -16,13 +16,14 @@ output: csv file with gene id and count
 '''
 
 
-def transcript_sampling(total_transcript_number, tsv_file, output_csv):
-    df = pd.read_csv(tsv_file, sep='\t', lineterminator='\n', names=["id", "level"]))
+def transcript_sampling(total_transcript_number, csv_file, output_csv):
+    df = pd.read_csv(csv_file, sep='\t', lineterminator='\n', names=["id", "level"])
     levels = []
-
+    sums = df['level'].tolist()
+    total = sum(sums)
+    normalized = total_transcript_number/total
     for expression_level in df['level']:
-
-        poisson_sampled = np.random.poisson(total_transcript_number*expression_level)
+        poisson_sampled = np.random.poisson(expression_level*normalized)
         levels.append(poisson_sampled)
 
     transcript_numbers = pd.DataFrame({'id': df['id'],'count': levels})
