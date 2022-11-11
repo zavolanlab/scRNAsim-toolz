@@ -1,3 +1,26 @@
+def generate_sequences(n, mean, sd):
+    """
+    Generates random sequences.
+
+    Args:
+        n (int): Amount of sequences to generate.
+        mean (int): mean length of sequence (gaussian distribution).
+        sd (float): standard deviation of length of sequence (gaussian distribution).
+
+    Returns:
+        list: of n sequences
+    """
+    from random import gauss, choice
+    dict = {}
+    for i in range(n):
+        keys = range(n)
+        seq = ""
+        nt = ["A", "T", "C", "G"]
+        for value in range(abs(round(gauss(mean, sd)))):
+            seq = seq + choice(nt)
+        dict[keys[i]] = seq
+    return dict
+
 
 def read_in_fasta(file_path):
     '''
@@ -36,7 +59,7 @@ def read_sequence(seq, read_length, padding_probabilities=None):
     if read_length >= len(seq):
         for nt in range(len(seq)):
             sequenced += seq[nt]
-        for nt in range(len(seq),read_length):
+        for nt in range(len(seq), read_length):
             sequenced += choice(bases)
     else:
         for nt in range(read_length):
@@ -47,7 +70,7 @@ def read_sequence(seq, read_length, padding_probabilities=None):
 def simulate_sequencing(sequences, read_length):
     results = {}
     for index, key in enumerate(sequences):
-        results[key] = read_sequence(sequences[key],read_length=read_length)
+        results[key] = read_sequence(sequences[key], read_length=read_length)
 
     return results
 
@@ -63,7 +86,19 @@ def write_fasta(sequences, file_path):
             outfile.write("\n".join(wrap(value, 60)))
             outfile.write("\n")
 
-def run_read_sequencer(input_file_path, read_length, output_file_path):
-    sequences = read_in_fasta(input_file_path)
-    reads = simulate_sequencing(sequences, read_length)
-    write_fasta(reads, output_file_path)
+class read_sequencer:
+    def __init__(self):
+        self.sequences = {}
+        self.reads = {}
+
+    def add_random_sequences(self, n, mean, sd):
+        self.sequences = generate_sequences(n, mean, sd)
+
+    def read_fasta(self, input_file):
+        self.sequences = read_in_fasta(input_file)
+
+    def run_sequencing(self, read_length):
+        self.reads = simulate_sequencing(self.sequences, read_length)
+
+    def write_fasta(self, output_file_path):
+        write_fasta(self.reads, output_file_path)
