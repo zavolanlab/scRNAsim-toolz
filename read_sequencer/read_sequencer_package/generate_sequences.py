@@ -1,9 +1,7 @@
-
 import random
 
 def generate_sequences(n, mean, sd):
-    """Summary line.
-
+    """
     Generates random sequences.
 
     Args:
@@ -14,12 +12,13 @@ def generate_sequences(n, mean, sd):
     Returns:
         list: of n sequences
     """
-    l1 = []
+    dict1 = {}
     for i in range(n):
+        keys = range(n)
         seq = ""
         nt = ["A", "T", "C", "G"]
-        for pos in range(round(random.gauss(mean, sd))):
+        for value in range(round(random.gauss(mean, sd))):
             seq = seq + random.choice(nt)
-        l1.append(seq)
-    return l1
+        dict1[keys[i]] = seq
+    return dict1
 
