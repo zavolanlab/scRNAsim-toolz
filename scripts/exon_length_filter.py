@@ -3,8 +3,9 @@
 ### Called Packages ###
 import re
 import os
+import time
 
-import transkript_extractor as te
+import transcript_extractor as te
 ### Functions ###
 
 def exon_length_calculator(entry): 
@@ -52,10 +53,17 @@ def __longest_transcript_finder(current_exon_length,longest_transcript,longest_t
     current_exon_length = 0
     return(current_exon_length,longest_transcript,longest_transcript_ID)
 
+
+        
 def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]}):
-    """This funtion selects only the transcripts for a dictionar that have the longest total mRNA"""
-    print("Representative trascripts are filterd based on exon length please wait...")
+    """This funtion selects only the transcripts for a dictionar that have the longest total mRNA"""  
+    
+    print("Representative trascipts are filterd based on exon length please wait...")
+    bar,start_time = te.bar_builder(length_multiplyer = 3)
     source_pathway_name,deposit_pathway_name = te.__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
+    total_genes = len(gen_dict)
+    gens_done = 0
+
     with open(source_pathway_name+"\\"+file_name+".gtf", 'r') as f:
         
         old_gen = str()
@@ -65,6 +73,7 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
         longest_transcript_ID = str()
         current_exon_length = 0
         longest_transcript = 0 
+        percentage_done = 0
         
         for entry in f: 
             
@@ -73,13 +82,14 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
             except:
                 corrent_gen = old_gen
             #The block above test if there is a gen name in the entry
-            if corrent_gen != old_gen:    
+            if corrent_gen != old_gen:   
                 representative_trasnscript_not_found = True
+
             #The block above determines if the Gen name is new and set the test
             #representative_trasnscript_not_found back to true which is used to 
             #make the program faster if there is just one transcript for a given
             #gen in the dict
-            if representative_trasnscript_not_found and corrent_gen in gen_dict:
+            if representative_trasnscript_not_found and corrent_gen != str():
                 #print(corrent_gen)
                 #The conditon prvents serges if a representative transcript has
                 #all ready been chosen
@@ -88,7 +98,14 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
                     representative_transcript[old_gen] = longest_transcript_ID
                     try:
                         del gen_dict[old_gen]
-                        old_gen = corrent_gen 
+                        old_gen = corrent_gen                   
+                        gens_done += 1
+                        corrent_percentage_done = (gens_done/total_genes)*100
+                        if corrent_percentage_done > percentage_done+10:
+                            bar,start_time = te.bar_builder(percentage=percentage_done+10,length_multiplyer = 3,start_time=start_time,bar =bar)
+                            percentage_done = int(corrent_percentage_done)  
+                        
+                         
                     except:
                         old_gen = corrent_gen
                     longest_transcript = 0
@@ -107,7 +124,7 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
                         continue
                     
                 try: 
-                    current_transcript_ID = te.transcript_ID_finder(entry)                     
+                    current_transcript_ID = te.transcript_ID_finder(entry)         
                 except: 
                     continue
                 #The block above searches for a trnascript ID in the  current enty
@@ -132,10 +149,11 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
         current_exon_length,longest_transcript,longest_transcript_ID = __longest_transcript_finder(current_exon_length,longest_transcript,longest_transcript_ID,old_transcript_ID)
         representative_transcript[old_gen] = longest_transcript_ID
     del representative_transcript[str()]
-    print("Representative transcripts collected\n")
+    te.bar_builder(100,length_multiplyer = 3,start_time=start_time,bar =bar)
     return(representative_transcript)
 
 if __name__ == "__main__":
     exon_length_filter()
+    
     
 #This line allows the file to be executed on its own also from 

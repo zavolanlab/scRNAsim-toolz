@@ -12,7 +12,7 @@ def __searche_for_preexisting_files(file_name,deposit_pathway_name = os.getcwd()
     generat_new_file = False
     directory_content = os.listdir(deposit_pathway_name)
     for file in directory_content: 
-        Search_profile = file_name+"_intermediat_file.txt"
+        Search_profile = file_name+"_intermediate_file.txt"
         if file == Search_profile: 
             while True: 
                 File_found_input = input ("An intermediate file has allready been generated from this file\nDo you want to generate a new one [y/n] \n>")
@@ -163,7 +163,7 @@ def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name):
             transcript_number = 0
             for entry in f: 
                 #this loop reads all lines in the source file one by one 
-                Gen_finder = re.compile("gene_name") 
+                Gen_finder = re.compile("gene_id") 
                 try_gen_finder = Gen_finder.search(entry)
                 #the lines above determin if the is a "gene_name" collumn 
                 #in the current entry
