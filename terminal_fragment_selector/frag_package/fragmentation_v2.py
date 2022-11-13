@@ -1,15 +1,36 @@
-import argparse
-import os.path
 import re
 
 import numpy as np
+import pandas as pd
 
 
-def fragmentation(fasta, seq_counts, mean_length, std):
+def fasta_process(fasta_file):
+    with open(fasta_file, "r") as f:
+        lines = f.readlines()
+
+        ident_pattern = re.compile('>(\S+)')
+        seq_pattern = re.compile('^(\S+)$')
+
+        genes = {}
+        for line in lines:
+            if ident_pattern.search(line):
+                seq_id = (ident_pattern.search(line)).group(1)
+            elif seq_id in genes.keys():
+                genes[seq_id] += (seq_pattern.search(line)).group(1)
+            else:
+                genes[seq_id] = (seq_pattern.search(line)).group(1)
+    return genes
+
+def fragmentation(fasta_file, counts_file, mean_length, std):
+    fasta = fasta_process(fasta_file)
+    seq_counts = pd.read_csv(counts_file, names = ["seqID", "count"])
+
     nucs = ['A','T','G','C']
     mononuc_freqs = [0.22, 0.25, 0.23, 0.30]
+
     term_frags = [] 
-    for seq, counts in dna_seq.items():
+    for seq_id, seq in fasta.items():
+        counts = seq_counts[seq_counts["seqID"] == seq_id]["count"]
         for _ in range(counts): 
             n_cuts = int(len(seq)/mean_length)
             
@@ -40,42 +61,3 @@ def fragmentation(fasta, seq_counts, mean_length, std):
                 term_frags.append(term_frag)
     return term_frags
 
-def main(args):   
-    fasta, seq_counts, mean_length, std = args
-    dna_seq = {
-    "ATAACATGTGGATGGCCAGTGGTCGGTTGTTACACGCCTACCGCGATGCTGAATGACCCGGACTAGAGTGGCGAAATTTATGGCGTGTGACCCGTTATGC": 100,
-    "TCCATTTCGGTCAGTGGGTCATTGCTAGTAGTCGATTGCATTGCCATTCTCCGAGTGATTTAGCGTGACAGCCGCAGGGAACCCATAAAATGCAATCGTA": 100}
-
-    term_frags = fragmentation(fasta, seq_counts, mean_length, std)
-    with open('terminal_frags.txt', 'w') as f:
-        for line in term_frags:
-            f.write(line)
-            f.write('\n')
-
-# found on https://stackoverflow.com/questions/11540854/file-as-command-line-argument-for-argparse-error-message-if-argument-is-not-va
-def extant_file(x):
-    """
-    'Type' for argparse - checks that file exists but does not open.
-    """
-    if not os.path.exists(x):
-        # Argparse uses the ArgumentTypeError to give a rejection message like:
-        # error: argument input: x does not exist
-        raise argparse.ArgumentTypeError("{0} does not exist".format(x))
-    return x
-
-# Parse command-line arguments
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Takes as input FASTA file of cDNA sequences, a CSV with sequence counts, and mean and std. dev. of fragment lengths. Outputs most terminal fragment (within desired length range) for each sequence.")
-    
-    parser.add_argument('--fasta', required=True, type=extant_file, help="FASTA file with cDNA sequences")
-    parser.add_argument('--counts', required=True, type=extant_file, help="CSV file with sequence counts")
-    parser.add_argument('--mean', required = False, default = 10, type = int, help="Mean fragment length (default: 10)")
-    parser.add_argument('--std', required = False, default = 1, type = int, help="Standard deviation fragment length (defafult: 1)")
-    args = parser.parse_args()
-    
-    return args.fasta, args.counts, args.mean, args.std
-
-
-if __name__ == '__main__':
-    arguments = parse_arguments()
-    main(arguments)
