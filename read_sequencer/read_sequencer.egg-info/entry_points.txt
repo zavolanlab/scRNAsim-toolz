@@ -1,0 +1,2 @@
+[console_scripts]
+read_sequencer = read_sequencer_package.cli:main
