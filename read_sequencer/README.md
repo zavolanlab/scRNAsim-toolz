@@ -6,14 +6,14 @@ Read Sequencer is a test phyton package to simulate Sequencing.
 It reads fasta files, simulate sequencing and writes the resulting sequences into a new fasta file.
 
 
-## Installation
+## Installation from PyPI
 
-To install the latest release from GitHub:
+Read_Sequencer requires Python 3.6 or later.
+
+Install Read_Sequencer from PyPI using:
 
 ```
-if (!requireNamespace("remotes", quietly = TRUE))
-    install.packages("remotes")
-remotes::install_github(".../Read_Sequencer")
+pip install Read_Sequencer
 
 ```
 
