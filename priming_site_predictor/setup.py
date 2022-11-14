@@ -10,6 +10,6 @@ setup(
     packages = ['primingsitepredictor'],
     entry_points = {
         'console_scripts': [
-            'primingsitepredictor = primingsitepredictor.__main__:main'
+            'psp = primingsitepredictor.main:main'
         ]
     })
