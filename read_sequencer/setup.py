@@ -1,17 +1,14 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='awesome_read_sequencer',
+    name='read_sequencer',
     version='0.1.0',
-    author='An Awesome Coder',
-    author_email='aac@example.com',
-    packages=['random'],
-    scripts=['cli.py', 'modules.py'],
-    license='LICENSE.txt',
-    description='An awesome package that simulates sequencing from sequences specified by a FASTA file.',
-    long_description=open('README.md').read(),
-    install_requires=['random', 'sys'],
-    entry_points={
-        'console_scripts': ['read_sequencer=read_sequencer_package/cli.py:main']
-    }
+    url='https://git.scicore.unibas.ch/zavolan_group/tools/read-sequencer',
+    license='MIT',
+    author='Clara Serger, Michael Sandholzer and Christoph Harmel',
+    author_email='christoph.harmel@unibas.ch',
+    description='Simulates sequencing with a specified read length from sequences specified by a FASTA file.',
+    packages=find_packages(),
+    install_requires=['random','textwrap','argparse'],
+    entry_points={'console_scripts': ['read_sequencer=read_sequencer_package.cli:main']}
 )
