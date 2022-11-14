@@ -2,8 +2,8 @@
 
 ## Overview
 
-Read Sequencer is a test phyton package to simulate Sequencing. 
-It reads fasta files, simulate sequencing and writes the resulting sequences into a new fasta file.
+Read Sequencer is a test python package to simulate sequencing. 
+It reads fasta files, simulate sequencing with specified read length and writes the resulting sequences into a new fasta file.
 
 
 ## Installation from PyPI
