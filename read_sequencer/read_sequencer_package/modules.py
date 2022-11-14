@@ -64,7 +64,7 @@ def read_sequence(seq, read_length):
         str: returns sequenced element
 
     '''
-    LOG.info("Reading sequences.")
+    
     from random import choice
     bases = ["A", "T", "C", "G"]
     sequenced = ''
