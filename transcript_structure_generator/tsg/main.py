@@ -16,6 +16,9 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
 
     Returns:
         pd.DataFrame: Transcript abundances ("id", "count")
+
+    Raises: 
+        ValueError: When the input file is neither csv or tsv
     """
     cols: list = ["id", "count"]
     if transcripts_file.endswith(".tsv"):
@@ -27,6 +30,18 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
 
 
 def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
+    """Filters inclusions of exons and the highest transcript support level (TSL1)
+    
+    Data is filtered from the pd.DataFrame to include the string entery of "exons", based on the number of transcripts
+    it will choose the transcript with the highest transcript support level (TSL1-5). It will filter a list of transcript
+    IDs if that is given as an input.
+
+    Args: 
+        df: pd.DataFrame, transcript: list
+    
+    Returns: 
+        df_filter: filter strings from pd.DataFrame ("exons", "transcript_support_level "1"")
+    """
     # Filter annotations to exon and highest transcript support level.
     # If list of transcript ids is given, filter for that as well.
     df_filter = df[
@@ -40,6 +55,15 @@ def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
 
 
 def str_to_dict(s: str) -> dict:
+    """Split between key/value pairs
+
+    Creates a dictionary based on the split between key and value pairs from the item_list
+    Also removes quotes values, empty list items and then returns the dictionary
+    
+    Args:
+
+    Returns:
+    """
     # split between key/value pairs
     # remove empty list items and split key, value pairs
     item_list: list = [x.split() for x in s.split(";") if len(x) > 0]
@@ -48,6 +72,18 @@ def str_to_dict(s: str) -> dict:
 
 
 def dict_to_str(d: dict) -> str:
+    """Joins a key/value pair with a space in a list
+
+    Takes key/value pairs from a dictionary and joins them with a space on a list
+    Joins items from said list that are marked with ; and end with ;
+    Checks if the value is Not a Number (nan)
+    
+    Args: 
+        "key", "value" (str)
+
+    Returns: 
+        Str
+    """
     # join key, value pairs from dictionary with a space in a list,
     # then join items in list by ;
     # end on ;
@@ -60,6 +96,17 @@ def dict_to_str(d: dict) -> str:
 
 
 def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
+    """Creates columns that are well defnined by .gtf file standards
+    
+    The first 8 defined columns are constant as defined by gtf file standards
+    Further columns are assumed to be free text columns and superflous
+    
+    Args:
+
+
+    Returns: 
+        DataFrame with 8 columns as defined by gtf file standards
+    """
     # the first 8 columns should be constant according to gtf file standard
     # we assume that further columns are parsed free text columns
     df_free_text = df_all.iloc[:, 8:]
@@ -70,6 +117,18 @@ def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
 
 
 def write_gtf(df: pd.DataFrame, filename: str) -> None:
+    """Checks all data types in the pd.DataFrame
+
+    Goes through the updated pd.DataFrame after formatting to gtf file standards
+    and checks if the data types have been formatted correctly. 
+    
+    Args: 
+        Types ("filename", "sep", "header", "index", "quoting", "quotechar", "mode")
+        Filename: str
+
+    Returns: 
+        DataFrame defined correctly via gtf.dtypes
+    """
     # Make sure the data types are correct.
     df = df.astype(Gtf.dtypes)
 
@@ -85,6 +144,13 @@ def write_gtf(df: pd.DataFrame, filename: str) -> None:
 
 
 def write_header(annotations_file: str) -> None:
+    """Opens up an annotation file with the datatypes defined as correct
+
+    Args:
+    
+    Returns:
+
+    """
     with open(annotations_file, "w") as fh:
         fh.write("\t".join(Gtf.dtypes.keys()) + "\n")
 
@@ -118,6 +184,19 @@ class Gtf:
         self.free_text_columns = []
 
     def read_file(self, annotations_file: str) -> None:
+        """Defines a limit for larger input Files. Iterates lines and Filters on bool.
+        
+        If the chuncksize of the inputed annotation file is larger than 100000 it will
+        iterate over the lines and filters before saving.
+
+        Args:
+
+        Returns:
+            If the file chunk is over a certain size it will reiterate the lines and files.
+
+        Raises:
+            ValueError: The file type is required to be .gtf
+        """
         # for large annotation files, iterate over lines and filter before saving to dataframe
         if not annotations_file.endswith("gtf"):
             raise ValueError("File type needs to be gtf")
@@ -142,6 +221,16 @@ class Gtf:
             self.parsed = True
 
     def parse_free_text(self):
+        """Creates a self DataFrame with columns for parsed free text
+
+        Creates a dataframe with columns for values in the free text column and then joins
+        the free_text column to orginal dataframe. Drops the free_text column itself.
+        
+        Args:
+
+        Returns:
+            Parsed DataFrame with free_text column joined with orginal and dropped. 
+         """
         assert self.parsed == False
         # create dataframe with columns for values in free_text column
         df_free_text = self.df["free_text"].map(str_to_dict).apply(pd.Series)
@@ -155,6 +244,16 @@ class Gtf:
         self.parsed = True
 
     def reverse_parse_free_text(self):
+         """Creates a reversed self DataFrame with columns for non parsed free text
+
+         Creates a data frame with only free_text columns and then filters current dataframe down
+         to only orginal_columns leaving the free_text column untouched. The parsing is undone and the results 
+         saved in the free_text column and defined as non parsed.
+        
+        Args:
+
+        Returns:
+         """
         assert self.parsed == True
         # create dataframe with only free_text columns
         df_free_text = self.df[self.free_text_columns]
@@ -205,6 +304,13 @@ class TranscriptGenerator:
         return inclusion_arr
 
     def _get_unique_inclusions(self) -> (list, np.array, np.array):
+        """Inclusion of unique intron inclusion via arrays and counts and name generation of each unique count.
+        
+        Args:
+
+        Returns:
+            Bool: If true include unique intron array and count and create unique name and count.
+        """
         inclusion_arr = self._get_inclusions()
         # Unique intron inclusion arrays and counts
         inclusion_arr_unique, counts = np.unique(
@@ -268,6 +374,17 @@ class TranscriptGenerator:
                 fh.write(f"{transcript_id},{self.id},{transcript_count}\n")
 
     def generate_annotations(self, filename: str) -> None:
+        """Generates a gtf file including IDs, inclusion, and counts from reverse parse free text
+        
+        Args:
+            Filename: str
+        
+        Returns:
+            Gtf file with filename
+        
+        Raises:
+            ValueError: If self.ID could not be sampled (No ID generated for the inclusion transcript) 
+        """
         ids, inclusions, counts = self._get_unique_inclusions()
         n_unique = len(ids)
 
