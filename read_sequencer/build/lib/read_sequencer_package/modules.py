@@ -1,6 +1,3 @@
-import logging
-LOG = logging.getLogger(__name__)
-
 def generate_sequences(n, mean, sd):
     """
     Generates random sequences.
@@ -14,7 +11,6 @@ def generate_sequences(n, mean, sd):
         list: of n sequences
     """
     from random import gauss, choice
-    LOG.info("Generating sequences.")
     dict = {}
     for i in range(n):
         keys = range(n)
@@ -37,7 +33,6 @@ def read_in_fasta(file_path):
         Dict: It returns a dictionary with sequences.
 
     '''
-    LOG.info("Reading in FASTA files from destination.")
     sequences = {}
     f = open(file_path)
     for line in f:
@@ -64,7 +59,6 @@ def read_sequence(seq, read_length):
         str: returns sequenced element
 
     '''
-    
     from random import choice
     bases = ["A", "T", "C", "G"]
     sequenced = ''
@@ -90,7 +84,6 @@ def simulate_sequencing(sequences, read_length):
     Returns:
         dict: of n sequences as values 
     """
-    LOG.info("Sequencing in progress....")
     results = {}
     for index, key in enumerate(sequences):
         results[key] = read_sequence(sequences[key], read_length=read_length)
@@ -110,7 +103,6 @@ def generate_sequences(n, mean, sd):
     Returns:
         dict: of n sequences
     """
-    LOG.info("Generating random sequences.")
     dict1 = {}
     for i in range(n):
         keys = range(n)
@@ -131,14 +123,13 @@ def write_fasta(sequences, file_path):
         file_path (str): A file path directing to the output folder.
         
     """
-    LOG.info("Writing FASTA file.")
     from textwrap import wrap
     with open(file_path, "w") as outfile:
         for key, value in sequences.items():
             outfile.write(key + "\n")
             outfile.write("\n".join(wrap(value, 60)))
             outfile.write("\n")
-    LOG.info("Sequencing was successfully executed.")
+
 class read_sequencer:
     def __init__(self):
         self.sequences = {}
