@@ -6,7 +6,7 @@ def list_to_file(
 
     Args:
         to_write_to_file: The list that you want to write to a file.
-        filename: The name you want the output file to have (also include the extension of the file while calling the function).
+        filename: The name you want the output fasta file to have (also include the extension of the file while calling the function).
 
     Returns:
         Nothing, since it outputs a file directly to the working directory
