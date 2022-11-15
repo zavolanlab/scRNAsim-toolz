@@ -1,4 +1,14 @@
-def exon_concatenation(filename):
+def exon_concatenation(
+	filename: str
+) -> list:
+	"""Concatenates all sequences in fasta file with the same transcript ID header and then outputs a list containing sequence headers (Transcript ID) and sequences that have been concatenated.
+
+	Args:
+		filename: The name of the fasta file having multiple entries for the same transcript ID.
+
+	Returns:
+		A list with headers in the even indices and their corresponding sequences in the odd indices
+	"""
 	fa = open(filename,'r')
 	lines = fa.readlines()
 	to_write_to_file = []
