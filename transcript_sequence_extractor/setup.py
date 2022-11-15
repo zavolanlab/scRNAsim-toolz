@@ -8,5 +8,7 @@ setup(
     version='0.2.0',
     packages=find_packages(),
     install_requires=[],
-    entrypoints={}
+    entrypoints={
+        'console_scripts': ['sequence_extractor=sequence_extractor.cli:main']
+        }
 )
