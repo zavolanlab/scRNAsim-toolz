@@ -1,25 +1,21 @@
 
 # Extract transcript sequences
 
-Project aim: 
+### Project aim: 
 
 Given a gtf specification of transcript exon/intron structures and the genome sequence, construct the nucleotide sequence of the transcripts and add poly(A) tails.
 
-Input:
+__Input:__
 
 * Gtf file with exon/intron structures of transcripts
 * File with genome sequence
 * Length of the poly(A) tail
 * Dictionary of expected nucleotide frequencies in poly(A) tail
-* Output: fasta-formatted file of transcript sequences
 
-Output: 
+
+__Output:__
 
 For each transcript, the list of exons should be traversed from 5' to 3', the sequences of the exons need to be extracted from the genome given the coordinates and then pasted together. At the end, a tail of the specified length should be added at the 3' end of the transcript, given a vector of mono-nucleotide frequencies (of course, the frequency of A's will be much higher than of any other nucleotide).
-
-
-
- 
 
 
 ## Design plan
@@ -52,7 +48,7 @@ e. Output the final transcript sequences as a .fasta file. (Final Output)
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/) license, Copyright (c) 2021 Zavolan Lab, Biozentrum, University of Basel 
+[MIT](https://choosealicense.com/licenses/mit/) license, Copyright (c) 2022 Zavolan Lab, Biozentrum, University of Basel 
 
 
 ## Contributers
