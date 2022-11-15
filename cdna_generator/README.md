@@ -45,6 +45,22 @@ _Eample_
 `[id of generated transcript]    ... [position of priming site]... [binding likelihood ]`
 
 
+**Output files**
+
+cDNA_file:
+
+- fasta-formatted file 
+
+- Includes all the uniquie "cDNA sequence" and "cDNA sequence ID"
+
+
+
+cDNA_count_file:
+
+- csv-formatted file 
+
+- Includes "cDNA sequence ID" and "cDNA count"
+
 
 
 
