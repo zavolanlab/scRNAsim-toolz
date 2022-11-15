@@ -1,33 +1,8 @@
 import logging
 LOG = logging.getLogger(__name__)
 
-def generate_sequences(n, mean, sd):
-    """
-    Generates random sequences.
-
-    Args:
-        n (int): Amount of sequences to generate.
-        mean (int): mean length of sequence (gaussian distribution).
-        sd (float): standard deviation of length of sequence (gaussian distribution).
-
-    Returns:
-        list: of n sequences
-    """
-    from random import gauss, choice
-    LOG.info("Generating sequences.")
-    dict = {}
-    for i in range(n):
-        keys = range(n)
-        seq = ""
-        nt = ["A", "T", "C", "G"]
-        for value in range(abs(round(gauss(mean, sd)))):
-            seq = seq + choice(nt)
-        dict[keys[i]] = seq
-    return dict
-
-
 def read_in_fasta(file_path):
-    '''
+    """
     This function reads in FASTA files.
 
     Args:
@@ -36,7 +11,7 @@ def read_in_fasta(file_path):
     Returns:
         Dict: It returns a dictionary with sequences.
 
-    '''
+    """
     LOG.info("Reading in FASTA files from destination.")
     sequences = {}
     f = open(file_path)
@@ -52,7 +27,7 @@ def read_in_fasta(file_path):
     return sequences
 
 def read_sequence(seq, read_length):
-    '''
+    """
     This function reads a sequence of a specific read length and adds additional nucleotides if the sequence is 
     smaller then the requested length or cuts the sequence if its longer.
 
@@ -63,12 +38,11 @@ def read_sequence(seq, read_length):
     Returns:
         str: returns sequenced element
 
-    '''
-    
+    """
     from random import choice
     bases = ["A", "T", "C", "G"]
     sequenced = ''
-    if read_length >= len(seq):
+    if read_length > len(seq):
         for nt in range(len(seq)):
             sequenced += seq[nt]
         for nt in range(len(seq), read_length):
@@ -94,10 +68,10 @@ def simulate_sequencing(sequences, read_length):
     results = {}
     for index, key in enumerate(sequences):
         results[key] = read_sequence(sequences[key], read_length=read_length)
-
+    LOG.info("Sequencing was successfully executed.")
     return results
 
-import random
+
 def generate_sequences(n, mean, sd):
     """
     Generates random sequences.
@@ -110,16 +84,17 @@ def generate_sequences(n, mean, sd):
     Returns:
         dict: of n sequences
     """
+    from random import choice, gauss
     LOG.info("Generating random sequences.")
-    dict1 = {}
+    dict = {}
     for i in range(n):
-        keys = range(n)
         seq = ""
         nt = ["A", "T", "C", "G"]
-        for value in range(round(random.gauss(mean, sd))):
-            seq = seq + random.choice(nt)
-        dict1[keys[i]] = seq
-    return dict1
+        for value in range(abs(round(gauss(mean, sd)))):
+            seq = seq + choice(nt)
+        key = str(i) + ': length ' + str(len(seq)) + ' nt'
+        dict[key] = seq
+    return dict
 
 def write_fasta(sequences, file_path):
     """
@@ -138,8 +113,8 @@ def write_fasta(sequences, file_path):
             outfile.write(key + "\n")
             outfile.write("\n".join(wrap(value, 60)))
             outfile.write("\n")
-    LOG.info("Sequencing was successfully executed.")
-class read_sequencer:
+
+class ReadSequencer:
     def __init__(self):
         self.sequences = {}
         self.reads = {}
