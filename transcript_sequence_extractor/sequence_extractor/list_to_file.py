@@ -1,5 +1,5 @@
 def list_to_file(
-    to_write_to_file: str,
+    to_write_to_file: list,
     filename: str,
 ) -> None:
     """Creates a file from a list that is input to the function.
