@@ -318,7 +318,7 @@ class TranscriptGenerator:
 
         return inclusion_arr
 
-    def _get_unique_inclusions(self) -> tuple(list, np.array, np.array):
+    def _get_unique_inclusions(self) -> tuple[list, np.array, np.array]:
         """Inclusion of unique intron inclusion via arrays and counts and name generation of each unique count.
         
         Args:
