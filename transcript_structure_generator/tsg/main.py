@@ -60,9 +60,11 @@ def str_to_dict(s: str) -> dict:
     Creates a dictionary based on the split between key and value pairs from the item_list
     Also removes quotes values, empty list items and then returns the dictionary
     
-    Args:
+    Args: 
+        s: str
 
     Returns:
+        items in item_list
     """
     # split between key/value pairs
     # remove empty list items and split key, value pairs
@@ -82,7 +84,7 @@ def dict_to_str(d: dict) -> str:
         "key", "value" (str)
 
     Returns: 
-        Str
+        s: str
     """
     # join key, value pairs from dictionary with a space in a list,
     # then join items in list by ;
@@ -102,7 +104,7 @@ def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
     Further columns are assumed to be free text columns and superflous
     
     Args:
-
+        df_all: DataFrame
 
     Returns: 
         DataFrame with 8 columns as defined by gtf file standards
@@ -190,6 +192,7 @@ class Gtf:
         iterate over the lines and filters before saving.
 
         Args:
+            Path to annotations_file: str
 
         Returns:
             If the file chunk is over a certain size it will reiterate the lines and files.
@@ -212,7 +215,19 @@ class Gtf:
         )
         self.df = pd.concat([filter_df(chunk) for chunk in reader])
 
-    def from_dataframe(df: pd.DataFrame) -> None:
+    def from_dataframe(self, df: pd.DataFrame) -> None:
+        """ Initializes Gtf object from pandas Dataframe. 
+        Part of initialization is: 
+        Set dataframe attribute 
+        Check which columns belong to the free-text part of the GTF-file.
+        Check if there are no columns called free-text and if so, sets the value of parsed attribute to TRUE.
+
+        Args:
+            df: DataFrame
+        
+        Returns:
+            None     
+        """
         self.free_text_columns = [
             col for col in df.columns if col not in self.original_columns
         ]
@@ -244,11 +259,11 @@ class Gtf:
         self.parsed = True
 
     def reverse_parse_free_text(self):
-         """Creates a reversed self DataFrame with columns for non parsed free text
+        """Creates a reversed self DataFrame with columns for non parsed free text
 
-         Creates a data frame with only free_text columns and then filters current dataframe down
-         to only orginal_columns leaving the free_text column untouched. The parsing is undone and the results 
-         saved in the free_text column and defined as non parsed.
+        Creates a data frame with only free_text columns and then filters current dataframe down
+        to only orginal_columns leaving the free_text column untouched. The parsing is undone and the results 
+        saved in the free_text column and defined as non parsed.
         
         Args:
 
@@ -303,7 +318,7 @@ class TranscriptGenerator:
 
         return inclusion_arr
 
-    def _get_unique_inclusions(self) -> (list, np.array, np.array):
+    def _get_unique_inclusions(self) -> tuple(list, np.array, np.array):
         """Inclusion of unique intron inclusion via arrays and counts and name generation of each unique count.
         
         Args:
