@@ -1,57 +1,76 @@
 #### Exon length filter #####
-
+"""Exon length filter 
+Version 1.1.0"""
 ### Called Packages ###
 import re
 import os
 
-import transcript_extractor as te
+import transkript_extractor as te
 ### Functions ###
 
 def exon_length_calculator(entry): 
     """This funtion finds the start and end cordinates of the exon and uses them to calculate its lenght"""
     try:
         find_exon_coordinates = re.compile("\t\d{1,15}\t")
+        #this difines the pattern of the coordinates 
         try_find_start_coordinates = find_exon_coordinates.search(entry)
+        #this line findes the start coordinares based on the pattern 
         start_coordinates = int(try_find_start_coordinates[0].replace("\t",""))
-        final_index_start_coordinates = entry.find(try_find_start_coordinates[0])+len(try_find_start_coordinates[0])-1  
+        #this line removes the \t at the end and the start of the pattern and 
+        #turn the string of the coordinates into intergers  
+        final_index_start_coordinates = entry.find(try_find_start_coordinates[0])+len(try_find_start_coordinates[0])-1
+        #this line determines the indes of the final digit of the start coordinates    
         sub_entry = entry[final_index_start_coordinates:]
+        #this lineused the index determin above a starting point for a new sub entry
         try_find_end_coordinates = find_exon_coordinates.search(sub_entry)
         end_coordinates = int(try_find_end_coordinates[0].replace("\t",""))
-        exon_length = end_coordinates-start_coordinates
+        #these two lines find the end coordinates and turn tham int an int 
+        exon_lenght = end_coordinates-start_coordinates
+        #this line claculates the transcript length 
     except:
         print("\n\nIn the following enty only one or no valid coordinates could be found:\n",entry,"the value will be set to NA")
-        exon_length = "NA"
-    return(exon_length)
+        exon_lenght = "NA"
+    return(exon_lenght)
 
 def exon_fider(entry):
-    """This funtion determines if a given entry belongs to an exon"""
+    """This funtion determines if a given entry belongs to an exon
+    Expected inputs:
+        entry: str #any enty of a gtf file"""
     exon_test = entry.find("\texon\t")
+    #This line look for the entry exon in the file
     if exon_test == -1: 
         try_exon_test = False
     else:
         try_exon_test = True
+    #The block above evaluates the results of the search for the wort exon
     return(try_exon_test)
 
 def __longest_transcript_finder(current_exon_length,longest_transcript,longest_transcript_ID,old_transcript_ID):
-    """This function encapsulates an operation that has to be carried out multiple times in the exon_length_filter"""
+    """This funtion encapsulates an opperation that has to be carried out at several point ind the exon_length_filter funktion and servers to make that funktion more modular"""
     if current_exon_length > longest_transcript: 
+        #This condition updates the most promesing for
+        #beeing the representative transcript
         longest_transcript = current_exon_length
         longest_transcript_ID = old_transcript_ID
     current_exon_length = 0
     return(current_exon_length,longest_transcript,longest_transcript_ID)
 
+def _representative_transcript_csv (representative_transcript,file_name = "test",deposit_pathway_name =os.getcwd()):
+    with open(os.path.join(deposit_pathway_name,file_name+"_"+"representative_transcripts"+".csv"),"w") as rt:
+        for i in representative_transcript:
+            transcript = representative_transcript[i]
+            new_entry = str(i)+","+transcript+"\n"
+            rt.write(new_entry)
+    
 
         
-def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]}):
-    """This function selects only the transcripts that have the longest total mRNA"""  
-    
-    print("Representative transcipts are filtered based on exon length. Please wait...")
+def _exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]}):
+    """This funtion selects only the transcripts for a dictionar that have the longest total mRNA"""  
     bar,start_time = te.bar_builder(length_multiplyer = 3)
-    source_pathway_name,deposit_pathway_name = te.__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
     total_genes = len(gen_dict)
     gens_done = 0
 
-    with open(source_pathway_name+"\\"+file_name+".gtf", 'r') as f:
+    with open(os.path.join(source_pathway_name,file_name+".gtf"), 'r') as f:
         
         old_gen = str()
         old_transcript_ID = str()
@@ -114,7 +133,7 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
                     current_transcript_ID = te.transcript_ID_finder(entry)         
                 except: 
                     continue
-                #The block above searches for a transcript ID in the  current enty
+                #The block above searches for a trnascript ID in the  current enty
 
                 if current_transcript_ID in transcript_IDs:
                     #This condition test if the Transcript is one of the 
@@ -139,6 +158,31 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
     te.bar_builder(100,length_multiplyer = 3,start_time=start_time,bar =bar)
     return(representative_transcript)
 
+def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]},Input_free = False):   
+    """This function filters a dictionary of genes and there transcripts by the length of there exons an selects the longes transcript for each gene ans saves tham in a "," seperated csv file.
+    Expected inputs: 
+        file_name: str ; default = test #the name of the gft file you want to look at
+        source_pathway_name: str ; default = current work directory #path of the gtf file       
+        deposit_pathway_name: str ; default = current work directory #path for saving the csv file
+        gen_dict:dict{key == gene ID:[transcript IDs that belong to that gene]}
+        Input_free: tuple ; default = False # this input should be set to True for automation""" 
+    
+    print("Representative trascipts are filterd based on exon length please wait...")
+    source_pathway_name,deposit_pathway_name = te.__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
+    if Input_free:
+        pre_existing_file = False
+    else:
+        search_profile  = file_name+"_"+"representative_transcripts"+".csv"
+        pre_existing_file = te.__searche_for_preexisting_files(search_profile,deposit_pathway_name)
+    if pre_existing_file == False: 
+        representative_transcript = _exon_length_filter(file_name,source_pathway_name,deposit_pathway_name,gen_dict)
+        _representative_transcript_csv(representative_transcript,file_name,deposit_pathway_name)
+        print("\nRepresentative transcripts collected")
+    
+
 if __name__ == "__main__":
+    help(exon_length_filter)
     exon_length_filter()
     
+    
+#This line allows the file to be executed on its own also from 

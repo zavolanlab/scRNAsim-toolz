@@ -1,5 +1,6 @@
 #### Transcript extractor #####
-
+"""Transcript extractor 
+Version 1.1.0"""
 ### Called Packages ###
 import re
 import os
@@ -68,10 +69,9 @@ def __searche_for_preexisting_files(file_name,deposit_pathway_name = os.getcwd()
     generat_new_file = False
     directory_content = os.listdir(deposit_pathway_name)
     for file in directory_content: 
-        Search_profile = file_name+"_intermediate_file.txt"
-        if file == Search_profile: 
+        if file == file_name: 
             while True: 
-                File_found_input = input ("An intermediate file has allready been generated from this file\nDo you want to generate a new one [y/n] \n>")
+                File_found_input = input (file_name+" has allready been generated\nDo you want to generate a new one [y/n] \n>")
                 if File_found_input == "n":                     
                     File_of_same_name_found = True
                     break
@@ -88,10 +88,17 @@ def __searche_for_preexisting_files(file_name,deposit_pathway_name = os.getcwd()
     elif generat_new_file: 
         print("A new file will be generated please wait...\n")
     else:            
-        print("No pre-existing intermediate file based on the currend file have been found.\nA new file will be generated please wait...\n")
+        print("No pre-existing file of the relevant type has been found.\nA new file will be generated please wait...\n")
     return(File_of_same_name_found)
 
 def bar_builder(percentage = 0,length_multiplyer = 2,start_time = time.time(),bar = str()):
+    """This function creates a loading bar that can load in 10% increments starting a 0% and ending at 100%
+    Expected inputs: 
+        percentage: int between 0 and 100 in steps of 10; default = 0 #defines the current loading increment
+        length_multiplyer: int > 0 ; default = 2 #determiens the amount of symbols per loading increment
+        start_time: any int ; default= time.time() #for determening loading time
+        bar: str ; default = str()#input of the current bar status does not need to be defined if for the 0% increment
+        """
     if percentage == 100:
         bar = bar.replace("-","#")
         print("\r"+bar+"\t"+"100%\t\t"+str(int(time.time()-start_time)))
@@ -164,7 +171,9 @@ def __do_pathways_exist__(source_pathway_name,deposit_pathway_name):
     return(source_pathway_name,deposit_pathway_name)
         
 def gene_ID_finder(entry):
-    """This function is supposed to find the gene ID of a known gene entry"""
+    """This function is supposed to find the gene ID of a known gene entry
+    Expected inputs:
+        entry: str #a line from a gtf file that contains a gene ID"""
     index_gene_id = entry.find("gene_id")
     find_gene_id_name = re.compile("\"\S{1,25}\"")
     sub_entry = entry[index_gene_id:]
@@ -173,7 +182,9 @@ def gene_ID_finder(entry):
     return (gene_ID)
        
 def transcript_ID_finder (entry):
-    """This function is supposed to finde the transcript ID in a known transcript entry"""
+    """This function is supposed to finde the transcript ID in a known transcript entry
+    Expected inputs:
+        entry: str #a line from a gtf file that contains a transcript ID"""
     index_transcript_id = entry.find("transcript_id")
     find_transcript_id_name = re.compile("\"\S{1,25}\"")
     sub_entry = entry[index_transcript_id:]
@@ -186,7 +197,9 @@ def transcript_ID_finder (entry):
     return (transcript_ID)
         
 def transcript_support_level_finder(entry):
-    """This function is supposed to find the transcript support level in a known transcript entry"""
+    """This function is supposed to find the transcript support level in a known transcript entry
+    Expected input: 
+        entry: str #a line from a gtf file that be blongs to a transcript"""
     transcript_support_level_start_ID = entry.find("transcript_support_level")
     sub_entry = entry[transcript_support_level_start_ID:]
     
@@ -210,10 +223,15 @@ def transcript_support_level_finder(entry):
 
     
 def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name): 
-    """This functi extracts the transcript number ,transcript ID, the transcript support level, the transcrip length and the line index from a gtf file of a given name and saves tham as a new file name given_name_intermediat_file.txt. It only works in the directory of the skript at this point"""
-    with open(source_pathway_name+"\\"+file_name+".gtf", 'r') as f:      
+    """This function extracts the transcript number ,transcript ID, the transcript support level, the transcrip length and the line index from a gtf file of a given name and saves tham as a new file name given_name_intermediat_file.txt. 
+    Expected input:
+        file_name: str #the name of the gft file you want to look at without the .gtf part
+        source_pathway_name: str #path of the gtf file       
+        deposit_pathway_name: str #path for saving the intermediat file"""
+        
+    with open(os.path.join(source_pathway_name,file_name+".gtf"), 'r') as f:      
         total_entrys =len(f.readlines())
-    with open(source_pathway_name+"\\"+file_name+".gtf", 'r') as f:
+    with open(os.path.join(source_pathway_name,file_name+".gtf"), 'r') as f:
         current_entry = 0 
         percentage_done = 0 
         bar,start_time = bar_builder(length_multiplyer = 3)
@@ -221,7 +239,7 @@ def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name):
         
         Old_gen_ID = str() 
         #stand-in as the first couple entrys are not genes
-        with open(deposit_pathway_name+"\\"+file_name+"_"+"intermediate_file"+".txt","w") as IMF:
+        with open(os.path.join(deposit_pathway_name,file_name+"_"+"intermediate_file"+".txt"),"w") as IMF:
             transcript_number = 0
             for entry in f: 
 
@@ -255,20 +273,33 @@ def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name):
         print("The transcripts have been collected") 
         
         
-def extract_transkript (file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = True): 
+def extract_transkript (file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = False,Input_free = False): 
    """This it the overall exetutable funtion that will execute the transcript extraction process for a given file with all checks. 
-   The default file name is "test". This function will also return the file name, the source pathway and the depisti pathway that have been used to generate the intermediat file"""
-   if deposit_pathway_name and type(deposit_pathway_name) != str : 
-       deposit_pathway_name = source_pathway_name  
-   file_name,source_pathway_name,deposit_pathway_name = __parameter_editor(file_name,source_pathway_name,deposit_pathway_name)
-   source_pathway_name,deposit_pathway_name =__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
-   validated_file_name = __test_file_name(file_name,source_pathway_name)
-   file_name = validated_file_name[1]
-   if validated_file_name[0]:
-       if __searche_for_preexisting_files(file_name,deposit_pathway_name):
-           print("The transcripts has been collected\n")
-       else:
-           _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name)
+    Expected input:
+        file_name: str ; default = test #the name of the gft file you want to look at
+        source_pathway_name: str ; default = current work directory #path of the gtf file       
+        deposit_pathway_name: str ; default = source_pathway_name #path for saving the intermediat file
+    Outputs: 
+        file_name: str 
+        source_pathway_name: str
+        deposit_pathway_name: str"""
+        
+   if deposit_pathway_name == False: 
+       deposit_pathway_name = source_pathway_name
+   if Input_free:
+       validated_file_name = __test_file_name(file_name,source_pathway_name)
+       file_name = validated_file_name[1]
+       _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name)
+   else:
+       file_name,source_pathway_name,deposit_pathway_name = __parameter_editor(file_name,source_pathway_name,deposit_pathway_name)
+       source_pathway_name,deposit_pathway_name =__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
+       validated_file_name = __test_file_name(file_name,source_pathway_name)
+       file_name = validated_file_name[1]
+       if validated_file_name[0]:
+           if __searche_for_preexisting_files(file_name+"_intermediate_file.txt",deposit_pathway_name):
+               print("The transcripts has been collected\n")
+           else:
+               _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name)
    return(file_name,source_pathway_name,deposit_pathway_name)
 
 #### Dev part ####
