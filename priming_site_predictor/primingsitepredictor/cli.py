@@ -8,6 +8,7 @@ import argparse
 import logging
 
 def create_parser():
+    """This function creates the parser"""
     parser = argparse.ArgumentParser(
     prog = 'Priming site predictor',
     description = 'Takes a cutoff energy and the predicts location of priming sites of transcripts',
