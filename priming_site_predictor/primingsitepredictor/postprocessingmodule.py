@@ -4,13 +4,11 @@ Created on Wed Nov 16 16:47:20 2022
 
 @author: baerma
 """
+from createtranscript import CreateTranscript
 
-
-with open("RIBlast output example.txt", 'r') as file:
-    content = file.readlines()
-    print(content[3:][0].strip(' \n').split(',')[-1].strip('()').split(':'))
-    #create a instant of each transcript class
-
+    
+transcripts = CreateTranscript()    
+interaction_df = transcripts.generate_interaction_df()       
 
 
 
