@@ -6,7 +6,14 @@ from tsg.main import sample_transcripts
 
 
 def setup_logging(loglevel: str = None) -> None:
-    # Set up logging
+    """Set up logging. Loglevel can be one of ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].
+
+    Args:
+        loglevel (str, optional): Level of log output. Defaults to None.
+
+    Raises:
+        ValueError: If string that is not a log level is passed, raise error.
+    """
     if loglevel:
         numeric_level = getattr(logging, loglevel.upper())
         if not isinstance(numeric_level, int):
@@ -20,7 +27,7 @@ def setup_logging(loglevel: str = None) -> None:
     )
 
 
-def build_arg_parser():
+def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("--transcripts", type=str)
     parser.add_argument("--annotation", type=str)
@@ -30,7 +37,7 @@ def build_arg_parser():
     return parser
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
     parser = build_arg_parser()
 
     args = parser.parse_args()
@@ -39,6 +46,18 @@ def get_args():
 
 
 def output_filename(filename: str) -> str:
+    """Generate output filename for given input filename.
+
+    Args:
+        filename (str): Input filename
+
+    Raises:
+        NotImplementedError: Only accept filetypes .csv, .tsv and .gtf.
+        FileExistsError: If the output file exists, raise error.
+
+    Returns:
+        str: Output filename
+    """
     filepath = Path(filename)
     if filepath.suffix == ".csv" or filepath.suffix == ".tsv":
         outfile = "generated_" + filepath.stem + ".csv"
