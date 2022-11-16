@@ -8,15 +8,19 @@ It reads fasta files, simulate sequencing with specified read length and writes 
 
 ## Installation from PyPI
 
-Read_Sequencer requires Python 3.6 or later.
+Read Sequencer requires Python 3.9 or later.
 
-Install Read_Sequencer from PyPI using:
-
-```
-pip install Read_Sequencer
+Install Read Sequencer from PyPI using:
 
 ```
+pip install -i https://test.pypi.org/simple/ read-sequencer==0.1.1
+```
 
+## Usage
+
+```
+read_sequencer --input_file_path --output_file_path --read_length
+```
 ## Contributors and Contact Information
 
 Christoph Harmel - christoph.harmel@unibas.ch  
