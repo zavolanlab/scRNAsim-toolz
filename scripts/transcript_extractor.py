@@ -11,7 +11,7 @@ import time
 
 
 def __parameter_editor(file_name,source_pathway_name,deposit_pathway_name):
-    """This function allows for chaging the parameters after running the program"""
+    """This function allows for changing the parameters after running the program"""
     while True:
         print("The program will run with the following parameters:\nFile name:\t\t",file_name,"\nSource pathway:\t",source_pathway_name,"\nDeposit pathway:\t",deposit_pathway_name,"\n")
         parameter_conformation = input("To continue with these parameters input [continue or c] to change them input [edit]\n>")
@@ -273,7 +273,7 @@ def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name):
         print("The transcripts have been collected") 
         
         
-def extract_transkript (file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = False,Input_free = False): 
+def extract_transcript(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = False,Input_free = False): 
    """This it the overall exetutable funtion that will execute the transcript extraction process for a given file with all checks. 
     Expected input:
         file_name: str ; default = test #the name of the gft file you want to look at
@@ -305,7 +305,7 @@ def extract_transkript (file_name = "test",source_pathway_name = os.getcwd(),dep
 #### Dev part ####
 
 if __name__ == "__main__":
-    extract_transkript()
+    extract_transcript()
 #This line allows the file to be executed on its own also from 
 
 

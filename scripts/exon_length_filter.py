@@ -5,11 +5,11 @@ Version 1.1.0"""
 import re
 import os
 
-import transkript_extractor as te
+import transcript_extractor as te
 ### Functions ###
 
 def exon_length_calculator(entry): 
-    """This funtion finds the start and end cordinates of the exon and uses them to calculate its lenght"""
+    """This function finds the start and end cordinates of the exon and uses them to calculate its length"""
     try:
         find_exon_coordinates = re.compile("\t\d{1,15}\t")
         #this difines the pattern of the coordinates 
@@ -25,12 +25,12 @@ def exon_length_calculator(entry):
         try_find_end_coordinates = find_exon_coordinates.search(sub_entry)
         end_coordinates = int(try_find_end_coordinates[0].replace("\t",""))
         #these two lines find the end coordinates and turn tham int an int 
-        exon_lenght = end_coordinates-start_coordinates
+        exon_length = end_coordinates-start_coordinates
         #this line claculates the transcript length 
     except:
         print("\n\nIn the following enty only one or no valid coordinates could be found:\n",entry,"the value will be set to NA")
-        exon_lenght = "NA"
-    return(exon_lenght)
+        exon_length = "NA"
+    return(exon_length)
 
 def exon_fider(entry):
     """This funtion determines if a given entry belongs to an exon
@@ -46,7 +46,7 @@ def exon_fider(entry):
     return(try_exon_test)
 
 def __longest_transcript_finder(current_exon_length,longest_transcript,longest_transcript_ID,old_transcript_ID):
-    """This funtion encapsulates an opperation that has to be carried out at several point ind the exon_length_filter funktion and servers to make that funktion more modular"""
+    """This funtion encapsulates an operation that has to be carried out at several points in the exon_length_filter function and serves to make that function more modular"""
     if current_exon_length > longest_transcript: 
         #This condition updates the most promesing for
         #beeing the representative transcript
@@ -65,7 +65,7 @@ def _representative_transcript_csv (representative_transcript,file_name = "test"
 
         
 def _exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]}):
-    """This funtion selects only the transcripts for a dictionar that have the longest total mRNA"""  
+    """This funtion selects only the transcripts for a dictionary that have the longest total mRNA"""  
     bar,start_time = te.bar_builder(length_multiplyer = 3)
     total_genes = len(gen_dict)
     gens_done = 0
@@ -133,7 +133,7 @@ def _exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),dep
                     current_transcript_ID = te.transcript_ID_finder(entry)         
                 except: 
                     continue
-                #The block above searches for a trnascript ID in the  current enty
+                #The block above searches for a transcript ID in the current entry
 
                 if current_transcript_ID in transcript_IDs:
                     #This condition test if the Transcript is one of the 
