@@ -1,8 +1,8 @@
 # Synopsis
 
-The human contains countless variety and diversity of cell types, states, and interactions. We wish to understand these tissues and the cell types at much deeper level. Single-cell RNA-seq (scRNA-seq) offers a look into what genes are being expressed at the level of individual cells. Overall this method allows on to identify cell types, find rare or unidentified cell types or states, identify genes that are differently expressed in different cell types, and explore changes in expression whilst including spatial, regulatory, and protein interactions. 
+The human body contains a countless variety and diversity of cell types, states, and interactions. We wish to understand these tissues and the cell types at much deeper level. Single-cell RNA-seq (scRNA-seq) offers a look into what genes are being expressed at the level of individual cells. Overall this method allows one to identify cell types, find rare or unidentified cell types or states, identify genes that are differently expressed in different cell types, and explore changes in expression whilst including spatial, regulatory, and protein interactions. 
 
-We hope that other would find use for this transcript_structure generator that allows one to take input gtf files of specific gene transcripts and outputs a gtf  containing intron/exon structures per inputed transcript. 
+We hope that others would find use for this transcript_structure generator that allows one to take input gtf-files of specific gene transcripts and outputs a gtf-file containing intron/exon structures per input transcript. Moreover, one can specify a probability for intron-inclusion which is used to simulate incorrect splicing. 
 
 # Installation
 
@@ -58,8 +58,8 @@ MIT license, Copyright (c) 2021 Zavolan Lab, Biozentrum, University of Basel
 
 # Contributers
 
-Larissa Glass
-Michael Zimmermann
+Larissa Glass  
+Michael Zimmermann  
 Andri Fraenkl
 
 

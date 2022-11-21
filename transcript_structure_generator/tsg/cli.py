@@ -13,6 +13,9 @@ def setup_logging(loglevel: str = None) -> None:
 
     Raises:
         ValueError: If string that is not a log level is passed, raise error.
+
+    Returns:
+        None
     """
     if loglevel:
         numeric_level = getattr(logging, loglevel.upper())
@@ -28,6 +31,20 @@ def setup_logging(loglevel: str = None) -> None:
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
+    """ Builds the argument parser.
+
+    Args:
+        1) path to the csv-file with the number of transcripts (str)
+        2) path to the gtf-file with the annotations for each transcript (str)
+        3) a value for the probability of intron inclusion (float)
+        4) a log message (str)
+    
+    Raises:
+        None  
+
+    Returns:
+        parser  
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--transcripts", type=str)
     parser.add_argument("--annotation", type=str)
@@ -38,8 +55,18 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 
 def get_args() -> argparse.Namespace:
-    parser = build_arg_parser()
+    """Builds a parser and returns its arguments.
 
+    Args:
+        None
+    
+    Raises:
+        None 
+
+    Returns:
+        arguments for parser   
+    """
+    parser = build_arg_parser()
     args = parser.parse_args()
 
     return args
@@ -73,6 +100,20 @@ def output_filename(filename: str) -> str:
 
 
 def app():
+    """Gets the args, sets up the logging and starts the programm with the provided parameters.
+
+    Args: 
+        1) path to the csv-file with the number of transcripts (str)
+        2) path to the gtf-file with the annotations for each transcript (str)
+        3) a value for the probability of intron inclusion (float)
+        4) a log message (str)
+    
+    Raises:
+        None  
+
+    Returns:
+        None  
+    """
     args = get_args()
 
     setup_logging(args.log)

@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 
 
 def read_abundances(transcripts_file: str) -> pd.DataFrame:
-    """Read abundance file into dataframe.
+    """Read transcript-abundance file into dataframe.
 
     Args:
         transcripts_file (str): Input filename
@@ -32,7 +32,7 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
 
 
 def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
-    """Filter annotations to include only exons with the highest transcript support level (TSL1).
+    """Filter annotations to include only exons with the highest transcript support level, i.e. TSL1.
 
     `feature` column is filtered on value "exon" and
     `free_text` column is filtered to include the string denoting the highest transcript support level
@@ -41,12 +41,12 @@ def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
     If a list of transcript IDs is given, `free_text` column is filtered to include one of the IDs.
 
     Args:
-        df: A pd.DataFrame containing an unparsed gtf file
+        df: A pd.DataFrame containing an unparsed gtf-file
         transcript: list of transcript IDs
 
     Returns:
         A pd.DataFrame containing only rows with exon annotations of highest transcript support level and,
-            if provided, belonging to one of the given transcripts
+        if provided, belonging to one of the given transcripts
     """
     df_filter = df[
         (df["feature"] == "exon")
@@ -63,8 +63,7 @@ def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
 def str_to_dict(s: str) -> dict:
     """Split between key/value pairs.
 
-    Split string based on delimiter ';' into items, remove empty items and split items on delimiter ' ' into key/value
-    pairs.
+    Split string based on delimiter ';' into items, remove empty items and split items on delimiter ' ' into key/value pairs.
     Remove quotes from value strings and create a dictionary.
 
     Args:
@@ -109,9 +108,9 @@ def dict_to_str(d: dict) -> str:
 def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
     """Reverse parsing of gtf based pd.DataFrame to include only columns that are well defnined by gtf file standards.
 
-    The first 8 defined columns are constant as defined by gtf file standards
-    Further columns are assumed to be parsed free text columns (see Gtf.parse_free_text()).
-    The parsed free text columns are aggregated as a dictionary and the dictionry is parsed as a string in gtf format.
+    The first 8 defined columns are constant as defined by gtf file standards.
+    Further columns are assumed to be parsed free-text columns (see Gtf.parse_free_text()).
+    The parsed free-text columns are aggregated as a dictionary and the dictionry is parsed as a string in gtf format.
 
     Args:
         df_all: A pd.DataFrame containing a parsed gtf file.
@@ -119,11 +118,11 @@ def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
     Returns:
         A DataFrame with the columns as defined by gtf file standards.
     """
-    # Define pd.DataFrame containing only parsed free text columns
+    # Define pd.DataFrame containing only parsed free-text columns
     df_free_text = df_all.iloc[:, 8:]
     # Define pd.DataFrame containing only non-parsed columns
     df = df_all.iloc[:, :8]
-    # Reverse parsing of free text columns and add the result as column `free_text` to output pd.DataFrame
+    # Reverse parsing of free-text columns and add the result as column `free_text` to output pd.DataFrame
     df["free_text"] = df_free_text.agg(pd.Series.to_dict, axis=1).apply(dict_to_str)
     return df
 
@@ -236,7 +235,7 @@ class Gtf:
     def parse_free_text(self):
         """Parse key/value pairs from `free_text` column into column `key` with row entry `value`.
 
-        Creates a dataframe with columns for keys in the free text column instead of `free_text` column.
+        Creates a dataframe with columns for keys in the free-text column instead of `free_text` column.
         Saves it to Gtf.df attribute.
         """
         assert self.parsed == False
@@ -254,7 +253,7 @@ class Gtf:
     def reverse_parse_free_text(self):
         """Reverses parsing of `free_text` column.
 
-        Creates a data frame that can be written in gtf format to file. Parsed free text columns are aggregated
+        Creates a data frame that can be written in gtf format to file. Parsed free-text columns are aggregated
         into `free_text` column according to gtf format specification.
         """
         assert self.parsed == True
