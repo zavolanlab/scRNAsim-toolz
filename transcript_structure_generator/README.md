@@ -30,6 +30,7 @@ Output:
 To install package, run
 
 ```
+pip install setuptools>=62.1.0
 pip install .
 ```
 
