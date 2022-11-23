@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='mypackage',
+    name='cdna',
     url='https://gitlab.com/my_user_name/my_package.git',
     author='My Name',
     author_email='me@email.org',
