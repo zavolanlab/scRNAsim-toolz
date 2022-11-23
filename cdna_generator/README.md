@@ -14,19 +14,9 @@ transcript_copies (csv-formatted) containing:
 - copy number
 
 
-_Eample_
-
-`[ID of transcript]    [ID of parent transcript]    [copy number]`
-
-
 transcript_sequences (fasta-formatted) containing:
  
 - ID of transcript 
-
-_Eample_
-
-`> [ID of transcript]
-AGUGACGUUAGACCAGAUAGAC....`
 
 
 priming_sites (gtf-formatted) containing:
@@ -35,24 +25,20 @@ priming_sites (gtf-formatted) containing:
 - Position of priming site
 - Binding likelihood of priming site
 
-_Eample_
-
-`[ID of transcript]    ... [Position of priming site]... [Binding likelihood of priming site]`
 
 
 **Output files**
 
-cDNA (fasta-formatted) containing:
+cDNA_sequences (fasta-formatted) containing:
 
 - cDNA sequence ID
-- Uniquie cDNA sequence
-
+- cDNA-sequence
 
 
 cDNA_counts (csv-formatted) containing:
 
 - cDNA sequence ID
-- cDNA copy number
+- cDNA-counts
 
 
 
