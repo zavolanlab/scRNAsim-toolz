@@ -6,24 +6,21 @@ The function of this module is to generate cdDNA based on mRNA transcript seuqen
 
 **Input files**
 
-Copy_number_file:
 
-- csv-formatted file ("NewTranscriptID,ID,Count")
+transcript_copies (csv-formatted) containing:
 
-- id of generated transcript
+- ID of transcript
+- ID of parent transcript
+- copy number
 
-- id of original transcript (without intron inclusions)
-count
 
 _Eample_
 
 `[id of generated transcript]    [ID]    [Count]`
 
 
-transcript_sequences_file:
-
-- fasta-formatted file 
-
+transcript_sequences (fasta-formatted) containing:
+ 
 - id of generated transcript? (in the header)
 
 _Eample_
@@ -32,12 +29,9 @@ _Eample_
 AGUGACGUUAGACCAGAUAGAC....`
 
 
-priming_site_file:
-
-- gtf-formatted file 
+priming_sites (gtf-formatted) containing:
 
 - id of generated transcript?
-
 - position of priming site and binding likelihood 
 
 _Eample_
@@ -47,19 +41,17 @@ _Eample_
 
 **Output files**
 
-cDNA_file:
+cDNA (fasta-formatted) containing:
 
-- fasta-formatted file 
-
-- Includes all the uniquie "cDNA sequence" and "cDNA sequence ID"
-
+- cDNA sequence ID
+- uniquie cDNA sequence and "cDNA sequence ID
 
 
-cDNA_count_file:
 
-- csv-formatted file 
+cDNA_counts (csv-formatted) containing:
 
-- Includes "cDNA sequence ID" and "cDNA count"
+- cDNA sequence ID
+- cDNA count
 
 
 
