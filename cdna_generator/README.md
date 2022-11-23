@@ -11,7 +11,7 @@ transcript_copies (csv-formatted) containing:
 
 - ID of transcript
 - ID of parent transcript
-- copy number
+- transcript copy number
 
 
 transcript_sequences (fasta-formatted) containing:
