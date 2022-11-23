@@ -22,3 +22,8 @@ def check_positive(value):
         raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
     return ivalue
 
+def check_prob(value):
+    pvalue = float(value)
+    if pvalue <= 0 or pvalue>1:
+        raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
+    return pvalue 
