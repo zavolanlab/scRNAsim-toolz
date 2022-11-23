@@ -1,0 +1,10 @@
+default:
+  tags:
+    - docker
+  image: python:3.10-slim-buster
+
+my_tests:
+  # Good to put a small description here of what this job does
+  script:
+    - echo "Command 1"
+    - echo "Command 2"
