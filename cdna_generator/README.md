@@ -1,7 +1,7 @@
-# cDNA Generator
+# cDNA Generator module
 
-Description of the project
-
+Description of the module:
+The function of this module is to generate cdDNA based on mRNA transcript seuqences and the coresponding priming probabilities. 
 
 
 **Input files**
