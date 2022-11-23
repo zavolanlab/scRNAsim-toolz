@@ -1,8 +1,0 @@
-Metadata-Version: 2.1
-Name: cli-primingsitepredictor
-Version: 0.1.0
-Summary: Command-Line Interface
-Home-page: https://git.scicore.unibas.ch/zavolan_group/tools/priming-site-predictor/-/tree/main/CLI
-Author: Robin Christen & Max Baer
-Author-email: robin.christen@stud.unibas.ch & max.baer@swisstph.ch
-License: MIT,
