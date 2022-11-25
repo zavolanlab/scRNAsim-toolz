@@ -1,12 +1,16 @@
 import logging
+from random import choice, gauss
+from textwrap import wrap
+
 LOG = logging.getLogger(__name__)
+
 
 def read_in_fasta(file_path: str) -> dict[str,str]:
     """
     This function reads in FASTA files.
 
     Args:
-        file_path (str): A file path directing to the fasta file.  
+        file_path: A file path directing to the fasta file.
 
     Returns:
         Dict: It returns a dictionary with sequences.
@@ -31,14 +35,13 @@ def read_sequence(seq:str, read_length:int) -> str:
     smaller than the requested length or cuts the sequence if its longer.
 
     Args:
-        seq (str): the sequence to read 
-        read_length (int): length of reads
+        seq: the sequence to read
+        read_length: length of reads
 
     Returns:
         str: returns sequenced element
 
     """
-    from random import choice
     bases: list[str] = ["A", "T", "C", "G"]
     sequenced: str = ''
     if read_length > len(seq):
@@ -57,8 +60,8 @@ def simulate_sequencing(sequences: dict[str,str], read_length: int) -> dict[str,
     Simulates sequencing.
 
     Args:
-        sequences (dict): Dictionary of sequences to sequence.
-        read_length (int): length of reads
+        sequences: Dictionary of sequences to sequence.
+        read_length: length of reads
 
     Returns:
         dict: of n sequences as values 
@@ -75,14 +78,13 @@ def generate_sequences(n: int, mean: int, sd: int) -> dict[str,str]:
     Generates random sequences.
 
     Args:
-        n (int): Amount of sequences to generate.
-        mean (int): mean length of sequence (gaussian distribution).
-        sd (float): standard deviation of length of sequence (gaussian distribution).
+        n: Amount of sequences to generate.
+        mean: mean length of sequence (gaussian distribution).
+        sd: standard deviation of length of sequence (gaussian distribution).
 
     Returns:
         dict: of n sequences
     """
-    from random import choice, gauss
     LOG.info("Generating random sequences.")
     sequences: dict[str,str] = {}
     for i in range(n):
@@ -94,18 +96,17 @@ def generate_sequences(n: int, mean: int, sd: int) -> dict[str,str]:
         sequences[key] = seq
     return sequences
 
-def write_fasta(sequences: dict[str,str], file_path: str):
+def write_fasta(sequences: dict[str,str], file_path: str) -> None:
     """
     Takes a dictionary and writes it to a fasta file.
     Must specify the filename when calling the function.
 
     Args:
-        sequences (dict): Dictionary of sequence.
-        file_path (str): A file path directing to the output folder.
+        sequences: Dictionary of sequence.
+        file_path: A file path directing to the output folder.
         
     """
     LOG.info("Writing FASTA file.")
-    from textwrap import wrap
     with open(file_path, "w") as outfile:
         for key, value in sequences.items():
             outfile.write(key + "\n")
