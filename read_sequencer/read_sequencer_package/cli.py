@@ -1,5 +1,5 @@
 import argparse
-from modules import ReadSequencer
+from read_sequencer import ReadSequencer
 import logging
 
 parser = argparse.ArgumentParser(prog='read_sequencer',
