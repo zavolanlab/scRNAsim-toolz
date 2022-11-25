@@ -1,9 +1,0 @@
-Metadata-Version: 2.1
-Name: read-sequencer
-Version: 0.1.1
-Summary: Simulates sequencing with a specified read length from sequences specified by a FASTA file.
-Home-page: https://git.scicore.unibas.ch/zavolan_group/tools/read-sequencer
-Author: Clara Serger, Michael Sandholzer and Christoph Harmel
-Author-email: christoph.harmel@unibas.ch
-License: MIT
-License-File: LICENSE.txt
