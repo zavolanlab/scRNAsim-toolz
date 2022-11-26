@@ -2,7 +2,7 @@ import argparse
 import logging
 from pre_bedtools import exon_extraction_from_gtf
 from exon_concatenation import exon_concatenation
-from polyA import PolyA_generator
+from polyA import polyA_addition_to_fasta_list
 from list_to_file import list_to_file
 
 parser = argparse.ArgumentParser(
@@ -20,9 +20,9 @@ args = parser.parse_args()
 def main():
     LOG.info("sequence_extractor begins")
     exon_extraction_from_gtf()
-    exon_concatenation()
-    PolyA_generator()
-    list_to_file()
+    fasta_list = exon_concatenation(args.)
+    final_list = polyA_addition_to_fasta_list(fasta_list)
+    list_to_file(final_list,args.output_file_name)
     LOG.info("sequence_extractor ends")
 
 if ___name__ == 'main':
