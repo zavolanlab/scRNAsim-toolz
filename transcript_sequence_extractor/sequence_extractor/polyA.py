@@ -26,11 +26,5 @@ def polyA_addition_to_fasta_list(
 	Returns:
 		A list like the initial list, this time with polyA tail added onto it.
 	"""
-	list_annotation = fasta_list[0::2]
-	list_exon = fasta_list[1::2]
-	mature_rna_list = [polyA_generator(i) for i in list_exon]
-	final_list = []
-	for annotation, exon in zip(list_annotation,mature_rna_list):
-		final_list.append(annotation)
-		final_list.append(exon)
-	return final_list
+	mature_rna_list = [(i[0],polyA_generator(i[1])) for i in fasta_list]
+	return mature_rna_list
