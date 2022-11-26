@@ -18,10 +18,10 @@ def polyA_generator(
 def polyA_addition_to_fasta_list(
 	fasta_list: list,
 ) -> list:
-	"""Takes in a list of alternate annotations and exons and outputs a list where polyA tail has been added to all the exon 3' ends.
+	"""Takes in a list of tuples with annotations and exons and outputs a list where polyA tail has been added to all the exon 3' ends.
 
 	Args:
-		fasta_list: List contaning annotations and exons, with every element being an equivalent to a line in the fasta file
+		fasta_list: List contaning tuples of annotations and exons
 
 	Returns:
 		A list like the initial list, this time with polyA tail added onto it.

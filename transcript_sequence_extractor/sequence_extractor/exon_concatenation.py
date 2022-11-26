@@ -1,13 +1,13 @@
 def exon_concatenation(
 	post_bedtools_fasta: str
 ) -> list:
-	"""Concatenate all sequences starting with identical transcripit ID and outputs it as a list with sequence header (Transcript ID) and concatenated sequences.
+	"""Concatenate all sequences starting with identical transcripit ID and outputs it as a list with sequence header (Transcript ID) and concatenated sequences as tuples.
 
 	Args:
 		post_bedtools_fasta: The name of the fasta file obtained after bedtools has been run
 
 	Returns:
-		A list with transcript ID in even indices and corresponding concatenated exons in odd indices.
+		A list containing transcript ID and concatenated exons in tuples.
 	"""
     with open(post_bedtools_fasta,'r') as fa:
         annotation = []
