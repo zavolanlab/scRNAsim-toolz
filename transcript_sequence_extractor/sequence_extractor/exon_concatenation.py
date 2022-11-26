@@ -20,10 +20,8 @@ def exon_concatenation(
                 if annotation[-1] == line1[0:16]:
                     read += line2[:-1]
                 elif annotation[-1] != line1[0:16]:
-                    fasta_format_list.append(annotation[-1])
-                    fasta_format_list.append(read)
+                    fasta_format_list.append((annotation[-1],read))
                     annotation.append(line1[0:16])
                     read = line2[:-1]
-        fasta_format_list.append(annotation[-1])
-        fasta_format_list.append(read)
+        fasta_format_list.append((annotation[-1],read))
     return fasta_format_list
