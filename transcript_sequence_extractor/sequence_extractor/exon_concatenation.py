@@ -14,16 +14,16 @@ def exon_concatenation(
 	to_write_to_file = []
 	for x in range(int(len(lines)/2)):
 		if x == 0:
-			annotation = lines[0]
-			read = lines[1]
+			annotation = lines[0][0:16]
+			read = lines[1][:-1]
 		if x >= 1:
-			if lines[2*x] == lines[2*(x-1)]:
-				read+= lines[(2*x)+1]
+			if lines[2*x][1:16] == lines[2*(x-1)][1:16]:
+				read+= lines[(2*x)+1][:-1]
 			else:
 				to_write_to_file.append(annotation)
 				to_write_to_file.append(read)
-				annotation = lines[2*x]
-				read = lines[(2*x)+1]
+				annotation = lines[2*x][0:16]
+				read = lines[(2*x)+1][:-1]
 	to_write_to_file.append(annotation)
 	to_write_to_file.append(read)
 	return to_write_to_file
