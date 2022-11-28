@@ -9,6 +9,6 @@ setup(
     author_email='christoph.harmel@unibas.ch',
     description='Simulates sequencing with a specified read length from sequences specified by a FASTA file.',
     packages=find_packages(),
-    install_requires=['random','textwrap','argparse','logging'],
+    install_requires=['random','Bio','argparse','logging'],
     entry_points={'console_scripts': ['read_sequencer=read_sequencer_package.cli:main']}
 )
