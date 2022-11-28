@@ -1,131 +1,149 @@
 import logging
-from random import choice, gauss
-from textwrap import wrap
+from random import choices
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from collections.abc import Generator, Iterator
 
 LOG = logging.getLogger(__name__)
 
-
-def read_in_fasta(file_path: str) -> dict[str,str]:
-    """
-    This function reads in FASTA files.
-
-    Args:
-        file_path: A file path directing to the fasta file.
-
-    Returns:
-        Dict: It returns a dictionary with sequences.
-    """
-    LOG.info("Reading in FASTA files from destination.")
-    sequences: dict[str,str] = {}
-    f = open(file_path)
-    for line in f:
-        if line[0] == '>':
-            def_line = line.strip()
-            def_line = def_line.replace('>', '')
-        else:
-            if def_line not in sequences:
-                sequences[def_line] = ''
-                sequences[def_line] += line.strip()
-    f.close()
-    return sequences
-
-def read_sequence(seq:str, read_length:int) -> str:
-    """
-    This function reads a sequence of a specific read length and adds additional nucleotides if the sequence is 
-    smaller than the requested length or cuts the sequence if its longer.
-
-    Args:
-        seq: the sequence to read
-        read_length: length of reads
-
-    Returns:
-        str: returns sequenced element
-
-    """
-    bases: list[str] = ["A", "T", "C", "G"]
-    sequenced: str = ''
-    if read_length > len(seq):
-        for nt in range(len(seq)):
-            sequenced += seq[nt]
-        for nt in range(len(seq), read_length):
-            sequenced += choice(bases)
-    else:
-        for nt in range(read_length):
-            sequenced += seq[nt]
-
-    return sequenced
-
-def simulate_sequencing(sequences: dict[str,str], read_length: int) -> dict[str,str]:
-    """
-    Simulates sequencing.
-
-    Args:
-        sequences: Dictionary of sequences to sequence.
-        read_length: length of reads
-
-    Returns:
-        dict: of n sequences as values 
-    """
-    LOG.info("Sequencing in progress....")
-    results: dict[str,str] = {}
-    for index, key in enumerate(sequences):
-        results[key] = read_sequence(sequences[key], read_length=read_length)
-    LOG.info("Sequencing was successfully executed.")
-    return results
-
-def generate_sequences(n: int, mean: int, sd: int) -> dict[str,str]:
-    """
-    Generates random sequences.
-
-    Args:
-        n: Amount of sequences to generate.
-        mean: mean length of sequence (gaussian distribution).
-        sd: standard deviation of length of sequence (gaussian distribution).
-
-    Returns:
-        dict: of n sequences
-    """
-    LOG.info("Generating random sequences.")
-    sequences: dict[str,str] = {}
-    for i in range(n):
-        seq: str = ""
-        bases: list[str] = ["A", "T", "C", "G"]
-        for nt in range(abs(round(gauss(mean, sd)))):
-            seq = seq + choice(bases)
-        key: str = str(i) + ': length ' + str(len(seq)) + ' nt'
-        sequences[key] = seq
-    return sequences
-
-def write_fasta(sequences: dict[str,str], file_path: str) -> None:
-    """
-    Takes a dictionary and writes it to a fasta file.
-    Must specify the filename when calling the function.
-
-    Args:
-        sequences: Dictionary of sequence.
-        file_path: A file path directing to the output folder.
-        
-    """
-    LOG.info("Writing FASTA file.")
-    with open(file_path, "w") as outfile:
-        for key, value in sequences.items():
-            outfile.write(key + "\n")
-            outfile.write("\n".join(wrap(value, 60)))
-            outfile.write("\n")
-
 class ReadSequencer:
-    def __init__(self):
-        self.sequences: dict[str,str] = {}
-        self.reads: dict[str,str] = {}
+    def __init__(self, fasta: str = None, output: str = None, read_length: int = 150, chunk_size: int = 10000) -> None:
+        """ ReadSequencer class
+        Args:
+            fasta: path fasta file
+            output: path output fasta file(s)
+            read_length: read length, defaults to 150.
+            chunk_size: batch size used for memory efficient processing, only used when number of sequences greater
+                        than number of passed sequences. Defaults to 10000.
 
-    def add_random_sequences(self, n: int, mean: int, sd: int):
-        self.sequences: dict[str,str] = generate_sequences(n, mean, sd)
+        Returns:
+            None
+        """
+        self.fasta = fasta
+        self.output = output
+        self.read_length = read_length
+        self.chunk_size = chunk_size
+        self.random = False
+        self.bases = ('A', 'T', 'C', 'G')
+        self.n_sequences = None
 
-    def read_fasta(self, input_file):
-        self.sequences: dict[str,str] = read_in_fasta(input_file)
+    def get_n_sequences(self) -> None:
+        """
+            Helper function to detect number of sequences present in set fasta file.
 
-    def run_sequencing(self, read_length: int):
-        self.reads: dict[str,str] = simulate_sequencing(self.sequences, read_length)
+            Returns:
+                 None
+        """
+        self.n_sequences = len(list(SeqIO.parse(self.fasta, 'fasta')))
+        LOG.info(self.n_sequences, ' sequences found in ', self.fasta)
 
-    def write_fasta(self, output_file_path: str):
-        write_fasta(self.reads, output_file_path)
+    def define_random_sequences(self, n: int) -> None:
+        """
+            Defines random sequences.
+
+            Args:
+                 n: number of random sequences to be generated
+
+            Returns:
+                None
+        """
+        LOG.info('Set mode to: generate random sequences')
+        LOG.info('N random sequences: ', n)
+        self.random = True
+        self.n_sequences = n
+
+    def generate_random_sequence(self, length: int) -> Seq:
+        """
+            Generates random sequence.
+
+            Args:
+                length: length of sequence
+
+            Returns:
+                random sequence of length n
+        """
+        seq = choices(self.bases, k=length)
+        seq = Seq(''.join(seq))
+        return seq
+
+    def resize_sequence(self, record:SeqRecord) -> SeqRecord:
+        """
+            Resizes sequence according to set read length. If sequence is shorter than read length, fills up
+            with random nucleotides.
+
+            Args:
+                record: SeqRecord
+
+            Returns:
+                resized SeqRecord
+        """
+        if (len(record)) >= self.read_length:
+            record.seq = record.seq[0:self.read_length]
+        else:
+            n_add = self.read_length - len(record)
+            add_seq = self.generate_random_sequence(n_add)
+            record.seq = record.seq + add_seq
+        return record.seq
+
+    def batch_iterator(self, iterator: Iterator, batch_size: int) -> Generator:
+        """
+            This is a generator function, and it returns lists of the
+            entries from the supplied iterator.  Each list will have
+            batch_size entries, although the final list may be shorter.
+
+            Args:
+                iterator: iterator object generated with Bio.SeqIO.parse()
+                batch_size: batch size to use for the generator
+
+            Returns:
+                list of entries from supplied iterator according to batch_size
+        """
+        batch = []
+        for entry in iterator:
+            batch.append(entry)
+            if len(batch) == batch_size:
+                yield batch
+                batch = []
+
+    def run_sequencing(self) -> None:
+        """
+            Runs read sequencing of specified sequences from input fasta file or generates random sequences for a given
+             read length. If number of sequences exceeds chunk-size, it will switch to batch processing mode.
+
+            Returns:
+                 Writes processed sequences to output fasta file(s).
+        """
+        if self.random:
+            if self.n_sequences < self.chunk_size:
+                with open(self.output, 'w') as output_handle:
+                    for i in range(self.n_sequences):
+                        record = SeqRecord(
+                            self.generate_random_sequence(self.read_length),
+                            id='random_seq: ' + str(i+1))
+                        SeqIO.write(record, output_handle, 'fasta')
+            else:
+                for i, batch in enumerate(self.batch_iterator(range(self.n_sequences), self.chunk_size)):
+                    filename = self.output.replace('.fasta','') + '_chunk_%i.fasta' % (i + 1)
+                    with open(filename, 'w') as output_handle:
+                        for j, k in enumerate(batch):
+                            record = SeqRecord(
+                                self.generate_random_sequence(self.read_length),
+                                id='random_seq: ' + str(j+1))
+                            SeqIO.write(record, output_handle, 'fasta')
+        else:
+            if self.n_sequences < self.chunk_size:
+                with open(self.fasta) as input_handle, open(
+                        self.output, 'w') as output_handle:
+                    for record in SeqIO.parse(input_handle, 'fasta'):
+                        record.seq = self.resize_sequence(record)
+                        SeqIO.write(record, output_handle, 'fasta')
+
+            else:
+                record_iter = SeqIO.parse(open(self.fasta), 'fasta')
+                for i, batch in enumerate(self.batch_iterator(record_iter, self.chunk_size)):
+                    filename = self.output.replace('.fasta','') + '_chunk_%i.fasta' % (i + 1)
+                    for j, record in enumerate(batch):
+                        batch[j].seq = self.resize_sequence(record)
+                    with open(filename, 'w') as handle:
+                        SeqIO.write(batch, handle, 'fasta')
