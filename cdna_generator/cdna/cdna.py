@@ -1,5 +1,36 @@
 import sys
+import pandas as pd
 
+from gtfparse import read_gtf
+
+
+# returns GTF with essential columns such as "feature", "seqname", "start", "end"
+# alongside the names of any optional keys which appeared in the attribute column
+df_input_GTF = read_gtf("Example_GTF_Input.gtf")
+df_input_CSV = pd.read_csv("copy_number_input.csv")
+
+df_input_CSV = df_input_CSV.reset_index()  # make sure indexes pair with number of rows
+
+df_input_GTF['Binding_Probability'] = pd.to_numeric(df_input_GTF['Binding_Probability']) # convert to numeric
+df_normalization_bind_probablility = df_input_GTF.groupby('seqname')['Binding_Probability'].sum() # extract binding probablility
+
+# Add New columns to the existing DataFrame
+df_input_GTF["Normalized_Binding_Probability"] = ''
+df_input_GTF["Transcript_Copy_Number"] = ''
+
+
+# Adds Normalized_Binding_Probability and Transcript_Copy_Number to each transcript in the dataframe
+for index, row in df_input_GTF.iterrows():
+    # GTF transcript ID 
+    id_GTF = str(row['seqname'])                
+    # CVS transcript ID 
+    id_CSV = str(row['seqname']).split('_')[1]  
+    # Calculate Normalized_Binding_Probability and add to GTF dataframe
+    df_input_GTF.loc[index, 'Normalized_Binding_Probability'] = row['Binding_Probability'] / df_normalization_bind_probablility[id_GTF]
+    # Calculate Normalized_Binding_Probability and add to GTF dataframe
+    csv_transcript_copy_number = df_input_CSV.loc[df_input_CSV['ID of transcript'] == int(id_CSV), 'Transcript copy number'].iloc[0]
+    df_input_GTF.loc[index,'Transcript_Copy_Number'] = round(csv_transcript_copy_number * df_input_GTF.loc[index,'Normalized_Binding_Probability'])
+    
 
 def translate(res):
     translate_dict = {"A": "T", "U": "A", "G": "C", "C": "G"}
@@ -69,23 +100,6 @@ class cDNA_Gen:
     def return_output(self):
         return self.output_fasta, self.output_csv
 
-
-class GTF_entry:
-    def __init__(self, string):
-        self.string = string
-        self.values = self.string.split("\t")
-        self.id = self.values[0]
-        self.start = int(self.values[3])
-        self.end = int(self.values[4])
-        self.score = float(0.5)  # self.values[5]
-        self.sequence = "no sequence set"
-        self.length = self.end - self.start
-
-    def __repr__(self):
-        return self.sequence[:10] + "..." + f" len={self.length} score={self.score}"
-
-    def set_sequence(self, full_sequence):
-        self.sequence = full_sequence[self.start : self.end]
 
 
 if __name__ == "__main__":
