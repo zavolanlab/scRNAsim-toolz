@@ -36,7 +36,6 @@ class ReadSequencer:
                  None
         """
         self.n_sequences = len(list(SeqIO.parse(self.fasta, 'fasta')))
-        LOG.info(self.n_sequences, ' sequences found in ', self.fasta)
 
     def define_random_sequences(self, n: int) -> None:
         """
@@ -48,8 +47,6 @@ class ReadSequencer:
             Returns:
                 None
         """
-        LOG.info('Set mode to: generate random sequences')
-        LOG.info('N random sequences: ', n)
         self.random = True
         self.n_sequences = n
 
