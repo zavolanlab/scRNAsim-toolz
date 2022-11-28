@@ -21,7 +21,7 @@ def main():
     LOG.info("sequence_extractor begins")
     exon_extraction_from_gtf()
     fasta_list = exon_concatenation(args.)
-    final_list = polyA_addition_to_fasta_list(fasta_list)
+    final_list = poly_a_addition_to_fasta_list(fasta_list)
     list_to_file(final_list,args.output_file_name)
     LOG.info("sequence_extractor ends")
 
