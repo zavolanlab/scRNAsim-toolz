@@ -62,7 +62,7 @@ class TestGtf:
     def test_parsed(self):
         annotations = Gtf()
         annotations.read_file("tests/resources/Annotation1.gtf")
-        annotations.parse_free_text()
+        annotations.parse_key_value()
 
         assert annotations.parsed == True
         assert set(annotations.free_text_columns) == set(

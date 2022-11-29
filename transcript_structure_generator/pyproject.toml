@@ -1,6 +1,6 @@
 [project]
 name = "tsg"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
   { name="Michael Zimmermann", email="michael.zimmermann@unibas.ch" },
   { name="Andri Fraenkl", email="andri.fraenkl@unibas.ch" },

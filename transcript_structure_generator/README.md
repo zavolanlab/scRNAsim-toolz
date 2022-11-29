@@ -39,7 +39,7 @@ To generate the sampled transcripts, open a new shell, activate your environment
 ```
 conda activate transcript-structure-generator
 
-transcript-generator --transcripts <transcripts_file> --annotation <annotations_file> --prob_inclusion=<probability_inclusion> [--log "INFO"]
+transcript-generator --prob_inclusion <probability_inclusion> [--log "INFO"] <transcripts_file> <annotations_file>
 ```
 
 where the transcripts file should be csv-formatted, the annotation file gtf-formatted and the inclusion probability for introns a float in the range [0,1]. The log parameter is optional and can be one of `["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]`. The default is `INFO`.
@@ -51,6 +51,18 @@ To perform all tests, make sure your environment corresponds to the `environment
 
 ```
 pytest tests
+```
+
+To build Docker image, run
+
+```
+docker build -t transcript-app .
+```
+
+Afterwards, you can use the Docker image like so
+
+```
+docker run transcript-app --prob_inclusion <probability_inclusion> [--log "INFO"] <transcripts_file> <annotations_file>
 ```
 
 # License

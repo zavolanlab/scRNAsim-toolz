@@ -12,4 +12,5 @@ dependencies:
   - mypy
   - flake8
   - pytest
+  - pylint
   - coverage

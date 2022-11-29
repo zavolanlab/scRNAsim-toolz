@@ -14,10 +14,10 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
     """Read transcript-abundance file into dataframe.
 
     Args:
-        transcripts_file (str): Input filename
+        transcripts_file: Input filename
 
     Returns:
-        pd.DataFrame: Transcript abundances ("id", "count")
+        A pd.DataFrame with the transcript abundances ("id", "count").
 
     Raises:
         ValueError: When the input file is neither csv or tsv
@@ -25,13 +25,12 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
     cols: list = ["id", "count"]
     if transcripts_file.endswith(".tsv"):
         return pd.read_table(transcripts_file, header=None, names=cols)
-    elif transcripts_file.endswith(".csv"):
+    if transcripts_file.endswith(".csv"):
         return pd.read_csv(transcripts_file, header=None, names=cols)
-    else:
-        raise ValueError("File type needs to be either csv or tsv")
+    raise ValueError("File type needs to be either csv or tsv")
 
 
-def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
+def filter_df(df: pd.DataFrame, transcripts: list = None) -> pd.DataFrame:
     """Filter annotations to include only exons with the highest transcript support level, i.e. TSL1.
 
     `feature` column is filtered on value "exon" and
@@ -48,6 +47,8 @@ def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
         A pd.DataFrame containing only rows with exon annotations of highest transcript support level and,
         if provided, belonging to one of the given transcripts
     """
+    if transcripts is None:
+        transcripts = []
     df_filter = df[
         (df["feature"] == "exon")
         & (df["free_text"].str.contains('transcript_support_level "1"'))
@@ -63,8 +64,8 @@ def filter_df(df: pd.DataFrame, transcripts: list = []) -> pd.DataFrame:
 def str_to_dict(s: str) -> dict:
     """Split between key/value pairs.
 
-    Split string based on delimiter ';' into items, remove empty items and split items on delimiter ' ' into key/value pairs.
-    Remove quotes from value strings and create a dictionary.
+    Split string based on delimiter ';' into items, remove empty items and split items on delimiter ' ' into
+    key/value pairs. Remove quotes from value strings and create a dictionary.
 
     Args:
         s: A string of the form 'gene_id "GENE1"; transcript_id "TRANSCRIPT1";'
@@ -97,7 +98,7 @@ def dict_to_str(d: dict) -> str:
     # join key, value pairs from dictionary with a space in a list,
     # then join items in list by ;
     # end on ;
-    # check if value is nan
+    # value == value checks that value is not nan
     s: str = (
         "; ".join([f'{key} "{value}"' for key, value in d.items() if value == value])
         + ";"
@@ -106,17 +107,17 @@ def dict_to_str(d: dict) -> str:
 
 
 def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
-    """Reverse parsing of gtf based pd.DataFrame to include only columns that are well defnined by gtf file standards.
+    """Reverse parsing of gtf based pd.DataFrame to include only columns that are well defnined by gtf-file standards.
 
-    The first 8 defined columns are constant as defined by gtf file standards.
+    The first 8 defined columns are constant as defined by gtf-file standards.
     Further columns are assumed to be parsed free-text columns (see Gtf.parse_free_text()).
     The parsed free-text columns are aggregated as a dictionary and the dictionry is parsed as a string in gtf format.
 
     Args:
-        df_all: A pd.DataFrame containing a parsed gtf file.
+        df_all: A pd.DataFrame containing a parsed gtf-file.
 
     Returns:
-        A DataFrame with the columns as defined by gtf file standards.
+        A pd.DataFrame with the columns as defined by gtf-file standards.
     """
     # Define pd.DataFrame containing only parsed free-text columns
     df_free_text = df_all.iloc[:, 8:]
@@ -133,8 +134,8 @@ def write_gtf(df: pd.DataFrame, filename: str) -> None:
     Makes sure data types are correct and saves object in gtf format.
 
     Args:
-        df: A pd.DataFrame containing a gtf file.
-        Filename: File to save to.
+        df: A pd.DataFrame containing a gtf-file.
+        filename: File to save to.
     """
     # Make sure the data types are correct.
     df = df.astype(Gtf.dtypes)
@@ -156,7 +157,7 @@ def write_header(annotations_file: str) -> None:
     Args:
         annotations_file: Filename to write header to.
     """
-    with open(annotations_file, "w") as fh:
+    with open(annotations_file, "w", encoding="utf_8") as fh:
         fh.write("\t".join(Gtf.dtypes.keys()) + "\n")
 
 
@@ -184,14 +185,15 @@ class Gtf:
 
     def __init__(self):
         """Initialize Gtf object."""
+        self.df = None
         self.parsed = False
         self.original_columns = list(self.dtypes.keys())
         self.free_text_columns = []
 
     def read_file(self, annotations_file: str) -> None:
-        """Read gtf file.
+        """Read gtf-file.
 
-        Iterate over chunks of the gtf file reading 100000 rows at a time. Filter chunks for exon annotations of
+        Iterate over chunks of the gtf-file reading 100000 rows at a time. Filter chunks for exon annotations of
         the highest transcript support level. Concatenate chunks to get resulting pd.DataFrame.
 
         Args:
@@ -219,11 +221,11 @@ class Gtf:
 
         Part of initialization is:
         Set dataframe attribute
-        Check which columns belong to the free-text part of the GTF-file.
+        Check which columns belong to the free-text part of the gtf-file.
         Check if there are no columns called free-text and if so, sets the value of parsed attribute to TRUE.
 
         Args:
-            df: pd.DataFrame
+            df: A pd.DataFrame containing a gtf-file.
         """
         self.free_text_columns = [
             col for col in df.columns if col not in self.original_columns
@@ -232,13 +234,13 @@ class Gtf:
         if "free_text" not in df.columns:
             self.parsed = True
 
-    def parse_free_text(self):
+    def parse_key_value(self):
         """Parse key/value pairs from `free_text` column into column `key` with row entry `value`.
 
         Creates a dataframe with columns for keys in the free-text column instead of `free_text` column.
         Saves it to Gtf.df attribute.
         """
-        assert self.parsed == False
+        assert self.parsed is False
         # create dataframe with columns for values in free_text column
         df_free_text = self.df["free_text"].map(str_to_dict).apply(pd.Series)
         # remember which columns come from free_text
@@ -256,7 +258,7 @@ class Gtf:
         Creates a data frame that can be written in gtf format to file. Parsed free-text columns are aggregated
         into `free_text` column according to gtf format specification.
         """
-        assert self.parsed == True
+        assert self.parsed is True
         # create dataframe with only free_text columns
         df_free_text = self.df[self.free_text_columns]
         # filter current dataframe to only original columns, except "free_text" column
@@ -276,6 +278,32 @@ class Gtf:
 class TranscriptGenerator:
     """Class to sample a transcript."""
 
+    def __new__(
+        cls,
+        transcript_id: str,
+        transcript_count: int,
+        transcript_df: pd.DataFrame,
+        prob_inclusion: float,
+    ):
+        """Initialize TranscriptGenerator object."""
+        strands = transcript_df["strand"].unique()
+        if len(transcript_df) == 0:
+            LOG.warning(
+                "Transcript %s can't be sampled. Annotation is missing", transcript_id
+            )
+            instance = None
+        elif len(strands) > 1:
+            LOG.warning(
+                "Transcript %s can't be sampled. Transcript generator is not implemented for transcripts with"
+                " exons annotated on different strands",
+                transcript_id,
+            )
+            instance = None
+        else:
+            instance = super().__new__(cls)
+
+        return instance
+
     def __init__(
         self,
         transcript_id: str,
@@ -284,10 +312,6 @@ class TranscriptGenerator:
         prob_inclusion: float,
     ):
         """Initialize TranscriptGenerator object."""
-        assert len(transcript_df) > 0
-        assert transcript_count > 0
-        assert (prob_inclusion >= 0) and (prob_inclusion <= 1)
-
         self.id = transcript_id
         self.count = transcript_count
         self.df = transcript_df
@@ -301,7 +325,7 @@ class TranscriptGenerator:
         Each column corresponds to one sample and the number of columns corresponds to the number of samples.
 
         Returns:
-            inclusion_arr: A boolean np.array, where True means intron inclusion.
+            A boolean np.array, where True means intron inclusion.
         """
         inclusion_arr = np.random.rand(self.no_exons, self.count) < self.prob_inclusion
         if self.strand == "+":
@@ -317,10 +341,9 @@ class TranscriptGenerator:
         Args:
 
         Returns:
-            names: List of names for generated exons.
-            inclusion_arr_unique: A boolean np.array where columns correspond to generated transcripts and rows to
-                intron inclusion.
-            counts: A np.array containing sample number per generated inclusions, i.e. transcript.
+            - List of names for generated exons.
+            - A boolean np.array where columns correspond to generated transcripts and rows to intron inclusion.
+            - A np.array containing sample number per generated inclusions, i.e. transcript.
         """
         inclusion_arr = self._get_inclusions()
         # Unique intron inclusion arrays and counts
@@ -330,7 +353,7 @@ class TranscriptGenerator:
         # Name for each generated transcript
         names = []
         for i in range(inclusion_arr_unique.shape[1]):
-            if np.all(inclusion_arr_unique[:, i] == False, axis=0):
+            if np.all(inclusion_arr_unique[:, i] is False, axis=0):
                 names.append(self.id)
             else:
                 names.append(f"{self.id}_{i}")
@@ -341,26 +364,26 @@ class TranscriptGenerator:
         """Take as input a dataframe filtered to one transcript and a boolean vector denoting intron inclusions.
 
         Args:
-            inclusions (np.array): A boolean vector denoting intron inclusion.
-            transcript_id (str): The transcript id.
+            inclusions: A boolean vector denoting intron inclusion.
+            transcript_id: The transcript id.
 
         Returns:
             The generated transcript as a pd.DataFrame.
         """
         df_generated = self.df.copy()
         if self.strand == "+":
-            origninal_end = df_generated["end"]
+            original_end = df_generated["end"]
             df_generated["end"] = np.where(
                 inclusions,
                 df_generated["start"].shift(periods=-1, fill_value=-1) - 1,
-                origninal_end,
+                original_end,
             )
         if self.strand == "-":
-            origninal_start = df_generated["start"]
+            original_start = df_generated["start"]
             df_generated["start"] = np.where(
                 inclusions,
                 df_generated["end"].shift(periods=-1, fill_value=-1) + 1,
-                origninal_start,
+                original_start,
             )
 
         original_id = df_generated["exon_id"]
@@ -373,39 +396,36 @@ class TranscriptGenerator:
         df_generated["transcript_id"] = transcript_id
         return df_generated
 
-    def generate_transcripts(self, filename: str) -> None:
+    def write_sequences(self, filename: str) -> None:
         """Write transcripts to file.
 
         Args:
-            filename (str): Output csv filename.
+            filename: Output csv filename.
         """
-        ids, inclusions, counts = self._get_unique_inclusions()
-        with open(filename, "a") as fh:
+        ids, _, counts = self._get_unique_inclusions()
+        with open(filename, "a", encoding="utf_8") as fh:
             for transcript_id, transcript_count in zip(ids, counts):
                 fh.write(f"{transcript_id},{self.id},{transcript_count}\n")
 
-    def generate_annotations(self, filename: str) -> None:
+    def write_annotations(self, filename: str) -> None:
         """Generate a annotations in gtf format for sampled transcript.
 
         Args:
-            Filename: Output gtf filename.
+            Filename: Output gtf-filename.
 
         Raises:
             ValueError: If given transcript ID could not be sampled.
         """
-        ids, inclusions, counts = self._get_unique_inclusions()
+        ids, inclusions, _ = self._get_unique_inclusions()
         n_unique = len(ids)
 
-        try:
-            df = pd.concat(
-                [self._get_df(inclusions[:, i], ids[i]) for i in range(n_unique)]
-            )
-            df = reverse_parse_free_text(df)
+        df = pd.concat(
+            [self._get_df(inclusions[:, i], ids[i]) for i in range(n_unique)]
+        )
+        df = reverse_parse_free_text(df)
 
-            write_gtf(df, filename)
-            LOG.debug(f"Transcript {self.id} sampled")
-        except ValueError:
-            LOG.error(f"Transcript {self.id} could not be sampled.")
+        write_gtf(df, filename)
+        LOG.debug("Transcript %s sampled", self.id)
 
 
 def sample_transcripts(
@@ -418,18 +438,23 @@ def sample_transcripts(
     """Read input files, iterate over transcript IDs, sample each transcript and save results.
 
     Args:
-        input_transcripts_file (str): Filename of transcript abundances, needs to be csv or tsv.
-        input_annotations_file (str): Filename of annotations, needs to be gtf.
-        prob_inclusion (float): Probability of intron inclusion, needs to be float in range [0,1].
-        output_transcripts_file (str): Filename of file to write sampled transcripts to.
-        output_annotations_file (str): Filename of file to write generated annotations to.
+        input_transcripts_file: Filename of transcript abundances, needs to be csv or tsv.
+        input_annotations_file: Filename of annotations, needs to be gtf.
+        prob_inclusion: Probability of intron inclusion, needs to be float in range [0,1].
+        output_transcripts_file: Filename of file to write sampled transcripts to.
+        output_annotations_file: Filename of file to write generated annotations to.
     """
+    LOG.info("Probability of intron inclusion: %s", str(prob_inclusion))
+    LOG.info("Parsing transcript abundances...")
     transcripts = read_abundances(input_transcripts_file)
+    # Make sure that abundance is positive
+    transcripts = transcripts[transcripts["count"] > 0]
+    LOG.info("Done parsing...")
 
     LOG.info("Parsing annotations...")
     annotations = Gtf()
     annotations.read_file(input_annotations_file)
-    annotations.parse_free_text()
+    annotations.parse_key_value()
     LOG.info("Done parsing...")
 
     LOG.info("Start sampling transcripts...")
@@ -447,6 +472,9 @@ def sample_transcripts(
             transcript_df,
             prob_inclusion=prob_inclusion,
         )
-        transcripts.generate_annotations(output_annotations_file)
-        transcripts.generate_transcripts(output_transcripts_file)
+        try:
+            transcripts.write_annotations(output_annotations_file)
+            transcripts.write_sequences(output_transcripts_file)
+        except AttributeError:
+            pass
     LOG.info("Done.")

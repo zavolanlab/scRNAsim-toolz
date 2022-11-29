@@ -1,3 +1,4 @@
+"""Command line interface."""
 import argparse
 import logging
 from pathlib import Path
@@ -9,7 +10,7 @@ def setup_logging(loglevel: str = None) -> None:
     """Set up logging. Loglevel can be one of ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].
 
     Args:
-        loglevel (str, optional): Level of log output. Defaults to None.
+        loglevel: Level of log output.
 
     Raises:
         ValueError: If string that is not a log level is passed, raise error.
@@ -17,12 +18,15 @@ def setup_logging(loglevel: str = None) -> None:
     Returns:
         None
     """
+    # set default log level
+    numeric_level = getattr(logging, "INFO")
+
     if loglevel:
-        numeric_level = getattr(logging, loglevel.upper())
-        if not isinstance(numeric_level, int):
-            raise ValueError("Invalid log level: %s" % loglevel)
-    else:
-        numeric_level = getattr(logging, "INFO")
+        try:
+            numeric_level = getattr(logging, loglevel.upper())
+        except AttributeError as err:
+            print(f"Unexpected {err=}, {type(err)=}")
+            raise
 
     logging.basicConfig(
         format='[%(asctime)s: %(levelname)s] %(message)s (module "%(module)s")',
@@ -31,43 +35,49 @@ def setup_logging(loglevel: str = None) -> None:
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
-    """ Builds the argument parser.
+    """Builds the argument parser.
 
     Args:
-        1) path to the csv-file with the number of transcripts (str)
-        2) path to the gtf-file with the annotations for each transcript (str)
-        3) a value for the probability of intron inclusion (float)
-        4) a log message (str)
-    
+        1) path to the csv-file with the number of transcripts
+        2) path to the gtf-file with the annotations for each transcript
+        3) a value for the probability of intron inclusion
+        4) a log message
+
     Raises:
-        None  
+        None
 
     Returns:
-        parser  
+        arguments for parser
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("--transcripts", type=str)
-    parser.add_argument("--annotation", type=str)
-    parser.add_argument("--prob_inclusion", type=float)
-    parser.add_argument("--log", type=str)
+    parser.add_argument(
+        "transcripts",
+        type=str,
+        help="Path to csv file with number of transcripts (ID,Count).",
+    )
+    parser.add_argument(
+        "annotation",
+        type=str,
+        help="Path to gtf-file with exon annotation."
+    )
+    parser.add_argument(
+        "-p",
+        "--prob-inclusion",
+        type=float,
+        default=0.05,
+        help="Probability of intron inclusion.",
+    )
+    parser.add_argument(
+        "--log",
+        type=str,
+        default="INFO",
+        help='Level of logging. Can be one of ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]',
+    )
 
-    return parser
-
-
-def get_args() -> argparse.Namespace:
-    """Builds a parser and returns its arguments.
-
-    Args:
-        None
-    
-    Raises:
-        None 
-
-    Returns:
-        arguments for parser   
-    """
-    parser = build_arg_parser()
     args = parser.parse_args()
+
+    assert args.prob_inclusion >= 0
+    assert args.prob_inclusion <= 1
 
     return args
 
@@ -76,7 +86,7 @@ def output_filename(filename: str) -> str:
     """Generate output filename for given input filename.
 
     Args:
-        filename (str): Input filename
+        filename: Input filename
 
     Raises:
         NotImplementedError: Only accept filetypes .csv, .tsv and .gtf.
@@ -86,7 +96,7 @@ def output_filename(filename: str) -> str:
         str: Output filename
     """
     filepath = Path(filename)
-    if filepath.suffix == ".csv" or filepath.suffix == ".tsv":
+    if filepath.suffix in (".csv", ".tsv"):
         outfile = "generated_" + filepath.stem + ".csv"
     elif filepath.suffix == ".gtf":
         outfile = "generated_" + filepath.name
@@ -95,26 +105,26 @@ def output_filename(filename: str) -> str:
 
     if Path(outfile).exists():
         raise FileExistsError(f"The output file {outfile} already exists.")
-        
+
     return outfile
 
 
 def app():
     """Gets the args, sets up the logging and starts the programm with the provided parameters.
 
-    Args: 
-        1) path to the csv-file with the number of transcripts (str)
-        2) path to the gtf-file with the annotations for each transcript (str)
-        3) a value for the probability of intron inclusion (float)
-        4) a log message (str)
-    
+    Args:
+        1) path to the csv-file with the number of transcripts
+        2) path to the gtf-file with the annotations for each transcript
+        3) a value for the probability of intron inclusion
+        4) a log message
+
     Raises:
-        None  
+        None
 
     Returns:
-        None  
+        None
     """
-    args = get_args()
+    args = build_arg_parser()
 
     setup_logging(args.log)
     sample_transcripts(
