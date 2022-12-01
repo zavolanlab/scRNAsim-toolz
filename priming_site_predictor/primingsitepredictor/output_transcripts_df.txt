@@ -1,0 +1,3 @@
+Transcript_1	RIBlast	Priming_site	2974	2988	.	+	.	Accessibility_Energy "0.08051396365277928"
+Transcript_1	RIBlast	Priming_site	4	18	.	+	.	Accessibility_Energy "0.17770481173297115"
+Transcript_2	RIBlast	Priming_site	1270	1284	.	+	.	Accessibility_Energy "0.6445369481689498"

@@ -62,7 +62,19 @@ class CreateTranscript():
 
         return self.df
 
+
+
 transcripts = CreateTranscript()    
 interaction_df = transcripts.generate_interaction_df()        
 
+#print line by line to file and then you're done
+
+output = str()
+for i in interaction_df.index:
+    #print(interaction_df[3][i]+'\t' + 'RIBlast' + '\t' + 'Priming_site' + '\t' + interaction_df[13][i] + '\t' + interaction_df[12][i] + '\t' + '.' + '\t' + '+' + '\t' + '.' + '\t' + f'Accessibility_Energy "{interaction_df["Interaction Energy"][i]}"')
+    output = output + str(interaction_df[3][i]+'\t' + 'RIBlast' + '\t' + 'Priming_site' + '\t' + interaction_df[13][i] + '\t' + interaction_df[12][i] + '\t' + '.' + '\t' + '+' + '\t' + '.' + '\t' + f'Accessibility_Energy "{interaction_df["Interaction Energy"][i]}"' + '\n')
+
+print(output)
+with open('output_transcripts_df.txt', 'w') as f:
+    f.write(output)
 
