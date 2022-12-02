@@ -11,7 +11,7 @@ support level for each gene of the input
 
 
 
-def import_gtfSelection_to_df(gtf_modified_file: str):
+def import_gtfSelection_to_df(gtf_modified_file: str) -> pd.DataFrame:
     """Import intermediate file from gtf and create a df
 
         Args:
@@ -41,7 +41,7 @@ names = ["Gene_mixed", "Transcript", "Support_level", "Na1", "Na2"] )
 
 
 
-def representative_transcripts_inDict(df_gtfSelection: str) -> pd.DataFrame:
+def representative_transcripts_inDict(df_gtfSelection: pd.DataFrame) -> pd.DataFrame:
     """Return a dict containing for each gene transcripts 
         with highest confidence level
 
@@ -70,7 +70,7 @@ def representative_transcripts_inDict(df_gtfSelection: str) -> pd.DataFrame:
 
 
 
-def find_repr_by_SupportLevel(intermediate_file:str): 
+def find_repr_by_SupportLevel(intermediate_file : str) -> dict[str,str]: 
     """Combine functions import_gtfSelection_to_df() 
         and representative_transcripts_inDict()
 
