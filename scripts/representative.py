@@ -1,5 +1,6 @@
 
 import pandas as pd
+import os 
 
 '''
 This part of the code take as input a gtf modified file 
@@ -62,7 +63,7 @@ def representative_transcripts_inDict(df_gtfSelection: pd.DataFrame) -> pd.DataF
   
     df_multIndex = df_gtfSelection.set_index(["Gene", "Transcript"])
     #highest support level = 1 , worst = 5, NA = 100
-    df_min = df_multIndex.groupby(level=["Gene"])["Support_level"].transform("min")
+    df_min = df_multIndex[df_multIndex["Support_level"] == df_multIndex["Support_level"].min()]
     df_final = df_min.reset_index(level = "Transcript")
     df_final = df_final.drop(columns = ["Support_level"])
     dict_representative_transcripts = df_final.groupby("Gene")["Transcript"].apply(list).to_dict()
@@ -70,7 +71,7 @@ def representative_transcripts_inDict(df_gtfSelection: pd.DataFrame) -> pd.DataF
 
 
 
-def find_repr_by_SupportLevel(intermediate_file : str) -> dict[str,str]: 
+def find_repr_by_SupportLevel(intermediate_file: str) -> dict[str,str]: 
     """Combine functions import_gtfSelection_to_df() 
         and representative_transcripts_inDict()
 
@@ -93,4 +94,4 @@ def find_repr_by_SupportLevel(intermediate_file : str) -> dict[str,str]:
 
 
 if __name__ == "__main__":  
-    find_repr_by_SupportLevel() 
+    find_repr_by_SupportLevel()
