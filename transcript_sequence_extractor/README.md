@@ -38,12 +38,24 @@ c. It needs to take into account the probability (weight/relative frequency) of 
 d. Append via e.g. str.join(), str.ljust()  
 e. Output the final transcript sequences as a .fasta file. (Final Output)  
 
+
+## Installation 
+
+TBA 
+  
+
 ## Usage/Examples
 
 ```python script 
-
-
+ 'transcript_sequence_extractor'
+    '--input_fasta_file'
+        'genome fasta file'
+            '--input_gtf' 
+             'gtf file'
+                '--output_file_name'
+                   'output fasta file'
 ```
+  
 
 
 ## License
