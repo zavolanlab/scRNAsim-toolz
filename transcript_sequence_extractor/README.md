@@ -47,13 +47,10 @@ TBA
 ## Usage/Examples
 
 ```python script 
- 'transcript_sequence_extractor'
-    '--input_fasta_file'
-        'genome fasta file'
-            '--input_gtf' 
-             'gtf file'
-                '--output_file_name'
-                   'output fasta file'
+  transcript_sequence_extractor
+  --input_fasta_file `genome fasta file`
+  --input_gtf `gtf file`
+  --output_file_name  `output fasta file`
 ```
   
 
