@@ -5,7 +5,7 @@ import representative as repr
 import os
 
 
-def dict_reprTrans_to_df(dict_reprTrans: dict[str,str])-> pd.Dataframe:
+def dict_reprTrans_to_df(dict_reprTrans: dict[str,str])-> pd.DataFrame:
 
     """Convert a dictionary of genes and their representative transcript into a dataframe 
 
