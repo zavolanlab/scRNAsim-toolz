@@ -1,3 +1,4 @@
+### Made by Hugo Gillet ###
 import pandas as pd
 import json
 import re
@@ -5,7 +6,7 @@ import representative as repr
 import os
 
 
-def dict_reprTrans_to_df(dict_reprTrans: dict[str,str])-> pd.DataFrame:
+def dict_reprTrans_to_df(dict_reprTrans: dict[str, str]) -> pd.DataFrame:
 
     """Convert a dictionary of genes and their representative transcript into a dataframe 
 
@@ -22,17 +23,21 @@ def dict_reprTrans_to_df(dict_reprTrans: dict[str,str])-> pd.DataFrame:
           
     """
     pass
-    if not type(dict_reprTrans) is dict :
+    if not type(dict_reprTrans) is dict:
         raise TypeError("Only dict are allowed")
-    if type(list(dict_reprTrans.keys())[0]) is not str :
+    if type(list(dict_reprTrans.keys())[0]) is not str:
         raise TypeError("Key should be strings")
-    if type(list(dict_reprTrans.values())[0]) is not str :
+    if type(list(dict_reprTrans.values())[0]) is not str:
         raise TypeError("Values should be strings")
 
-    df_reprTrans = pd.DataFrame.from_dict(dict_reprTrans, orient="index", columns=["reprTranscript"])
+    df_reprTrans = pd.DataFrame.from_dict(
+        dict_reprTrans, orient="index", columns=["reprTranscript"]
+    )
     df_reprTrans = df_reprTrans.reset_index(level=0)
-    df_reprTrans.columns = ["Gene", 'reprTrans']
-    df_reprTrans["reprTrans"] = df_reprTrans["reprTrans"].str.replace(r'\.[1-9]', '', regex=True)
+    df_reprTrans.columns = ["Gene", "reprTrans"]
+    df_reprTrans["reprTrans"] = df_reprTrans["reprTrans"].str.replace(
+        r"\.[1-9]", "", regex=True
+    )
     return df_reprTrans
 
 
@@ -51,11 +56,10 @@ def txt_to_dict(dict_txt: str) -> dict:
     """
     pass
 
-    input : str = open(dict_txt, "r").read()
-    input : str = input.replace("\'", "\"")
+    input: str = open(dict_txt, "r").read()
+    input: str = input.replace("'", '"')
     dict = json.loads(input)
     return dict
-
 
 
 def transcripts_by_gene_inDf(df_gtfSelection: pd.DataFrame) -> pd.DataFrame:
@@ -77,12 +81,14 @@ def transcripts_by_gene_inDf(df_gtfSelection: pd.DataFrame) -> pd.DataFrame:
     pass
     df_gene = df_gtfSelection.set_index(["Gene"])
     df_gene = df_gene.drop(columns=["Support_level"])
-    df_gene['Transcript']=df_gene['Transcript'].str.replace(r"\.[0-9]","", regex=True)
+    df_gene["Transcript"] = df_gene["Transcript"].str.replace(
+        r"\.[0-9]", "", regex=True
+    )
     df_gene = df_gene.reset_index(level=0)
     return df_gene
 
 
-def tsv_or_csv_to_df(input_txt:str) -> pd.DataFrame :
+def tsv_or_csv_to_df(input_txt: str) -> pd.DataFrame:
     """Convert tsv or csv file into a pandas dataframe
 
         Args:
@@ -96,13 +102,19 @@ def tsv_or_csv_to_df(input_txt:str) -> pd.DataFrame :
             None          
     """
     pass
-    df_input =pd.read_csv(input_txt, sep=r"[\t,]", lineterminator='\n',
-     names=["Transcript", "Expression_level"],
-     engine = "python")
+    df_input = pd.read_csv(
+        input_txt,
+        sep=r"[\t,]",
+        lineterminator="\n",
+        names=["Transcript", "Expression_level"],
+        engine="python",
+    )
     return df_input
 
 
-def exprLevel_byGene(df_exprTrasncript:pd.DataFrame, df_output_gtf_selection:pd.DataFrame) -> pd.DataFrame :
+def exprLevel_byGene(
+    df_exprTrasncript: pd.DataFrame, df_output_gtf_selection: pd.DataFrame
+) -> pd.DataFrame:
     """find the gene of each transcipt given by the expression level csv/tsv file,
        and summ expression level of all transcipts from the same gene. 
 
@@ -118,12 +130,19 @@ def exprLevel_byGene(df_exprTrasncript:pd.DataFrame, df_output_gtf_selection:pd.
         Raises:
             None          
     """
-    pass 
-    df_merged = pd.merge(df_output_gtf_selection, df_exprTrasncript , how="inner", on="Transcript")
-    df_sum = df_merged.groupby("Gene").sum("Expression_level") # sum transcripts comming from the same gene  
+    pass
+    df_merged = pd.merge(
+        df_output_gtf_selection, df_exprTrasncript, how="inner", on="Transcript"
+    )
+    df_sum = df_merged.groupby("Gene").sum(
+        "Expression_level"
+    )  # sum transcripts comming from the same gene
     return df_sum
 
-def match_byGene(df_reprTranscript: pd.DataFrame, df_expressionLevel_byGene:pd.DataFrame) -> pd.DataFrame: 
+
+def match_byGene(
+    df_reprTranscript: pd.DataFrame, df_expressionLevel_byGene: pd.DataFrame
+) -> pd.DataFrame:
     """Find matching genes bewteen the 2 args 
 
         Args:
@@ -141,13 +160,16 @@ def match_byGene(df_reprTranscript: pd.DataFrame, df_expressionLevel_byGene:pd.D
         Raises:
             None          
     """
-    pass 
-    df_merged = pd.merge(df_reprTranscript, df_expressionLevel_byGene , how="outer", on="Gene")
+    pass
+    df_merged = pd.merge(
+        df_reprTranscript, df_expressionLevel_byGene, how="outer", on="Gene"
+    )
     df_clean = df_merged.dropna(axis=0)
-    df_clean = df_clean.loc[:, ["reprTrans","Expression_level"]]
+    df_clean = df_clean.loc[:, ["reprTrans", "Expression_level"]]
     return df_clean
 
-def output_tsv(dataframe: pd.DataFrame)-> pd.DataFrame :
+
+def output_tsv(dataframe: pd.DataFrame) -> pd.DataFrame:
     """Convert pandas dataframe into a tsv file 
 
         Args:
@@ -161,15 +183,23 @@ def output_tsv(dataframe: pd.DataFrame)-> pd.DataFrame :
         Raises:
             None          
     """
-    pass 
+    pass
 
-    csv_file = dataframe.to_csv(os.getcwd()+"\ReprTrans_ExpressionLevel.tsv", sep="\t", 
-    index=False, header=False)
+    csv_file = dataframe.to_csv(
+        os.getcwd() + "\ReprTrans_ExpressionLevel.tsv",
+        sep="\t",
+        index=False,
+        header=False,
+    )
     return csv_file
+
 
 ### functions to run this part of the programm
 
-def match_reprTranscript_expressionLevel(exprTrans:str, dict_reprTrans:dict, intermediate_file:str): 
+
+def match_reprTranscript_expressionLevel(
+    exprTrans: str, dict_reprTrans: dict, intermediate_file: str
+):
     """Combine functions to replace transcripts from an expression level csv/tsv file 
        with representative transcripts 
 
@@ -199,14 +229,5 @@ def match_reprTranscript_expressionLevel(exprTrans:str, dict_reprTrans:dict, int
 
 # run the programm 
 
-#dict_txt = a #input a dict of {gene:reprTrans} in the form of a txt file
-#input_intermediate_file = b #input the intermediate file generated by transckript extractor
-#input_expr = c #input a csv or tsv file containing the expr level 
-
-#dict_reprTrans = txt_to_dict(dict_txt)
-#match_final = match_reprTranscript_expressionLevel(input_expr, dict_reprTrans, input_intermediate_file)
-#print("this is the function :\n\n {}".format(match_final))
-
-if __name__ == "__main__":  
+if __name__ == "__main__":
     match_reprTranscript_expressionLevel()
- 
