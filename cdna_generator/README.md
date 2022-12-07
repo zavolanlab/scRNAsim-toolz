@@ -17,7 +17,7 @@ transcript_copies (csv-formatted) containing:
 transcript_sequences (fasta-formatted) containing:
  
 - ID of transcript 
-
+- transcript-sequence
 
 priming_sites (gtf-formatted) containing:
 
