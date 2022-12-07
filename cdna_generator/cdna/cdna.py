@@ -1,43 +1,27 @@
 import sys
-import pandas as pd
+import warnings
 
+import pandas as pd
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
 from gtfparse import read_gtf
 
+# ignore warnings from read_gtf
+warnings.filterwarnings(action='ignore', category=FutureWarning) 
 
-# returns GTF with essential columns such as "feature", "seqname", "start", "end"
-# alongside the names of any optional keys which appeared in the attribute column
-df_input_GTF = read_gtf("Example_GTF_Input.gtf")
-df_input_CSV = pd.read_csv("copy_number_input.csv")
-
-df_input_CSV = df_input_CSV.reset_index()  # make sure indexes pair with number of rows
-
-df_input_GTF['Binding_Probability'] = pd.to_numeric(df_input_GTF['Binding_Probability']) # convert to numeric
-df_normalization_bind_probablility = df_input_GTF.groupby('seqname')['Binding_Probability'].sum() # extract binding probablility
-
-# Add New columns to the existing DataFrame
-df_input_GTF["Normalized_Binding_Probability"] = ''
-df_input_GTF["Transcript_Copy_Number"] = ''
-
-
-# Adds Normalized_Binding_Probability and Transcript_Copy_Number to each transcript in the dataframe
-for index, row in df_input_GTF.iterrows():
-    # GTF transcript ID 
-    id_GTF = str(row['seqname'])                
-    # CVS transcript ID 
-    id_CSV = str(row['seqname']).split('_')[1]  
-    # Calculate Normalized_Binding_Probability and add to GTF dataframe
-    df_input_GTF.loc[index, 'Normalized_Binding_Probability'] = row['Binding_Probability'] / df_normalization_bind_probablility[id_GTF]
-    # Calculate Normalized_Binding_Probability and add to GTF dataframe
-    csv_transcript_copy_number = df_input_CSV.loc[df_input_CSV['ID of transcript'] == int(id_CSV), 'Transcript copy number'].iloc[0]
-    df_input_GTF.loc[index,'Transcript_Copy_Number'] = round(csv_transcript_copy_number * df_input_GTF.loc[index,'Normalized_Binding_Probability'])
-    
-
-def translate(res):
-    translate_dict = {"A": "T", "U": "A", "G": "C", "C": "G"}
+def compliment(res):
+    translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
     if res not in translate_dict.keys():
-        print("cDNA residue not A,T,U or G ")
-        sys.exit(1)
+        print(f"Unknown character, {res}")
+        sys.exit(1) 
     return translate_dict[res]
+
+def seq_compliment(sequence):
+    if sequence is None:
+        return None
+    _ = "".join([compliment(char) for char in str(sequence)])[::-1] #  reverse string
+    return _
 
 
 class cDNA_Gen:
@@ -50,52 +34,93 @@ class cDNA_Gen:
         self.cpn = cpn
         self.output_fasta = output_fasta
         self.output_csv = output_csv
+
         # variables
-        self.prime_sites = []
-        self.fasta_seq = ""
-        self.fasta_id = ""
-        self.copy_numbers = {}
+        self.fasta_dict = None
+        self.fasta_records = None
 
         self.run()
 
     def run(self):
+        self.read_csv()
         self.read_fasta()
         self.read_gtf()
+        self.add_sequences()
+        self.add_compliment()
+        self.add_records()
+        self.write_fasta()
 
-    def order_priming_sites(self):
-        pass
+    def add_records(self):
+        self.fasta_records = []
+        for index, row in self.df_input_GTF.iterrows():
+            if row["compliment"] is not None:
+                copy_number = row["Transcript_Copy_Number"]
+                record = SeqRecord(
+                    Seq(row["compliment"]), 
+                    row["seqname"], 
+                    f"Transcript copy number: {copy_number}",
+                     "")
+                self.fasta_records.append(record)
 
-    def generate_cdna(self):
-        pass
+    def add_sequences(self):
+        self.df_input_GTF["priming_site"] = self.df_input_GTF.apply(
+            lambda row: self.read_primingsite(row["seqname"], 
+                            row["start"], 
+                            row["end"]), 
+            axis=1)
+
+    def add_compliment(self):
+        self.df_input_GTF["compliment"] = self.df_input_GTF["priming_site"].apply(
+            lambda x: seq_compliment(x))
+
+    def read_primingsite(self, sequence, start, end):
+        if sequence not in self.fasta_dict.keys():
+            return None
+        _ = self.fasta_dict[sequence].seq[start:end]
+        return _
 
     def read_fasta(self):
-        fasta = open(self.fasta).readlines()
-        self.fasta_id = fasta[0]
-        print(fasta[0])
-        self.fasta_seq = "".join([_.rstrip() for _ in fasta[1:]])
+        record = SeqIO.parse(self.fasta, "fasta")
+        records = list(record)
+        self.fasta_dict = {x.name: x for x in records}
+
+    def read_csv(self):
+        df_input_CSV = pd.read_csv(self.cpn, index_col=False)
+        df_input_CSV = df_input_CSV.reset_index()  # make sure indexes pair with number of rows
+        self.df_input_CSV = df_input_CSV
+
 
     def read_gtf(self):
-        with open(self.gtf) as gtf_file:
-            gtf_lines = gtf_file.readlines()
-            for line in gtf_lines[:1000]:
-                if not line.startswith("#"):
-                    temp_gtf = GTF_entry(line)
-                    temp_gtf.set_sequence(self.fasta_seq)
-                    self.prime_sites.append(temp_gtf)
+        # returns GTF with essential columns such as "feature", "seqname", "start", "end"
+        # alongside the names of any optional keys which appeared in the attribute column
+        df_input_GTF = read_gtf(self.gtf)
+        df_input_GTF['Binding_Probability'] = pd.to_numeric(df_input_GTF['Binding_Probability']) # convert to numeric
+        df_normalization_bind_probablility = df_input_GTF.groupby('seqname')['Binding_Probability'].sum() # extract binding probablility
+
+        # # Add New columns to the existing DataFrame
+        # df_input_GTF["Normalized_Binding_Probability"] = ''
+        # df_input_GTF["Transcript_Copy_Number"] = ''
+
+        # Adds Normalized_Binding_Probability and Transcript_Copy_Number to each transcript in the dataframe
+        for index, row in df_input_GTF.iterrows():
+            # GTF transcript ID 
+            id_GTF = str(row['seqname'])                
+            # CVS transcript ID 
+            id_CSV = str(row['seqname']).split('_')[1]  
+            # Calculate Normalized_Binding_Probability and add to GTF dataframe
+            df_input_GTF.loc[index, 'Normalized_Binding_Probability'] = row['Binding_Probability'] / df_normalization_bind_probablility[id_GTF]
+            # Calculate Normalized_Binding_Probability and add to GTF dataframe
+            csv_transcript_copy_number = self.df_input_CSV.loc[self.df_input_CSV['ID of transcript'] == int(id_CSV), 'Transcript copy number'].iloc[0]
+            df_input_GTF.loc[index,'Transcript_Copy_Number'] = round(csv_transcript_copy_number * df_input_GTF.loc[index,'Normalized_Binding_Probability'])
+            
+        self.df_input_GTF = df_input_GTF
 
     def write_fasta(self):
-        pass
+        print(self.fasta_records)
+        SeqIO.write(self.fasta_records, self.output_fasta, "fasta")
 
-    def read_copy_numbers(self):
-        with open(self.cpn) as cpn_file:
-            cpn_lines = cpn_file.readlines()
-            for line in cpn_lines:
-                csv = line.split(",")
-                trans_id = csv[0]
-                if trans_id:
-                    gene_id = csv[1]
-                    count = csv[2]
-                    self.copy_numbers[gene_id] = count
+    def write_csv(self):
+        pass
 
     def return_output(self):
         return self.output_fasta, self.output_csv
@@ -104,5 +129,4 @@ class cDNA_Gen:
 
 if __name__ == "__main__":
     import argparse
-
     pass
