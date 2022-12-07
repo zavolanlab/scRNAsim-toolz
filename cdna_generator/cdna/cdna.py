@@ -28,6 +28,15 @@ class cDNA_Gen:
     def __init__(
         self, fasta, gtf, cpn, output_fasta="cDNA.fasta", output_csv="cDNA.csv"
     ):
+        """_summary_
+
+        Args:
+            fasta (_type_): _description_
+            gtf (_type_): _description_
+            cpn (_type_): _description_
+            output_fasta (str, optional): _description_. Defaults to "cDNA.fasta".
+            output_csv (str, optional): _description_. Defaults to "cDNA.csv".
+        """
         # inputs
         self.fasta = fasta
         self.gtf = gtf
@@ -49,6 +58,7 @@ class cDNA_Gen:
         self.add_compliment()
         self.add_records()
         self.write_fasta()
+        self.write_csv()
 
     def add_records(self):
         self.fasta_records = []
@@ -57,7 +67,7 @@ class cDNA_Gen:
                 copy_number = row["Transcript_Copy_Number"]
                 record = SeqRecord(
                     Seq(row["compliment"]), 
-                    row["seqname"], 
+                    row["cdna_ID"], 
                     f"Transcript copy number: {copy_number}",
                      "")
                 self.fasta_records.append(record)
@@ -96,15 +106,17 @@ class cDNA_Gen:
         df_input_GTF = read_gtf(self.gtf)
         df_input_GTF['Binding_Probability'] = pd.to_numeric(df_input_GTF['Binding_Probability']) # convert to numeric
         df_normalization_bind_probablility = df_input_GTF.groupby('seqname')['Binding_Probability'].sum() # extract binding probablility
-
-        # # Add New columns to the existing DataFrame
-        # df_input_GTF["Normalized_Binding_Probability"] = ''
-        # df_input_GTF["Transcript_Copy_Number"] = ''
-
+        count = 0
+        prev_id = None
         # Adds Normalized_Binding_Probability and Transcript_Copy_Number to each transcript in the dataframe
         for index, row in df_input_GTF.iterrows():
             # GTF transcript ID 
-            id_GTF = str(row['seqname'])                
+            id_GTF = str(row['seqname'])
+            if id_GTF == prev_id:
+                count += 1
+            else:
+                prev_id = None
+                count = 0                
             # CVS transcript ID 
             id_CSV = str(row['seqname']).split('_')[1]  
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
@@ -112,7 +124,9 @@ class cDNA_Gen:
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             csv_transcript_copy_number = self.df_input_CSV.loc[self.df_input_CSV['ID of transcript'] == int(id_CSV), 'Transcript copy number'].iloc[0]
             df_input_GTF.loc[index,'Transcript_Copy_Number'] = round(csv_transcript_copy_number * df_input_GTF.loc[index,'Normalized_Binding_Probability'])
-            
+            df_input_GTF.loc[index,'cdna_ID'] = f"{id_GTF}_{count}"
+            prev_id = id_GTF
+
         self.df_input_GTF = df_input_GTF
 
     def write_fasta(self):
@@ -120,7 +134,7 @@ class cDNA_Gen:
         SeqIO.write(self.fasta_records, self.output_fasta, "fasta")
 
     def write_csv(self):
-        pass
+        self.df_input_GTF[["cdna_ID", "Transcript_Copy_Number"]].to_csv(self.output_csv, index=False)
 
     def return_output(self):
         return self.output_fasta, self.output_csv
