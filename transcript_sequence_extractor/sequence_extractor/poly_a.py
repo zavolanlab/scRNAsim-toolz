@@ -12,7 +12,7 @@ def poly_a_generator(
 		RNA with polyA tail added to its 3' end.
 	"""
 	listA = ['A','T','G','C']
-	polyA = ''.join(np.random.choice(listA,250,p=[0.9,0.040,0.020,0.020]))
+	polyA = ''.join(np.random.choice(listA,250,p=[0.914,0.028,0.025,0.033]))
 	return (exon+polyA)
 
 def poly_a_addition_to_fasta_list(
