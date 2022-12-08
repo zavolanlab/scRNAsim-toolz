@@ -282,7 +282,7 @@ def extract_transcript(file_name = "test",source_pathway_name = os.getcwd(),depo
     Outputs: 
         file_name: str 
         source_pathway_name: str
-        deposit_pathway_name: str"""
+        deposit_pathway_name: str """
         
    if deposit_pathway_name == False: 
        deposit_pathway_name = source_pathway_name
