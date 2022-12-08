@@ -274,7 +274,7 @@ def _transcript_extractor (file_name,source_pathway_name,deposit_pathway_name):
         
         
 def extract_transcript(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name = False,Input_free = False): 
-   """This it the overall exetutable funtion that will execute the transcript extraction process for a given file with all checks. 
+   """ This it the overall exetutable funtion that will execute the transcript extraction process for a given file with all checks. 
     Expected input:
         file_name: str ; default = test #the name of the gft file you want to look at
         source_pathway_name: str ; default = current work directory #path of the gtf file       
@@ -282,7 +282,9 @@ def extract_transcript(file_name = "test",source_pathway_name = os.getcwd(),depo
     Outputs: 
         file_name: str 
         source_pathway_name: str
-        deposit_pathway_name: str """
+        deposit_pathway_name: str 
+   """
+        
         
    if deposit_pathway_name == False: 
        deposit_pathway_name = source_pathway_name
