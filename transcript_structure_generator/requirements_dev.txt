@@ -1,0 +1,11 @@
+python=3.9
+matplotlib
+pandas
+pip
+tqdm
+flake8-docstrings
+mypy
+flake8
+pytest
+pylint
+coverage
