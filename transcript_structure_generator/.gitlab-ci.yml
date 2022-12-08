@@ -8,7 +8,7 @@ my_tests:
   before_script:
     - pip install -r requirements_dev.txt
   script:
-    - echo "coverage run --source code -m pytest"
-    - echo "flake8 --docstring-convention google code_directory/ tests/"
-    - echo "pylint code_directory/ tests/"
-    - echo "mypy code_directory/"
+    - echo "coverage run --source git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/ -m pytest"
+    - echo "flake8 --docstring-convention google git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/"
+    - echo "pylint git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/"
+    - echo "mypy git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/"
