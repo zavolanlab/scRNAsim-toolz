@@ -8,5 +8,7 @@ my_tests:
   before_script:
     - pip install -r requirements_dev.txt
   script:
-    - echo "Command 1"
-    - echo "Command 2"
+    - echo "coverage run --source code -m pytest"
+    - echo "flake8 --docstring-convention google code_directory/ tests/"
+    - echo "pylint code_directory/ tests/"
+    - echo "mypy code_directory/"
