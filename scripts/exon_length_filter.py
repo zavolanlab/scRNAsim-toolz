@@ -1,6 +1,6 @@
 #### Exon length filter #####
 """Exon length filter 
-Version 1.1.0"""
+Version 2.0.0"""
 ### Called Packages ###
 import re
 import os
@@ -159,11 +159,11 @@ def _exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),dep
     return(representative_transcript)
 
 def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]},Input_free = False):   
-    """This function filters a dictionary of genes and there transcripts by the length of there exons an selects the longes transcript for each gene ans saves tham in a "," seperated csv file.
+    """This function filters a dictionary of genes and there transcripts by the length of there exons an selects the longes transcript for each gene and returns an dictionary {gene_ID : transcript_ID}.
     Expected inputs: 
         file_name: str ; default = test #the name of the gft file you want to look at
         source_pathway_name: str ; default = current work directory #path of the gtf file       
-        deposit_pathway_name: str ; default = current work directory #path for saving the csv file
+        deposit_pathway_name: str ; default = current work directory #path for files
         gen_dict:dict{key == gene ID:[transcript IDs that belong to that gene]}
         Input_free: tuple ; default = False # this input should be set to True for automation""" 
     
@@ -176,8 +176,8 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
         pre_existing_file = te.__searche_for_preexisting_files(search_profile,deposit_pathway_name)
     if pre_existing_file == False: 
         representative_transcript = _exon_length_filter(file_name,source_pathway_name,deposit_pathway_name,gen_dict)
-        _representative_transcript_csv(representative_transcript,file_name,deposit_pathway_name)
         print("\nRepresentative transcripts collected")
+    return(representative_transcript)
     
 
 if __name__ == "__main__":
