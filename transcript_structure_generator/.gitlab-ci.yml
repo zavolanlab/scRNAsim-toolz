@@ -6,7 +6,7 @@ default:
 my_tests:
   # Good to put a small description here of what this job does
   before_script:
-    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt
   script:
     - echo "Command 1"
     - echo "Command 2"
