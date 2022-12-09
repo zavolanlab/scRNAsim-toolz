@@ -61,9 +61,7 @@ def file_validation(fasta_file: str,
     """
     with open(fasta_file, "r") as handle:
         fasta = SeqIO.parse(handle, "fasta")
-    try:
-        any(fasta)
-    except Exception:
+    if not any(fasta):
         logger.exception("Input FASTA file is either empty or \
             incorrect file type.")
 

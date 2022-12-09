@@ -1,1 +1,4 @@
-'random','argparse 1.4.0', 'check_positive', 'arghelper 0.4.2', 'fragmentation_v2', 'numpy 1.23.4', 'pandas 1.5'
+argparse
+biopython >= 1.78
+numpy >= 1.23.3
+pandas >= 1.4.4
