@@ -1,7 +1,2 @@
-argparse
-logging
-random
-collections.abc
 Bio
-Bio.Seq
-Bio.SeqRecord
+argparse
