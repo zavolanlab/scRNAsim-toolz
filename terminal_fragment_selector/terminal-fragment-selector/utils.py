@@ -1,25 +1,12 @@
-"""Utility functions for command line arguments."""
+"""Utility functions for CLI arguments."""
 import argparse
-import os.path
 
 
-# found on shorturl.at/vzAX4
-def extant_file(x):
-    if not os.path.exists(x):
-        # Argparse uses the ArgumentTypeError to give a rejection message like:
-        # error: argument input: x does not exist
-        raise argparse.ArgumentTypeError("{0} does not exist".format(x))
-    elif not x.endswith((".fasta", ".fa", ".csv")):
-        raise argparse.ArgumentTypeError("""{0} is not the correct
-                                         file format""".format(x))
-    return x
-
-
-def check_positive(value):
+def check_positive(value: str) -> int:
     """Check input value is a positive integer.
 
     Args:
-        value (string): command line parameter
+        value (str): command line parameter
 
     Raises:
         argparse.ArgumentTypeError: received a negative integer
@@ -40,12 +27,12 @@ def check_positive(value):
         return ivalue
 
 
-def check_prob(value):
+def check_prob(value: str) -> float:
     """
     Check probability value is within ]0,1] range.
 
     Args:
-        value (string): command line parameter
+        value (str): command line parameter
 
     Raises:
         argparse.ArgumentTypeError: received a value outside valid range

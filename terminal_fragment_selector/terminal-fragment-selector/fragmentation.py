@@ -5,42 +5,16 @@ import numpy as np
 import pandas as pd
 
 
-def fasta_process(fasta_file):
-    """
-    Pre-process FASTA file.
-
-    Args:
-        fasta_file (fasta): FASTA file with cDNA sequences
-
-    Returns:
-        dict: Dictionary of gene sequence IDs and their sequence
-    """
-    with open(fasta_file, "r") as f:
-        lines = f.readlines()
-
-        # Tanya, try \\S instead of \S and see if that works
-        ident_pattern = re.compile('>(\S+)')
-        seq_pattern = re.compile('^(\S+)$')
-
-        genes = {}
-        for line in lines:
-            if ident_pattern.search(line):
-                seq_id = (ident_pattern.search(line)).group(1)
-            elif seq_id in genes.keys():
-                genes[seq_id] += (seq_pattern.search(line)).group(1)
-            else:
-                genes[seq_id] = (seq_pattern.search(line)).group(1)
-    return genes
-
-
-def fragmentation(fasta_file, counts_file, mean_length, std,
-                  a_prob, t_prob, g_prob, c_prob):
+def fragmentation(fasta: dict, seq_counts: pd.DataFrame,
+                  mean_length: int, std: int,
+                  a_prob: float, t_prob: float, g_prob: float, c_prob: float
+                  ) -> list:
     """
     Fragment cDNA sequences and select terminal fragment.
 
     Args:
-        fasta_file (fasta): FASTA file with cDNA sequences
-        counts_file (text): CSV or TSV file woth sequence counts
+        fasta_file (dict): dictionary of {transcript IDs: sequences}
+        counts_file (pd.DataFrame): dataframe with sequence counts and IDs
         mean_length (int): mean length of desired fragments
         std (int): standard deviation of desired fragment lengths
         a_prob (float): probability of nucleotide A
@@ -51,10 +25,6 @@ def fragmentation(fasta_file, counts_file, mean_length, std,
     Returns:
         list: list of selected terminal fragments
     """
-    fasta = fasta_process(fasta_file)
-    seq_counts = pd.read_csv(counts_file,
-                             names=["seqID", "count"])
-
     # calculated using https://www.nature.com/articles/srep04532#MOESM1
     nuc_probs = {'A': a_prob, 'T': t_prob, 'G': g_prob, 'C': c_prob}
 
