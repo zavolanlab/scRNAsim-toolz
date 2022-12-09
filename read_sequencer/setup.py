@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-
+from pathlib import Path
 project_root_dir = Path(__file__).parent.resolve()
 with open(project_root_dir / "requirements.txt", "r", encoding="utf-8") as _file:
     INSTALL_REQUIRES = _file.read().splitlines()
