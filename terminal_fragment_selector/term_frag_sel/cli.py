@@ -135,7 +135,6 @@ def parse_arguments() -> argparse.Namespace:
                         type=check_positive,
                         help="Chunk size for batch processing")
     parser.add_argument('--sep', required=False, default=",",
-                        type=check_positive,
                         help="Sequence counts file separator.")
     args = parser.parse_args()
 
