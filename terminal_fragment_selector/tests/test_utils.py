@@ -1,9 +1,4 @@
 """Test utils.py functions."""
-<<<<<<< HEAD
-import pytest
-
-from 
-=======
 import argparse
 import pytest
 
@@ -40,4 +35,3 @@ def test_prob():
         check_prob("string")
     with pytest.raises(ValueError):
         check_prob("")
->>>>>>> hugo_new
