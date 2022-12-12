@@ -3,12 +3,33 @@ default:
     - docker
   image: python:3.10-slim-buster
 
-my_tests:
-  # Good to put a small description here of what this job does
-  before_script:
-    - pip install -r requirements_dev.txt
+stages:          # List of employment runs, starts with build ends with deploy. 
+  - build
+  - test
+  - deploy
+
+build-job:       # First stage deployment and installation of dependencies. 
+  stage: build   # Build Stage
   script:
-    - echo "coverage run --source git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/ -m pytest"
-    - echo "flake8 --docstring-convention google git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/"
-    - echo "pylint git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/"
-    - echo "mypy git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/"
+    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt
+
+Coverage-test-job:   # Test Stage
+  stage: test        # Starts when the above build stages finishes installing dependencies.
+  script:
+    - coverage run --source git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/ -m pytest
+    - coverage report -m
+
+Flake8/Pylint/mypy-test-job:   # Test Stage
+  stage: test    # Deploys and runs all 3 linters.
+  script:
+    - flake8 --docstring-convention google git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/
+    - pylint git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/
+    - mypy git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/
+
+deploy-job:      # Deploy Stage
+  stage: deploy  # Runs only when the privious jobs were finished succesfully. 
+  environment: production
+  script:
+    - echo "Running script"
+    - echo "Application successfully deployed."
