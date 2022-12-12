@@ -4,7 +4,14 @@ import logging
 from cdna import CDNAGen
 
 
-def parser():
+def parser() -> None:
+    """ Parser for cDNA generator
+
+    Parses command line arguments for cDNA generation.
+
+    Returns: None
+
+    """
     parser = argparse.ArgumentParser(
         prog="cDNA generator",
         description="Generate cDNA sequences based on primer probabilities.",
@@ -48,4 +55,4 @@ if __name__ == "__main__":
     print("**********************")
     print("Running cDNA generator")
     print("**********************")
-    cnda_object = parser()
+    parser()
