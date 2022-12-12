@@ -4,8 +4,8 @@ import logging
 from cdna import CDNAGen
 
 
-def parser() -> None:
-    """ Parser for cDNA generator
+def cdna_parser() -> None:
+    """Parser for cDNA generator
 
     Parses command line arguments for cDNA generation.
 
@@ -36,14 +36,14 @@ def parser() -> None:
 
     print(" \n".join(f"{k}={v}" for k, v in vars(args).items()))
     print()
-    CDNA = CDNAGen(
+    cdna_inst = CDNAGen(
         ifasta=args.input_fasta,
         igtf=args.input_gtf,
         icpn=args.input_copy_number,
         ocsv=args.output_csv,
         ofasta=args.output_fasta,
     )
-    return CDNA
+    return cdna_inst
 
 
 if __name__ == "__main__":
@@ -55,4 +55,4 @@ if __name__ == "__main__":
     print("**********************")
     print("Running cDNA generator")
     print("**********************")
-    parser()
+    cdna_parser()

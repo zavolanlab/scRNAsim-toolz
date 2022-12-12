@@ -8,3 +8,4 @@ my_tests:
   script:
     - pip install -r requirements_dev.txt
     - pylint cdna
+    - exit 0

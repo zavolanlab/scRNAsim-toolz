@@ -48,6 +48,7 @@ class CDNAGen:
     """
     Module that performs the cDNA synthesis.
     """
+
     def __init__(self, ifasta: str, igtf: str, icpn: str, ofasta: str, ocsv: str):
         # inputs
         self.fasta = ifasta
@@ -79,6 +80,13 @@ class CDNAGen:
         self.write_csv()
 
     def add_records(self) -> None:
+        """Adds data records to fasta file.
+
+        Adds the copy number information to the fasta records.
+
+        Returns: None
+
+        """
         self.fasta_records = []
         for index, row in self.gtf_df.iterrows():
             if row["compliment"] is not None:
@@ -151,9 +159,7 @@ class CDNAGen:
 
         """
         df_csv = pd.read_csv(self.cpn, index_col=False)
-        df_csv = (
-            df_csv.reset_index()
-        )  # make sure indexes pair with number of rows
+        df_csv = df_csv.reset_index()  # make sure indexes pair with number of rows
         self.csv_df = df_csv
 
     def read_gtf(self) -> None:
@@ -175,7 +181,8 @@ class CDNAGen:
         ].sum()  # extract binding probability
         count = 0
         prev_id = None
-        # Adds Normalized_Binding_Probability and Transcript_Copy_Number to each transcript in the dataframe
+        # Adds Normalized_Binding_Probability and Transcript_Copy_Number
+        # to each transcript in the dataframe
         for index, row in gtf_df.iterrows():
             # GTF transcript ID
             id_ = str(row["seqname"])
