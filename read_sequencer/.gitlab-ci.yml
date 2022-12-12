@@ -30,7 +30,7 @@ lint-test-job:   # This job also runs in the test stage.
     - pip install -r requirements.txt
     - pip install -r requirements-dev.txt
     - pip install -e .
-    #- flake8 --docstring-convention google readsequencer/ tests/
+    - flake8 --docstring-convention google --max-line-length 120 readsequencer/ --ignore=D212,D103,D104,D107,D100,D017,D415
     #- pylint readsequencer/ tests/
 
 deploy-job:      # This job runs in the deploy stage.
