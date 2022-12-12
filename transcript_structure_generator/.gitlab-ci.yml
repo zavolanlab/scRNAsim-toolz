@@ -25,7 +25,7 @@ Coverage-test-job:   # Test Stage
 Flake8/Pylint/mypy-test-job:   # Test Stage
   stage: test    # Deploys and runs all 3 linters.
   script:
-    - flake8 --docstring-convention google tests/tests/
+    - flake8 --docstring-convention google tests/ tests/
     - pylint tests/ tests/
     - mypy tests/ tests/
     - echo "Linters successfully deployed."
