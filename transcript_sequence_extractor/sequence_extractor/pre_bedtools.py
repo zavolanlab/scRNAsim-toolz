@@ -1,49 +1,34 @@
 import pandas as pd
+import argparse
+from gtfparse import read_gtf
 
-gtf = pd.read_table("Homo_sapiens.GRCh38.107.gtf.gz",skiprows=5,header=None)
+"""This script defines a BED from exon annotation in a GTF, to get exon coordinates for use in bedtools. It also ensures that the concatenation happens in the correct order, regardless of the strandedness of the transcript.
 
+    Args:
+        GTF file
 
-exons = gtf[gtf[2]=="exon"]
-feat = list(exons[8])
-superlist = []
-idlist = []
-for x in range(len(feat)):
-    newlist = feat[x].split(";")
-    superlist.append(str(newlist[2])[16:-1])
-    idlist.append(str(newlist[0])[9:-1])
+    Returns:
+        BED file with the format: chr, start, end, transcript_id, score, strand, gene_id
+"""
 
+parser = argparse.ArgumentParser(
+    prog = 'pre_bedtools',
+    description = 'extracts ordered information from gtf file and for transcripts in the negative strand, flips the order in which exons are ordered.')
+parser.add_argument('--input_gtf_file',
+                    help='ordered and processed gtf file')
+parser.add_argument('--output_bed_file',
+                    help='bed file with only exons with strandedness taken into account')
+args = parser.parse_args()
 
-bed = {"chr":exons[0],"start":exons[3],"end":exons[4],"transcript_id":superlist,"score":exons[5],"strand":exons[6],"gene_id":idlist}
-class bed:
-   def__init__(self, exons, chr, start, end, transcript_id, score, strand, gene_id):
-       self.exons = exons
-       self.chr = exons[0]
-       self.start = exons[3]
-       self.end = exons[4]
-       self.transcript_id = superlist
-       self.score = exons[5]
-       self.strand = exons[6]
-       self.gene_id = idList
+gtf = read_gtf(args.input_gtf_file)
+gtf_exons = gtf[gtf["feature"] == "exon"]
+gtf_exons = gtf_exons[["seqname", "start", "end", "transcript_id", "score", "strand", "gene_id"]]
 
-"""Creates BED from GTF for bedtools.
+gtf_df_neg = gtf_exons[gtf_exons["strand"] == "-"]
+gtf_df_neg = gtf_df_neg.sort_values(['transcript_id','start'],ascending=False).groupby('transcript_id').head(len(gtf_df_neg. transcript_id))
 
-    This class defines a BED from exon annotation from a GTF, for use in bedtools to get sequences with transcript ID as header.
-    Parameters
-    ----------
-    arg1 : GTF file.
+gtf_df_pos = gtf_exons[gtf_exons["strand"] == "+"]
+gtf_df_pos = gtf_df_pos.sort_values(['transcript_id','start'],ascending=True).groupby('transcript_id').head(len(gtf_df_pos. transcript_id))
 
-    Returns
-    -------
-    Class
-        A class which defines columns in standard BED format.
+pd.concat([gtf_df_pos, gtf_df_neg]).to_csv(args.output_bed_file,sep="\t",index=False) #gtf_df_pos and gtf_df_neg must be dataframes
 
-
-
-    Raises
-    ------
-    TypeError
-        ValueError: Not all columns found in GTF.
-    """
-bed = pd.DataFrame(bed)
-bed.to_csv("bed_file.bed",sep="\t",index=False)
-bed[(bed["gene_id"]=="ENSG00000160072")|(bed["gene_id"]== "ENSG00000142611")|(bed["gene_id"]=="ENSG00000232596")].to_csv("test.bed",sep="\t",index=False,header=None)
