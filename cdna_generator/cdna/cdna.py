@@ -13,10 +13,12 @@ warnings.filterwarnings(action="ignore", category=FutureWarning)
 
 def compliment(res: str) -> str:
     """
-    Returns the compliment of a given DNA residue.
-    
-    :param res: DNA residue
-    :return:
+    Returns the cDNA compliment of a given base pair
+    Args:
+        res: residue code.
+
+    Returns: corresponding cDNA residue.
+
     """
     translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
     if res not in translate_dict.keys():
@@ -27,11 +29,14 @@ def compliment(res: str) -> str:
 
 def seq_compliment(sequence: str) -> str:
     """
-    Returns the corresponding cDNA sequence for a given input by finding the
-    corresponding compliment base pair and reversing the input.
+    Returns the corresponding cDNA sequence by finding the complimentary
+    base pairs and returning the reversed sequence.
 
-    :param sequence: DNA sequence
-    :return: cDNA sequence
+    Args:
+        sequence: sequence to be converted into cDNA.
+
+    Returns: corresponding cDNA sequence.
+
     """
     if sequence is None:
         return "None"
@@ -51,21 +56,26 @@ class CDNAGen:
         # variables
         self.fasta_dict = None
         self.fasta_records = None
-
+        self.df_input_GTF = None
         self.run()
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Executes the cDNA workflow.
+        Returns: None
+
+        """
         self.read_csv()
         self.read_fasta()
         self.read_gtf()
         self.add_sequences()
         self.add_compliment()
         self.add_records()
-        print()
+        print()  # blank line for pretty printing
         self.write_fasta()
         self.write_csv()
 
-    def add_records(self):
+    def add_records(self) -> None:
         self.fasta_records = []
         for index, row in self.df_input_GTF.iterrows():
             if row["compliment"] is not None:
@@ -78,36 +88,79 @@ class CDNAGen:
                 )
                 self.fasta_records.append(record)
 
-    def add_sequences(self):
+    def add_sequences(self) -> None:
+        """
+        Adds the sequence for a given priming site.
+        Returns: None
+
+        """
         self.df_input_GTF["priming_site"] = self.df_input_GTF.apply(
             lambda row: self.read_primingsite(row["seqname"], row["start"]),
             axis=1,
         )
 
-    def add_compliment(self):
+    def add_compliment(self) -> None:
+        """
+        Adds the complimentary cDNA sequence.
+        Returns: None
+
+        """
         self.df_input_GTF["compliment"] = self.df_input_GTF["priming_site"].apply(
             lambda x: seq_compliment(x)
         )
 
-    def read_primingsite(self, sequence, start):
+    def read_primingsite(self, sequence: str, start: int) -> None:
+        """Read a fasta file from a given start character
+
+        Reads a fasta sequence with ID (sequence) and returns the
+        sequence starting from the index start.
+
+        Args:
+            sequence: sequence ID to be read.
+            start: start of the sequence.
+
+        Returns: None
+
+        """
         if sequence not in self.fasta_dict.keys():
             return None
         _ = self.fasta_dict[sequence].seq[start:]
         return _
 
-    def read_fasta(self):
+    def read_fasta(self) -> None:
+        """Read a given fasta file.
+
+        Wrapper for SeqIO.parse.
+
+        Returns: None
+
+        """
         record = SeqIO.parse(self.fasta, "fasta")
         records = list(record)
         self.fasta_dict = {x.name: x for x in records}
 
-    def read_csv(self):
+    def read_csv(self) -> None:
+        """ Reads a given copy number csv file
+
+        Wrapper for Pandas read_csv.
+
+        Returns: None
+
+        """
         df_input_CSV = pd.read_csv(self.cpn, index_col=False)
         df_input_CSV = (
             df_input_CSV.reset_index()
         )  # make sure indexes pair with number of rows
         self.df_input_CSV = df_input_CSV
 
-    def read_gtf(self):
+    def read_gtf(self) -> None:
+        """Read and process the GTF file.
+
+        Reads a GTF file and determines copy numbers from normalized probabilities.
+
+        Returns: None
+
+        """
         # returns GTF with essential columns such as "feature", "seqname", "start", "end"
         # alongside the names of any optional keys which appeared in the attribute column
         df_input_GTF = read_gtf(self.gtf)
@@ -132,7 +185,7 @@ class CDNAGen:
             id_CSV = str(row["seqname"]).split("_")[1]
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             df_input_GTF.loc[index, "Normalized_Binding_Probability"] = (
-                row["Binding_Probability"] / df_normalization_bind_probablility[id_GTF]
+                    row["Binding_Probability"] / df_normalization_bind_probablility[id_GTF]
             )
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             csv_transcript_copy_number = self.df_input_CSV.loc[
@@ -148,15 +201,26 @@ class CDNAGen:
 
         self.df_input_GTF = df_input_GTF
 
-    def write_fasta(self):
+    def write_fasta(self) -> None:
+        """Writes cDNA fasta records to file.
+
+        Wrapper for SeqIO.write.
+
+        Returns: None
+
+        """
         SeqIO.write(self.fasta_records, self.output_fasta, "fasta")
         print(f"Fasta file successfully written to: {self.output_fasta}")
 
-    def write_csv(self):
+    def write_csv(self) -> None:
+        """Writes the copy number information to a csv file.
+
+        Wrapper for Pandas to_csv.
+
+        Returns: None
+
+        """
         self.df_input_GTF[["cdna_ID", "Transcript_Copy_Number"]].to_csv(
             self.output_csv, index=False
         )
         print(f"Copy number csv file successfully written to: {self.output_csv}")
-
-
-
