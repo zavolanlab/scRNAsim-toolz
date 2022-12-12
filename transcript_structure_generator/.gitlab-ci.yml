@@ -12,6 +12,7 @@ build-job:       # First stage deployment and installation of dependencies.
   script:
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
+    - pip install -e .
     - echo "Dependencies successfully deployed."
 
 Coverage-test-job:   # Test Stage
