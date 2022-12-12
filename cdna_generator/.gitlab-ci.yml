@@ -6,5 +6,5 @@ default:
 my_tests:
   # Good to put a small description here of what this job does
   script:
-    - pip install -e -r requirements_dev.txt
+    - pip install -r requirements_dev.txt
     - pylint cdna
