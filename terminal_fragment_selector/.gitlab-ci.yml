@@ -29,5 +29,6 @@ lint-test-job:   # This job also runs in the test stage.
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    #- flake8 --docstring-convention google readsequencer/ tests/
-    #- pylint readsequencer/ tests/
+    - flake8 --docstring-convention google term_frag_sel/ tests/
+    - pylint term_frag_sel/ tests/
+    - mypy term_frag_sel/
