@@ -11,14 +11,14 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - pip install -r requirements.txt
-    - pip install -r requirements-dev.txt
+    - pip install -r requirements_dev.txt
     - pip install -e .
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - pip install -r requirements.txt
-    - pip install -r requirements-dev.txt
+    - pip install -r requirements_dev.txt
     - pip install -e .
     - coverage run --source term_frag_sel -m pytest
     - coverage report -m
@@ -27,7 +27,7 @@ lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
     - pip install -r requirements.txt
-    - pip install -r requirements-dev.txt
+    - pip install -r requirements_dev.txt
     - pip install -e .
     #- flake8 --docstring-convention google readsequencer/ tests/
     #- pylint readsequencer/ tests/
