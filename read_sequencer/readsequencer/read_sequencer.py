@@ -7,6 +7,7 @@ from Bio.SeqRecord import SeqRecord
 
 class ReadSequencer:
     """ReadSequencer class
+
     Args:
         fasta: path fasta file
         output: path output fasta file(s)
@@ -72,7 +73,8 @@ class ReadSequencer:
         return seq
 
     def resize_sequence(self, record: SeqRecord) -> SeqRecord:
-        """
+        """Resizes sequence
+
         Resizes sequence according to set read length. If sequence is
          shorter than read length, fills up with random nucleotides.
 
@@ -83,7 +85,7 @@ class ReadSequencer:
             resized SeqRecord
         """
         if (len(record)) >= self.read_length:
-            record.seq = record.seq[0:self.read_length-1]
+            record.seq = record.seq[0:self.read_length - 1]
         else:
             n_add = self.read_length - len(record)
             add_seq = self.generate_random_sequence(n_add)
@@ -91,7 +93,8 @@ class ReadSequencer:
         return record.seq
 
     def batch_iterator(self, iterator: Iterator, batch_size: int) -> Generator:
-        """
+        """Generates batch iterator.
+
         This is a generator function, and it returns lists of the
         entries from the supplied iterator.  Each list will have
         batch_size entries, although the final list may be shorter.
@@ -111,7 +114,8 @@ class ReadSequencer:
                 batch = []
 
     def run_sequencing(self) -> None:
-        """
+        """Runs sequencing.
+
         Runs read sequencing of specified sequences from input fasta file or
          generates random sequences for a given read length. If number of
          sequences exceeds chunk-size, it will switch to batch processing mode.
