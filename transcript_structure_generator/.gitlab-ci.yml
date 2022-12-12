@@ -17,7 +17,7 @@ build-job:       # First stage deployment and installation of dependencies.
 Coverage-test-job:   # Test Stage
   stage: test        # Starts when the above build stages finishes installing dependencies.
   script:
-    - coverage run --source tests/tests/ -m pytest
+    - coverage run --source tests -m pytest
     - coverage report -m
     - echo "Coverage successfully deployed."
 
@@ -25,6 +25,6 @@ Flake8/Pylint/mypy-test-job:   # Test Stage
   stage: test    # Deploys and runs all 3 linters.
   script:
     - flake8 --docstring-convention google tests/tests/
-    - pylint tests/tests/
-    - mypy tests/tests/
+    - pylint tests/ tests/
+    - mypy tests/ tests/
     - echo "Linters successfully deployed."
