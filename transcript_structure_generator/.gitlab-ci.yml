@@ -6,30 +6,25 @@ default:
 stages:          # List of employment runs, starts with build ends with deploy. 
   - build
   - test
-  - deploy
 
 build-job:       # First stage deployment and installation of dependencies. 
   stage: build   # Build Stage
   script:
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
+    - echo "Dependencies successfully deployed."
 
 Coverage-test-job:   # Test Stage
   stage: test        # Starts when the above build stages finishes installing dependencies.
   script:
-    - coverage run --source git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/ -m pytest
+    - coverage run --source tests/tests/ -m pytest
     - coverage report -m
+    - echo "Coverage successfully deployed."
 
 Flake8/Pylint/mypy-test-job:   # Test Stage
   stage: test    # Deploys and runs all 3 linters.
   script:
-    - flake8 --docstring-convention google git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/
-    - pylint git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/
-    - mypy git.scicore.unibas.ch:2222/zavolan_group/tools/transcript-structure-generator/tests/
-
-deploy-job:      # Deploy Stage
-  stage: deploy  # Runs only when the privious jobs were finished succesfully. 
-  environment: production
-  script:
-    - echo "Running script"
-    - echo "Application successfully deployed."
+    - flake8 --docstring-convention google tests/tests/
+    - pylint tests/tests/
+    - mypy tests/tests/
+    - echo "Linters successfully deployed."
