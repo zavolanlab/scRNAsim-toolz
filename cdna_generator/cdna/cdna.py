@@ -23,7 +23,7 @@ def compliment(res: str) -> str:
     translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
     if res not in translate_dict.keys():
         print(f"Unknown character, {res}")
-        sys.exit(1)
+        raise ValueError
     return translate_dict[res]
 
 
