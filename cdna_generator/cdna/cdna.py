@@ -1,8 +1,6 @@
 import sys
 import warnings
-import logging
 
-from cli import parser
 import pandas as pd
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -14,6 +12,12 @@ warnings.filterwarnings(action="ignore", category=FutureWarning)
 
 
 def compliment(res: str) -> str:
+    """
+    Returns the compliment of a given DNA residue.
+    
+    :param res: DNA residue
+    :return:
+    """
     translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
     if res not in translate_dict.keys():
         print(f"Unknown character, {res}")
@@ -22,6 +26,13 @@ def compliment(res: str) -> str:
 
 
 def seq_compliment(sequence: str) -> str:
+    """
+    Returns the corresponding cDNA sequence for a given input by finding the
+    corresponding compliment base pair and reversing the input.
+
+    :param sequence: DNA sequence
+    :return: cDNA sequence
+    """
     if sequence is None:
         return "None"
     _ = "".join([compliment(char) for char in str(sequence)])[::-1]  # reverse string
@@ -50,6 +61,7 @@ class CDNAGen:
         self.add_sequences()
         self.add_compliment()
         self.add_records()
+        print()
         self.write_fasta()
         self.write_csv()
 
@@ -137,22 +149,14 @@ class CDNAGen:
         self.df_input_GTF = df_input_GTF
 
     def write_fasta(self):
-        print(self.fasta_records)
         SeqIO.write(self.fasta_records, self.output_fasta, "fasta")
+        print(f"Fasta file successfully written to: {self.output_fasta}")
 
     def write_csv(self):
         self.df_input_GTF[["cdna_ID", "Transcript_Copy_Number"]].to_csv(
             self.output_csv, index=False
         )
-
-    def return_output(self):
-        return self.output_fasta, self.output_csv
+        print(f"Copy number csv file successfully written to: {self.output_csv}")
 
 
-if __name__ == "main":
-    logging.basicConfig(
-        format='[%(asctime)s: %(levelname)s] %(message)s (module "%(module)s")',
-        level=logging.INFO,
-    )
-    LOG = logging.getLogger(__name__)
-    cnda_object = parser()
+
