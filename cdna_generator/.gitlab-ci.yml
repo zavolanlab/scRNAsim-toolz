@@ -4,7 +4,7 @@ default:
   image: python:3.10-slim-buster
 
 my_tests:
-  # Good to put a small description here of what this job does
+  # run tests
   script:
     - pip install .
     - pip install -r requirements_dev.txt
