@@ -16,3 +16,4 @@ dependencies:
   - flake8-docstrings=1.6
   - mypy=0.991
   - pylint=2.15
+  - bedtools=2.30
