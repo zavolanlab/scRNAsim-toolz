@@ -140,7 +140,7 @@ class CDNAGen:
         self.fasta_dict = {x.name: x for x in records}
 
     def read_csv(self) -> None:
-        """ Reads a given copy number csv file
+        """Reads a given copy number csv file
 
         Wrapper for Pandas read_csv.
 
@@ -185,7 +185,7 @@ class CDNAGen:
             id_CSV = str(row["seqname"]).split("_")[1]
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             df_input_GTF.loc[index, "Normalized_Binding_Probability"] = (
-                    row["Binding_Probability"] / df_normalization_bind_probablility[id_GTF]
+                row["Binding_Probability"] / df_normalization_bind_probablility[id_GTF]
             )
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             csv_transcript_copy_number = self.df_input_CSV.loc[

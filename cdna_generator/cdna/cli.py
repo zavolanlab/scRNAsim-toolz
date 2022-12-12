@@ -9,14 +9,25 @@ def parser():
         prog="cDNA generator",
         description="Generate cDNA sequences based on primer probabilities.",
     )
-    parser.add_argument("-ifa", "--input_fasta", help="genome fasta file", required=True)
+    parser.add_argument(
+        "-ifa", "--input_fasta", help="genome fasta file", required=True
+    )
     parser.add_argument("-igtf", "--input_gtf", help="gtf file", required=True)
-    parser.add_argument("-ofa", "--output_fasta", help="output fasta file", required=True)
-    parser.add_argument("-icpn", "--input_copy_number", help="input copy number (csv) file", required=True)
-    parser.add_argument("-ocsv", "--output_csv", help="output fasta file", required=True)
+    parser.add_argument(
+        "-ofa", "--output_fasta", help="output fasta file", required=True
+    )
+    parser.add_argument(
+        "-icpn",
+        "--input_copy_number",
+        help="input copy number (csv) file",
+        required=True,
+    )
+    parser.add_argument(
+        "-ocsv", "--output_csv", help="output fasta file", required=True
+    )
     args = parser.parse_args()
 
-    print(' \n'.join(f'{k}={v}' for k, v in vars(args).items()))
+    print(" \n".join(f"{k}={v}" for k, v in vars(args).items()))
     print()
     CDNA = CDNAGen(
         ifasta=args.input_fasta,

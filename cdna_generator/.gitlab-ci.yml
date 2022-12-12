@@ -6,5 +6,5 @@ default:
 my_tests:
   # Good to put a small description here of what this job does
   script:
-    - echo "Command 1"
-    - echo "Command 2"
+    - black cdna
+    - pylint cdna
