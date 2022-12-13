@@ -4,6 +4,7 @@ from readsequencer.read_sequencer import ReadSequencer
 
 LOG = logging.getLogger(__name__)
 
+
 def main():
     parser = argparse.ArgumentParser(
         prog="read_sequencer",
