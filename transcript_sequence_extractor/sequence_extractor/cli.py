@@ -1,3 +1,4 @@
+""" command line script to be run on output fasta file from bedtools getfasta """
 import argparse
 import logging
 from exon_concatenation import exon_concatenation
@@ -14,10 +15,18 @@ parser.add_argument('--output_file_name',
 args = parser.parse_args()
 
 def main():
+    """Runs on the output from bedtools and concatenates the exons together and adds a polyA tail and outputs a fasta file.
+
+    Args:
+        None: this will run on its own by taking the information from argparse
+
+    Returns:
+        A fasta file with a single entry for each transcript ID with polyA tail being added onto the sequence at 3'end
+    """
     LOG.info("sequence_extractor begins")
     fasta_list = exon_concatenation(args.input_fasta_file)
     final_list = poly_a_addition_to_fasta_list(fasta_list)
-    with open(args.output_file_name, 'w') as fasta_out:
+    with open(args.output_file_name, 'w', encoding="utf-8") as fasta_out:
         fasta_out.write('\n'.join('%s\n%s' % x for x in final_list))
     LOG.info("sequence_extractor ends")
 
