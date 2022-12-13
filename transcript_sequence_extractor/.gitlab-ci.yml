@@ -1,0 +1,23 @@
+default:         # Set default
+  tags:
+    - docker
+  image: python:3.10-slim-buster
+
+stages:          # List of employment runs, starts with build ends with deploy.
+  - build
+  - test
+
+build-job:       # First stage deployment and installation of dependencies.
+  stage: build   # Build Stage
+  script:
+    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt
+    - pip install -e .
+    - echo "Dependencies successfully deployed."
+
+lint-test-job:   # Test Stage
+  stage: test    # Deploys and runs all 3 linters.
+  script:
+    - flake8 --docstring-convention google sequence_extractor/ gtf_processing/
+    - pylint sequence_extractor/ gtf_processing/
+    - mypy sequence_extractor/ gtf_processing/
