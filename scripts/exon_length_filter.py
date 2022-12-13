@@ -179,7 +179,7 @@ def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),depo
     
 
 if __name__ == "__main__":
-    te.version_control(module_list,modul_name_list,python_version)
+    #te.version_control(module_list,modul_name_list,python_version)
     exon_length_filter()
     
     
