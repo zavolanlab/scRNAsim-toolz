@@ -1,9 +1,7 @@
 ### Made by Hugo Gillet ###
 import pandas as pd
 import json
-import re
 import representative as repr
-import os
 
 
 def dict_reprTrans_to_df(dict_reprTrans: dict[str, str]) -> pd.DataFrame:
@@ -169,12 +167,14 @@ def match_byGene(
     return df_clean
 
 
-def output_tsv(dataframe: pd.DataFrame) -> pd.DataFrame:
+def output_tsv(dataframe: pd.DataFrame, output_path:str) -> str:
     """Convert pandas dataframe into a tsv file 
 
         Args:
-            dataframe (str): Pandas dataframe containing
+            dataframe : Pandas dataframe containing
             representative transcripts and their expression level 
+            output_path : path indicating were the tsv file should be written
+
 
         Returns:
             Tsv file containing representative transcripts
@@ -186,10 +186,10 @@ def output_tsv(dataframe: pd.DataFrame) -> pd.DataFrame:
     pass
 
     csv_file = dataframe.to_csv(
-        os.getcwd() + "\ReprTrans_ExpressionLevel.tsv",
+        output_path,
         sep="\t",
         index=False,
-        header=False,
+        header=True,
     )
     return csv_file
 
@@ -198,7 +198,7 @@ def output_tsv(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 
 def match_reprTranscript_expressionLevel(
-    exprTrans: str, dict_reprTrans: dict, intermediate_file: str
+    exprTrans: str, dict_reprTrans: dict, intermediate_file: str,
 ):
     """Combine functions to replace transcripts from an expression level csv/tsv file 
        with representative transcripts 
@@ -210,6 +210,7 @@ def match_reprTranscript_expressionLevel(
             representative transcipt
             intemediate_file (str) : txt file containing genes, transcript 
             and their expression level from the transkript_extractor function
+            output_path : path indicating were the tsv file should be written
 
         Returns:
             tsv file of representative trasncripts and their expression level
@@ -221,10 +222,10 @@ def match_reprTranscript_expressionLevel(
     df_geneTrans = transcripts_by_gene_inDf(df_intermediate)
     df_exprTrans = tsv_or_csv_to_df(exprTrans)
     df_reprTrans = dict_reprTrans_to_df(dict_reprTrans)
-    df_exprLevel_byGene = exprLevel_byGene(df_exprTrans, df_geneTrans)
+    df_exprLevel_byGene = exprLevel_byGene(df_exprTrans, df_geneTrans) 
     df_match = match_byGene(df_reprTrans, df_exprLevel_byGene)
-    output = output_tsv(df_match)
-    return output
+    df_match.rename(columns = {'reprTrans':'id', 'Expression_level':'level'}, inplace = True)
+    return df_match
 
 
 # run the programm 
