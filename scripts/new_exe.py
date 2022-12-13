@@ -1,26 +1,33 @@
+### Called Packages ###
 import argparse
+
 import transcript_extractor as te
 import exon_length_filter as elf
 import representative as rtcl
 import poisson_sampling as ps
 import writegtf as gt
 import match_reprtranscript_expressionlevel as ma
+
+python_version = "3.7.13"
+module_list =[argparse]
+modul_name_list = ["argparse"]
+### Functions ###
 def exe(input_file, csv, gtf, input_csv, transcript_nr,input_free = True):
     file_name,source_pathway_name_2,deposit_pathway_name_2 = te.extract_transcript(input_file, Input_free = input_free)
     inter_mediate_file_directory = file_name +"_intermediate_file.txt"
     print("Transcripts are filtered based on transcript score. Please wait...")
     pre_filter_representative_transcripts_dict = rtcl.find_repr_by_SupportLevel(inter_mediate_file_directory)
     print("Transcripts filtered\n")
-    dictionary1 = elf.exon_length_filter(file_name,gen_dict= pre_filter_representative_transcripts_dict, Input_free = input_free)
-    print(dictionary1)
-
-    tsv_input = ma.match_reprTranscript_expressionLevel(input_csv, dictionary1, inter_mediate_file_directory)
+    dictionary1 = elf.exon_length_filter(file_name,gen_dict= pre_filter_representative_transcripts_dict)
+    df_repr = ma.match_reprTranscript_expressionLevel(dict_reprTrans=dictionary1, exprTrans=input_csv, intermediate_file= inter_mediate_file_directory,)
+    print("Finiding match between representative transcripts and expression level file") 
     print("Poisson sampling of transcripts")
-    ps.transcript_sampling(transcript_nr, tsv_input, csv)
+    ps.transcript_sampling(transcript_nr, df_repr, csv)
     print("output csv file ready")
     print("writing output gtf file")
     gt.gtf_file_writer(input_file, csv, gtf)
 if __name__ == '__main__':
+    #te.version_control(module_list,modul_name_list,python_version)
     parser = argparse.ArgumentParser(
         description="transcript sampler",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
