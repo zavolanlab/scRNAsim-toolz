@@ -1,9 +1,7 @@
 import argparse
 import logging
-from pre_bedtools import exon_extraction_from_gtf
 from exon_concatenation import exon_concatenation
-from polyA import polyA_addition_to_fasta_list
-from list_to_file import list_to_file
+from poly_a import poly_a_addition_to_fasta_list
 
 parser = argparse.ArgumentParser(
     prog = 'transcript_sequence_extractor',
