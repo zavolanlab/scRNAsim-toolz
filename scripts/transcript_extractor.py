@@ -1,14 +1,29 @@
 #### Transcript extractor #####
 """Transcript extractor 
-Version 1.1.0"""
+Version 1.2.0"""
 ### Called Packages ###
 import re
 import os
 import time
 
+python_version = "3.7.13"
+module_list =[re,os,time]
+modul_name_list = ["re","os","time"]
+
 ### Functions ###
-
-
+def version_control(module_list,modul_name_list,python_version):
+    with open("required.txt","a") as req:
+    
+        for i in range(len(module_list)):
+            
+            try:
+               version = module_list[i].__version__
+               entry = modul_name_list[i]+"\t"+str(version)+"\n"
+               req.write(entry)
+            except:
+                version = python_version
+                entry = modul_name_list[i]+"\t"+str(version)+"\n"
+                req.write(entry)
 
 def __parameter_editor(file_name,source_pathway_name,deposit_pathway_name):
     """This function allows for changing the parameters after running the program"""
@@ -307,6 +322,7 @@ def extract_transcript(file_name = "test",source_pathway_name = os.getcwd(),depo
 #### Dev part ####
 
 if __name__ == "__main__":
+    #version_control(module_list,modul_name_list,python_version)
     extract_transcript()
 #This line allows the file to be executed on its own also from 
 
