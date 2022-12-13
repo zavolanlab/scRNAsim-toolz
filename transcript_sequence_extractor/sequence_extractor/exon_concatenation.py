@@ -1,4 +1,6 @@
 """Script containing the function to concatenate exons and output the results in a list of tuples"""
+
+
 def exon_concatenation(
     post_bedtools_fasta: str,
 ) -> list:
@@ -10,10 +12,10 @@ def exon_concatenation(
     Returns:
         A list containing transcript ID and concatenated exons in tuples.
     """
-    with open(post_bedtools_fasta,'r', encoding="utf-8") as fasta:
+    with open(post_bedtools_fasta, "r", encoding="utf-8") as fasta:
         annotation = []
         fasta_format_list = []
-        for line1,line2 in zip(fasta,fasta):
+        for line1, line2 in zip(fasta, fasta):
             if len(annotation) == 0:
                 annotation.append(line1[0:16])
                 read = line2[:-1]
@@ -21,8 +23,8 @@ def exon_concatenation(
                 if annotation[-1] == line1[0:16]:
                     read += line2[:-1]
                 elif annotation[-1] != line1[0:16]:
-                    fasta_format_list.append((annotation[-1],read))
+                    fasta_format_list.append((annotation[-1], read))
                     annotation.append(line1[0:16])
                     read = line2[:-1]
-        fasta_format_list.append((annotation[-1],read))
+        fasta_format_list.append((annotation[-1], read))
     return fasta_format_list
