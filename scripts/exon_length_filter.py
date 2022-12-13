@@ -1,11 +1,16 @@
 #### Exon length filter #####
 """Exon length filter 
-Version 2.0.0"""
+Version 2.1.0"""
 ### Called Packages ###
 import re
 import os
 
 import transcript_extractor as te
+
+python_version = "3.7.13"
+module_list =[re,os]
+modul_name_list = ["re","os"]
+
 ### Functions ###
 
 def exon_length_calculator(entry): 
@@ -158,30 +163,23 @@ def _exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),dep
     te.bar_builder(100,length_multiplyer = 3,start_time=start_time,bar =bar)
     return(representative_transcript)
 
-def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]},Input_free = False):   
+def exon_length_filter(file_name = "test",source_pathway_name = os.getcwd(),deposit_pathway_name =os.getcwd(),gen_dict = {"ENSG00000160072":["ENST00000673477","ENST00000472194","ENST00000378736","ENST00000308647","ENST00000442483"],"ENSG00000225972":["ENST00000416931"],"ENSG00000279928":["ENST00000624431","ENST00000424215"],"ENSG00000142611":["ENST00000378391","ENST00000607632","ENST00000511072"]}):   
     """This function filters a dictionary of genes and there transcripts by the length of there exons an selects the longes transcript for each gene and returns an dictionary {gene_ID : transcript_ID}.
     Expected inputs: 
         file_name: str ; default = test #the name of the gft file you want to look at
         source_pathway_name: str ; default = current work directory #path of the gtf file       
         deposit_pathway_name: str ; default = current work directory #path for files
-        gen_dict:dict{key == gene ID:[transcript IDs that belong to that gene]}
-        Input_free: tuple ; default = False # this input should be set to True for automation""" 
+        gen_dict:dict{key == gene ID:[transcript IDs that belong to that gene]}""" 
     
     print("Representative trascipts are filterd based on exon length please wait...")
     source_pathway_name,deposit_pathway_name = te.__do_pathways_exist__(source_pathway_name,deposit_pathway_name)
-    if Input_free:
-        pre_existing_file = False
-    else:
-        search_profile  = file_name+"_"+"representative_transcripts"+".csv"
-        pre_existing_file = te.__searche_for_preexisting_files(search_profile,deposit_pathway_name)
-    if pre_existing_file == False: 
-        representative_transcript = _exon_length_filter(file_name,source_pathway_name,deposit_pathway_name,gen_dict)
-        print("\nRepresentative transcripts collected")
+    representative_transcript = _exon_length_filter(file_name,source_pathway_name,deposit_pathway_name,gen_dict)
+    print("\nRepresentative transcripts collected")
     return(representative_transcript)
     
 
 if __name__ == "__main__":
-    help(exon_length_filter)
+    te.version_control(module_list,modul_name_list,python_version)
     exon_length_filter()
     
     
