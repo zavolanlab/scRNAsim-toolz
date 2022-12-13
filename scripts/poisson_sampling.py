@@ -1,7 +1,14 @@
+### Called Packages ###
 import pandas as pd
 import numpy as np
 import argparse
 
+import transcript_extractor as te
+
+python_version = "3.7.13"
+module_list =[pd,np,argparse]
+modul_name_list = ["pd","np","argparse"]
+### Functions ###
 
 '''
 Sample transcript 
@@ -16,11 +23,13 @@ output: csv file with gene id and count
 '''
 
 
-def transcript_sampling(total_transcript_number, csv_file, output_csv):
-    df = pd.read_csv(csv_file, sep='\t', lineterminator='\n', names=["id", "level"])
+def transcript_sampling(total_transcript_number, df_repr, output_csv):
+    #df = pd.read_csv(csv_file, sep="\t", lineterminator="\n",  names=["id", "level"])
+    df = df_repr # the function "match_reprTranscript_expressionLevel()" now directly output a dataframe  
     levels = []
     sums = df['level'].tolist()
     total = sum(sums)
+    total_transcript_number=int(total_transcript_number) # I added this because writting a number in the terminal inputed a string 
     normalized = total_transcript_number/total
     for expression_level in df['level']:
         poisson_sampled = np.random.poisson(expression_level*normalized)
@@ -30,6 +39,7 @@ def transcript_sampling(total_transcript_number, csv_file, output_csv):
     pd.DataFrame.to_csv(transcript_numbers, output_csv)
 
 if __name__ == '__main__':
+    #te.version_control(module_list,modul_name_list,python_version)
     parser = argparse.ArgumentParser(
         description="Transcript Poisson sampler, csv output",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
