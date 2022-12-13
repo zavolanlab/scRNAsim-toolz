@@ -1,7 +1,15 @@
+### Called Packages ###
 import pandas as pd
 import numpy as np
 import argparse
 import re
+
+import transcript_extractor as te
+
+python_version = "3.7.13"
+module_list =[pd,np,argparse,re]
+modul_name_list = ["pd","np","argparse","re"]
+### Functions ###
 
 def transcript_ID_finder (entry):
     index_transcript_id = entry.find("transcript_id")
@@ -28,7 +36,7 @@ def gtf_file_writer (original_file, csv_file, output_file):
 
     df = pd.read_csv(csv_file)
     listoftranscripts = df['id'].tolist()
-    if df['id'] == False:
+    if df['id'].empty:
         print('Error. \'id\' column needed in input csv file.')
 
     with open(original_file, 'r') as f:
@@ -38,10 +46,12 @@ def gtf_file_writer (original_file, csv_file, output_file):
                     if transcript_id in listoftranscripts:
                         output.append(entry)
     with open(output_file, 'w') as last_file:
-        last_file.write(output)
+        for line in output : # I had to add this loop because I had an error about you cannot write list in directly in a file
+            last_file.write(line)
 
 
 if __name__ == '__main__':
+    te.version_control(module_list,modul_name_list,python_version)
     parser = argparse.ArgumentParser(
         description="gtf output file writer",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
