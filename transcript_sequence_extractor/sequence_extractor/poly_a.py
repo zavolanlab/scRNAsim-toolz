@@ -5,6 +5,7 @@ import numpy as np
 
 # To do: Taking probabilities of nucleotides from user and raising error if sum != 1
 
+
 def poly_a_generator(
     exon: str,
 ) -> str:
