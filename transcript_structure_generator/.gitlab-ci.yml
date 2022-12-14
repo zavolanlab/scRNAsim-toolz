@@ -21,7 +21,7 @@ Coverage-test-job:   # Test Stage
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    - coverage run --source tests -m pytest
+    - coverage run --source tsg -m pytest
     - coverage report -m
     - echo "Coverage successfully deployed."
 
@@ -31,7 +31,7 @@ Flake8/Pylint/mypy-test-job:   # Test Stage
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    - flake8 --docstring-convention google tests/ tests/
-    - pylint tests/ tests/
-    - mypy tests/ tests/
+    - flake8 --docstring-convention google tsg/ tests/
+    - pylint tsg/ tests/
+    - mypy tsg/ tests/
     - echo "Linters successfully deployed."
