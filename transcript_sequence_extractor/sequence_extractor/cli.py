@@ -1,4 +1,4 @@
-""" command line script to be run on output fasta file from bedtools getfasta """
+"""command line script to be run on output fasta file from bedtools getfasta."""
 import argparse
 import logging
 from exon_concatenation import exon_concatenation
