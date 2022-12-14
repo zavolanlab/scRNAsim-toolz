@@ -1,10 +1,10 @@
 """This script defines a BED from exon annotation in a GTF, to get exon coordinates for use in bedtools. It also ensures that the concatenation happens in the correct order, regardless of the strandedness of the transcript.
 
-    Args:
-        GTF file
+Args:
+    GTF file
 
-    Returns:
-        BED file with the format: chr, start, end, transcript_id, score, strand, gene_id
+Returns:
+    BED file with the format: chr, start, end, transcript_id, score, strand, gene_id
 """
 
 import argparse

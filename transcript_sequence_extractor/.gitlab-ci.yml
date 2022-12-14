@@ -21,6 +21,6 @@ lint-test-job:   # Test Stage
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    - flake8 --docstring-convention google sequence_extractor/ gtf_processing/
+    - flake8 --docstring-convention google sequence_extractor/ gtf_processing/ --ignore=E501,D104,F821
     - pylint sequence_extractor/ gtf_processing/
     - mypy sequence_extractor/ gtf_processing/

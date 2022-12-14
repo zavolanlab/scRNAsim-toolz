@@ -1,4 +1,6 @@
-""" This script contains two functions and the first function is called by the second function and used to add poly A tail to the concatenated exon"""
+"""This script contains two functions and the first function is called by the second function and used to add poly A tail to the concatenated exon."""
+
+s
 import numpy as np
 
 # To do: Taking probabilities of nucleotides from user and raising error if sum != 1

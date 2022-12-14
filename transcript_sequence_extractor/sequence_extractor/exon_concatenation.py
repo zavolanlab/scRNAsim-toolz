@@ -1,4 +1,4 @@
-"""Script containing the function to concatenate exons and output the results in a list of tuples"""
+"""Script containing the function to concatenate exons and output the results in a list of tuples."""
 
 
 def exon_concatenation(
