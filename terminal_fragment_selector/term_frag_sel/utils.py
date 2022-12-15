@@ -25,22 +25,3 @@ def check_positive(value: str) -> int:
                                          got: {value}""") from exc
     else:
         return ivalue
-
-
-def check_prob(value: str) -> float:
-    """Check probability value is within ]0,1] range.
-
-    Args:
-        value (str): command line parameter
-
-    Raises:
-        argparse.ArgumentTypeError: received a value outside valid range
-
-    Returns:
-        float: float version of input value
-    """
-    pvalue = float(value)
-    if pvalue <= 0 or pvalue > 1:
-        raise argparse.ArgumentTypeError("""Expected a positive float between
-                                         0 and 1, but got {value}""")
-    return pvalue

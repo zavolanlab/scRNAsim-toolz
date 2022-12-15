@@ -8,7 +8,7 @@ import pandas as pd  # type: ignore
 
 
 from term_frag_sel.fragmentation import fragmentation
-from term_frag_sel.utils import check_positive, check_prob
+from term_frag_sel.utils import check_positive
 
 logging.basicConfig(
     format='[%(asctime)s: %(levelname)s] %(message)s \
@@ -38,14 +38,10 @@ def main(args: argparse.Namespace):
     logger.info("Fragmentation of %s...", args.fasta)
     splits = np.arange(0, len(list(fasta))+args.size, args.size)
 
-    nuc_probs = {'A': args.a_prob, 'T': args.t_prob,
-                 'G': args.g_prob, 'C': args.c_prob}
     for i, split in enumerate(splits):
         fasta_dict = fasta[split:splits[i+1]]
         term_frags = fragmentation(fasta_dict, seq_counts,
-                                   nuc_probs,
-                                   args.mean, args.std,
-                                   )
+                                   args.mean, args.std)
 
         logger.info("Writing batch %s sequences to %s...", i, args.output)
         with open(args.output, 'a', encoding="utf-8") as out_file:
@@ -119,18 +115,6 @@ def parse_arguments() -> argparse.Namespace:
                         type=check_positive,
                         help="Standard deviation fragment length \
                             (defafult: 60)")
-    parser.add_argument('-a', '--a_prob', required=False, default=0.22,
-                        type=check_prob,
-                        help="Probability cut happens after nucleotide A")
-    parser.add_argument('-t', '--t_prob', required=False, default=0.25,
-                        type=check_prob,
-                        help="Probability cut happens after nucleotide T")
-    parser.add_argument('-g', '--g_prob', required=False, default=0.25,
-                        type=check_prob,
-                        help="Probability cut happens after nucleotide G")
-    parser.add_argument('-c', '--c_prob', required=False, default=0.28,
-                        type=check_prob,
-                        help="Probability cut happens after nucleotide C")
     parser.add_argument('-s', '--size', required=False, default=10000,
                         type=check_positive,
                         help="Chunk size for batch processing")
