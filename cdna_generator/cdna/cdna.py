@@ -1,4 +1,3 @@
-import sys
 import warnings
 
 import pandas as pd
@@ -11,13 +10,14 @@ from gtfparse import read_gtf
 warnings.filterwarnings(action="ignore", category=FutureWarning)
 
 
-def compliment(res: str) -> str:
+def complement(res: str) -> str:
     """
-    Returns the cDNA compliment of a given base pair
+    Returns the cDNA complement of a given base pair
     Args:
         res: residue code.
 
     Returns: corresponding cDNA residue.
+    Raises: Value error
 
     """
     translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
@@ -27,9 +27,9 @@ def compliment(res: str) -> str:
     return translate_dict[res]
 
 
-def seq_compliment(sequence: str) -> str:
+def seq_complement(sequence: str) -> str or None:
     """
-    Returns the corresponding cDNA sequence by finding the complimentary
+    Returns the corresponding cDNA sequence by finding the complementary
     base pairs and returning the reversed sequence.
 
     Args:
@@ -39,8 +39,8 @@ def seq_compliment(sequence: str) -> str:
 
     """
     if sequence is None:
-        return "None"
-    _ = "".join([compliment(char) for char in str(sequence)])[::-1]  # reverse string
+        return None
+    _ = "".join([complement(char) for char in str(sequence)])[::-1]  # reverse string
     return _
 
 
@@ -58,6 +58,7 @@ class CDNAGen:
         self.output_csv = ocsv
 
         # variables
+        self.csv_df = None
         self.fasta_dict = None
         self.fasta_records = None
         self.gtf_df = None
@@ -73,9 +74,8 @@ class CDNAGen:
         self.read_fasta()
         self.read_gtf()
         self.add_sequences()
-        self.add_compliment()
+        self.add_complement()
         self.add_records()
-        print()  # blank line for pretty printing
         self.write_fasta()
         self.write_csv()
 
@@ -89,15 +89,16 @@ class CDNAGen:
         """
         self.fasta_records = []
         for index, row in self.gtf_df.iterrows():
-            if row["compliment"] is not None:
+            if row["complement"] is not None:
                 copy_number = row["Transcript_Copy_Number"]
-                record = SeqRecord(
-                    Seq(row["compliment"]),
-                    row["cdna_ID"],
-                    f"Transcript copy number: {copy_number}",
-                    "",
-                )
-                self.fasta_records.append(record)
+                for _ in range(int(copy_number)):
+                    record = SeqRecord(
+                        Seq(row["complement"]),
+                        row["cdna_ID"],
+                        f"Transcript copy number: {copy_number}",
+                        "",
+                    )
+                    self.fasta_records.append(record)
 
     def add_sequences(self) -> None:
         """
@@ -110,17 +111,17 @@ class CDNAGen:
             axis=1,
         )
 
-    def add_compliment(self) -> None:
+    def add_complement(self) -> None:
         """
-        Adds the complimentary cDNA sequence.
+        Adds the complementary cDNA sequence.
         Returns: None
 
         """
-        self.gtf_df["compliment"] = self.gtf_df["priming_site"].apply(
-            lambda x: seq_compliment(x)
+        self.gtf_df["complement"] = self.gtf_df["priming_site"].apply(
+            lambda x: seq_complement(x)
         )
 
-    def read_primingsite(self, sequence: str, start: int) -> None:
+    def read_primingsite(self, sequence: str, end: int) -> None:
         """Read a fasta file from a given start character
 
         Reads a fasta sequence with ID (sequence) and returns the
@@ -128,15 +129,14 @@ class CDNAGen:
 
         Args:
             sequence: sequence ID to be read.
-            start: start of the sequence.
+            end: end index of the priming site.
 
         Returns: None
 
         """
         if sequence not in self.fasta_dict.keys():
             return None
-        _ = self.fasta_dict[sequence].seq[start:]
-        return _
+        return self.fasta_dict[sequence].seq[:end]
 
     def read_fasta(self) -> None:
         """Read a given fasta file.
@@ -189,8 +189,7 @@ class CDNAGen:
             if id_ == prev_id:
                 count += 1
             else:
-                prev_id = None
-                count = 0
+                count = 0  # reset count
                 # CVS transcript ID
             id_csv = str(row["seqname"]).split("_")[1]
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
@@ -201,7 +200,7 @@ class CDNAGen:
             csv_transcript_copy_number = self.csv_df.loc[
                 self.csv_df["ID of transcript"] == int(id_csv),
                 "Transcript copy number",
-            ].iloc[0]
+            ].iloc[0]  # pop the first value in the frame
             gtf_df.loc[index, "Transcript_Copy_Number"] = round(
                 csv_transcript_copy_number
                 * gtf_df.loc[index, "Normalized_Binding_Probability"]

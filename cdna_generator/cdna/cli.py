@@ -33,7 +33,7 @@ def cdna_parser() -> None:
         "-ocsv", "--output_csv", help="output fasta file", required=True
     )
     args = parser.parse_args()
-
+    #  Print parser arguments
     print(" \n".join(f"{k}={v}" for k, v in vars(args).items()))
     print()
     cdna_inst = CDNAGen(
