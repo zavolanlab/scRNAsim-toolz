@@ -52,3 +52,50 @@ process file_validation {
     
     """ 
 }  
+
+/* 
+ * Define the transcript structure generation
+ * Read gtf files to define exons/introns and add random mutation coefficient. 
+ */
+
+process struc_gen {
+    
+    input:
+    
+    
+    output:
+    
+    
+    script:
+    """
+    
+    
+    """
+}
+
+
+
+/* Start the job:
+ * initialize variables
+ */
+ 
+Channel
+    .fromFilePairs( params.reads, checkIfExists:true ) 
+    .set { read_pairs_ch }     
+
+
+/* The "main" function:
+ * Use CLI arguments to create structure sequences and output text file & gtf file with selected exon structures
+ */
+
+workflow {
+  file_validation_ch = file_validation(params.cvs_file, params.gtf_file)
+  struc_gen_ch = struc_gen( # No idea yet)                                                                           }                                                                                                                     
+
+
+/* Book keeping upon workflow completion */
+workflow.onComplete {
+   log.info (workflow.success ? "\nDone! Open the following report in your browser -->     $params.outdir/multiqc/multiqc_report.html\n" : "Oops .. something went wrong") 
+   )
+}                                                                                                                     
+```
