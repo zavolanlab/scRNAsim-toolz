@@ -1,7 +1,8 @@
 #### Find representative transcripts ####
-"""Version 0.0.1"""
+"""Version 1.0.0"""
 
 ### Imports ### 
+import argparse
 
 ### Functions ###
     
@@ -35,7 +36,7 @@ def find_in_attributs (attributs,look_for):
         index = attributs.index(look_for)+1
         return attributs[index]
     except: 
-        print("ERROR in findinge",look_for,"in the entry the return was set to NA\n",attributs)
+        #print("No",look_for,"in the entry the return was set to NA\n",attributs)
         return "NA"
 
 def exon_length(entry): 
@@ -94,7 +95,8 @@ def get_rep_trans(file_name = "test"):
             entry = line.split("\t")
             
             #removes expected but unneeded entrys
-            if len(entry) == 1 or entry[2] in ["CDS","stop_codon","five_prime_utr","three_prime_utr","start_codon"]:
+            exp_unneed = ["CDS","stop_codon","five_prime_utr","three_prime_utr","start_codon",'Selenocysteine']
+            if len(entry) == 1 or entry[2] in exp_unneed:
                 continue
             
             #this funtion truns the less organized part of the entry into a uable list
@@ -179,13 +181,36 @@ def get_rep_trans(file_name = "test"):
         rep_transcripts = _re_format(rep_trans)
         return(rep_transcripts )
 
-### Execution part ###
-if __name__ == "__main__":   
+def _test(): 
+    """
+    This funtion is ment to be run for test
+    Output: 
+        file with the dictionary generated based on the test file 
+    """
     file_name = "test"
     rt = get_rep_trans(file_name)
-    with open ("representative_transcripts_"+file_name+".txt","w") as rtf: 
-        for key in rt:
-            rtf.write(key+"\t"+rt[key]+"\n")
+    expected_result = {"ENSG00000160072":"ENST00000472194","ENSG00000234396":"ENST00000442483",
+                       "ENSG00000225972":"ENST00000416931","ENSG00000224315":"ENST00000428803",
+                       "ENSG00000198744":"ENST00000416718","ENSG00000279928":"ENST00000624431",
+                       "ENSG00000228037":"ENST00000424215"}
+    if rt != expected_result: 
+        print("The test fail due to not yieding the same results")
+        print("The results the program got\n",rt)
+        print("The expected results\n",expected_result)
+    else: 
+        print("The test was succses full")
+            
+### Execution part ###
+if __name__ == "__main__":   
+    parser = argparse.ArgumentParser(description="find_representativ_transcripts",formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-file_name", required=True, help="gtf file with genome annotation")
+    parser.add_argument("-t", required=False,default = False,help="to run the test input -t True")
+    args = parser.parse_args()
+    if args.t: 
+        _test()
+    else:
+        get_rep_trans(args.file_name)
+   
 
     
                 
