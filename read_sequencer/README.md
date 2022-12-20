@@ -21,7 +21,7 @@ pip install .
 ## Usage
 
 ```
-usage: read_sequencer [-h] [-i INPUT] [-r READ_LENGTH] [-n N_RANDOM] [-s CHUNK_SIZE] output 
+usage: readsequencer [-h] [-i INPUT] [-r READ_LENGTH] [-n N_RANDOM] [-s CHUNK_SIZE] output 
 Simulates sequencing of DNA sequences specified by an FASTA file.
 
 positional arguments:
