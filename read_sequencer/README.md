@@ -44,6 +44,11 @@ optional arguments:
 
 The docker image is available on docker hub: https://hub.docker.com/r/grrchrr/readsequencer
 
+```
+docker pull grrchrr/readsequencer
+docker run readsequencer --help
+```
+
 ## Contributors and Contact Information
 
 Christoph Harmel - christoph.harmel@unibas.ch  
