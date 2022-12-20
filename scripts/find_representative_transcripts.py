@@ -1,5 +1,5 @@
 #### Find representative transcripts ####
-"""Version 1.0.0"""
+"""Version 1.0.1"""
 
 ### Imports ### 
 import argparse
@@ -36,7 +36,7 @@ def find_in_attributs (attributs,look_for):
         index = attributs.index(look_for)+1
         return attributs[index]
     except: 
-        #print("No",look_for,"in the entry the return was set to NA\n",attributs)
+        print("No",look_for,"in the entry the return was set to NA\n",attributs)
         return "NA"
 
 def exon_length(entry): 
@@ -108,10 +108,10 @@ def get_rep_trans(file_name = "test"):
                 if ignor_trans: 
                     continue
                 elif cur_gID != attributs[1]:
-                    print("ERROR exon from an unexpected Gen")
+                    raise ValueError("ERROR exon from an unexpected Gen")
                     continue
                 elif find_in_attributs (attributs,"transcript_id") != cur_tID:
-                    print("ERROR exon from an unexpected transcript")
+                    raise ValueError("exon from an unexpected transcript")
                     continue
                 
                 #calculating exon_length and adding it to the appropriat list and chackin for changes in best transcript
@@ -129,7 +129,7 @@ def get_rep_trans(file_name = "test"):
                 
                 #varryfi that the gen is correct
                 if cur_gID != attributs[1]:
-                    print("ERROR transcript from an unexpected Gen")
+                    raise ValueError("ERROR transcript from an unexpected Gen")
                     continue
                 
                 #finding the transcript id and the support level
@@ -175,7 +175,7 @@ def get_rep_trans(file_name = "test"):
                     
             #raises an error for unidentifyable entrys
             else: 
-                print("This entry could not be identified\n",entry)
+                raise ValueError("This entry could not be identified\n",entry)
                 
         del rep_trans[""]
         rep_transcripts = _re_format(rep_trans)
