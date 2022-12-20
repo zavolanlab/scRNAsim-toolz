@@ -6,6 +6,7 @@ Created on Mon Nov 14 14:49:50 2022
 """
 import argparse
 import logging
+import main
 
 def create_parser():
     """This function creates the parser"""
@@ -30,5 +31,5 @@ if __name__ == '__main__':
         level=logging.INFO,
     )
     LOG = logging.getLogger(__name__)
-    letsgo()
+    main()
     #here we would point to the main module and parse the energy cutoff
