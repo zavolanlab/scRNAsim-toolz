@@ -1,6 +1,7 @@
 .DS_Store
 .idea/
-
+read_sequencer.egg-info
+readsequencer.egg-info
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 

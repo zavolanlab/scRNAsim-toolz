@@ -7,7 +7,7 @@ LOG = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(
-        prog="read_sequencer",
+        prog="readsequencer",
         description="Simulates sequencing of DNA sequences specified by an FASTA file.",
     )
 
