@@ -1,7 +1,7 @@
 FROM python:3.11.1-slim-bullseye
 
 # MAINTAINER add_maintainer
-
+MAINTAINER "Christoph Harmel"
 # set names for user, group and user home
 ARG USER="bioc"
 ARG GROUP="bioc"
