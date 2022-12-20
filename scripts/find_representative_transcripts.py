@@ -1,5 +1,5 @@
 #### Find representative transcripts ####
-"""Version 1.0.1"""
+"""Version 1.1.1"""
 
 ### Imports ### 
 import argparse
@@ -36,19 +36,8 @@ def find_in_attributs (attributs,look_for):
         index = attributs.index(look_for)+1
         return attributs[index]
     except: 
-        print("No",look_for,"in the entry the return was set to NA\n",attributs)
+        #print("No",look_for,"in the entry the return was set to NA\n",attributs)
         return "NA"
-
-def exon_length(entry): 
-    """
-    This function calculate the of a given exon
-    Inputs:
-        entry = list() #from split up line 
-        
-    Output:
-        exon_length = int
-    """
-    return(int(entry[4])-int(entry[3]))
 
 def _re_format(rep_trans_dict):
     """
@@ -76,19 +65,14 @@ def get_rep_trans(file_name = "test"):
     Output: 
         rep_transcripts = {gene_id : transcript_id}
     """
-    #standadize the file_name inlude .gtf#
-    i_gtf = file_name.find(".gtf")
-    if i_gtf == -1:
-        file_name += ".gtf"
     
     #setting defoult variables
     rep_trans = dict()
     cur_gID = str()
     cur_best_trans = [str(),100,0] # [transcript_id , transcript_support_level , transcript_length]
-    pot_best_trans = cur_best_trans
+    pot_best_trans = False
     cur_tID = str()
     ignor_trans = False
-    no_pt = False
     
     with open (file_name,"r") as f: 
         for line in f: 
@@ -99,7 +83,7 @@ def get_rep_trans(file_name = "test"):
             if len(entry) == 1 or entry[2] in exp_unneed:
                 continue
             
-            #this funtion truns the less organized part of the entry into a uable list
+            #this function turns the less organized part of the entry into a reable list
             attributs = attributs_converter(entry[8])
             #looking for and processing exons entrys
             if entry[2] == "exon": 
@@ -114,19 +98,20 @@ def get_rep_trans(file_name = "test"):
                     raise ValueError("exon from an unexpected transcript")
                     continue
                 
-                #calculating exon_length and adding it to the appropriat list and chackin for changes in best transcript
-                l_exon = exon_length(entry)
-                if no_pt: 
-                    cur_best_trans[2]+= l_exon
-                else: 
-                    pot_best_trans[2]+= l_exon
+                #adding the length of the exon to the appropriat list and chacking for changes in best transcript
+                if pot_best_trans: 
+                    pot_best_trans[2]+= int(entry[4])-int(entry[3])
                     if pot_best_trans[2] > cur_best_trans[2]: 
                         cur_best_trans = pot_best_trans
-                        no_pt = True                                         
+                        pot_best_trans = False
+                else:
+                    cur_best_trans[2]+= int(entry[4])-int(entry[3])
+
+                                       
                 
             #looking for and processing transcript entrys
             elif entry[2] == "transcript":
-                
+                    
                 #varryfi that the gen is correct
                 if cur_gID != attributs[1]:
                     raise ValueError("ERROR transcript from an unexpected Gen")
@@ -137,7 +122,7 @@ def get_rep_trans(file_name = "test"):
                 t_supp_lvl = find_in_attributs (attributs,"transcript_support_level")    
                 
                 #If there is no transcript support level or the level is given as NA it is nomed as 100. else the transcript support level is tunrn into int
-                if t_supp_lvl == "NA" or t_supp_lvl == "gene_id": 
+                if t_supp_lvl == "NA": 
                     t_supp_lvl = 100
                 else:
                     try:
@@ -149,14 +134,13 @@ def get_rep_trans(file_name = "test"):
                 #decides if the transcript has potential to become the representative transcript
                 if t_supp_lvl < cur_best_trans[1] or cur_best_trans[0] == "":
                     cur_best_trans = [cur_tID,t_supp_lvl,0]
+                    pot_best_trans = False
                     ignor_trans = False
-                    no_pt = True 
+                     
                 elif t_supp_lvl == cur_best_trans[1]:
-                    pot_best_trans = [cur_tID,t_supp_lvl,0]
-                    no_pt = False 
+                    pot_best_trans = [cur_tID,t_supp_lvl,0] 
                 else:
                     ignor_trans = True
-                    no_pt = True 
                 
                   
             #looking for and processing gene entrys
@@ -166,7 +150,9 @@ def get_rep_trans(file_name = "test"):
                 if cur_gID not in rep_trans: 
                     rep_trans[cur_gID] = cur_best_trans
                 else: 
-                    if rep_trans[cur_gID][1] > cur_best_trans[1] and rep_trans[cur_gID][2] < cur_best_trans[2]:
+                    if rep_trans[cur_gID][1] > cur_best_trans[1]: 
+                        rep_trans[cur_gID] = cur_best_trans
+                    elif rep_trans[cur_gID][1] == cur_best_trans[1] and rep_trans[cur_gID][2] < cur_best_trans[2]: 
                         rep_trans[cur_gID] = cur_best_trans
                 
                 #updating cur_gID and resetting cur_best_trans
@@ -176,7 +162,16 @@ def get_rep_trans(file_name = "test"):
             #raises an error for unidentifyable entrys
             else: 
                 raise ValueError("This entry could not be identified\n",entry)
-                
+        
+        #addding the final gene to the dictionary
+        if cur_gID not in rep_trans: 
+            rep_trans[cur_gID] = cur_best_trans
+        else: 
+            if rep_trans[cur_gID][1] > cur_best_trans[1]: 
+                rep_trans[cur_gID] = cur_best_trans
+            elif rep_trans[cur_gID][1] == cur_best_trans[1] and rep_trans[cur_gID][2] < cur_best_trans[2]: 
+                rep_trans[cur_gID] = cur_best_trans        
+        
         del rep_trans[""]
         rep_transcripts = _re_format(rep_trans)
         return(rep_transcripts )
@@ -187,12 +182,12 @@ def _test():
     Output: 
         file with the dictionary generated based on the test file 
     """
-    file_name = "test"
+    file_name = "test.gtf"
     rt = get_rep_trans(file_name)
     expected_result = {"ENSG00000160072":"ENST00000472194","ENSG00000234396":"ENST00000442483",
                        "ENSG00000225972":"ENST00000416931","ENSG00000224315":"ENST00000428803",
                        "ENSG00000198744":"ENST00000416718","ENSG00000279928":"ENST00000624431",
-                       "ENSG00000228037":"ENST00000424215"}
+                       "ENSG00000228037":"ENST00000424215",'ENSG00000142611':'ENST00000378391'}
     if rt != expected_result: 
         print("The test fail due to not yieding the same results")
         print("The results the program got\n",rt)
@@ -206,10 +201,18 @@ if __name__ == "__main__":
     parser.add_argument("-file_name", required=True, help="gtf file with genome annotation")
     parser.add_argument("-t", required=False,default = False,help="to run the test input -t True")
     args = parser.parse_args()
+    
+    #standadize the file_name inlude .gtf#
+
+    file_name = args.file_name
+    i_gtf = file_name.find(".gtf")
+    if i_gtf == -1:
+        file_name += ".gtf"  
+    
     if args.t: 
         _test()
     else:
-        get_rep_trans(args.file_name)
+        get_rep_trans(file_name)
    
 
     
