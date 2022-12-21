@@ -1,7 +1,6 @@
 ### Made by Hugo Gillet ###
 import pandas as pd
-import json
-import representative as repr
+from gtfparse import read_gtf
 
 
 def dict_reprTrans_to_df(dict_reprTrans: dict[str, str]) -> pd.DataFrame:
@@ -38,52 +37,26 @@ def dict_reprTrans_to_df(dict_reprTrans: dict[str, str]) -> pd.DataFrame:
     )
     return df_reprTrans
 
-
-def txt_to_dict(dict_txt: str) -> dict:
-    """Convert a txt file into a dictionary 
-
+def gene_and_transcript(gtf_file:str)-> pd.DataFrame: 
+    """
+    This function take a .gtf file and convert it into a 
+    dataframe containing gene_id and their transcripts_id.
         Args:
-            dict_txt (str) : pathe to a txt file of a dict
-            structured as {'Gene':['transcriptA', 'transcriptB'], ...}
+            gtf_file (str) : path to the .gtf file
 
         Returns:
-            dict (dict) : dictionary stuctured as {'Gene':['transcriptA', 'transcriptB'], ...}
-      
-        Raises:
-            None          
+            df_gtf (pd.DataFrame) : pandas dataframe containing having has columns
+            gene_id and their transcripts_id.
+        Raises : 
+            None 
+    
     """
-    pass
+    df_gtf = read_gtf(gtf_file)
+    df_gtf = df_gtf.loc[df_gtf["feature"]=="transcript"]
+    df_gtf = df_gtf[["gene_id","transcript_id"]]
+    df_gtf = df_gtf.rename(columns={"gene_id":"Gene","transcript_id":"Transcript"})
+    return df_gtf
 
-    input: str = open(dict_txt, "r").read()
-    input: str = input.replace("'", '"')
-    dict = json.loads(input)
-    return dict
-
-
-def transcripts_by_gene_inDf(df_gtfSelection: pd.DataFrame) -> pd.DataFrame:
-    """Convert multiindex dataframe from function into a simple dataframe 
-
-        Args:
-            df_gtfSelection : Pandas multiindex dataframe having Gene,
-            transcript as indexs and support level as columns. 
-            Come from the function import_gtfSelection_to_df()
-            from representative.py script. 
-
-        Returns:
-            df_gene (str): Pandas dataframe having Gene and
-            transcript as columns 
-      
-        Raises:
-            None          
-    """
-    pass
-    df_gene = df_gtfSelection.set_index(["Gene"])
-    df_gene = df_gene.drop(columns=["Support_level"])
-    df_gene["Transcript"] = df_gene["Transcript"].str.replace(
-        r"\.[0-9]", "", regex=True
-    )
-    df_gene = df_gene.reset_index(level=0)
-    return df_gene
 
 
 def tsv_or_csv_to_df(input_txt: str) -> pd.DataFrame:
@@ -134,7 +107,7 @@ def exprLevel_byGene(
     )
     df_sum = df_merged.groupby("Gene").sum(
         "Expression_level"
-    )  # sum transcripts comming from the same gene
+    ) 
     return df_sum
 
 
@@ -167,38 +140,14 @@ def match_byGene(
     return df_clean
 
 
-def output_tsv(dataframe: pd.DataFrame, output_path:str) -> str:
-    """Convert pandas dataframe into a tsv file 
 
-        Args:
-            dataframe : Pandas dataframe containing
-            representative transcripts and their expression level 
-            output_path : path indicating were the tsv file should be written
-
-
-        Returns:
-            Tsv file containing representative transcripts
-             and their expression level in the same directory
-      
-        Raises:
-            None          
-    """
-    pass
-
-    csv_file = dataframe.to_csv(
-        output_path,
-        sep="\t",
-        index=False,
-        header=True,
-    )
-    return csv_file
 
 
 ### functions to run this part of the programm
 
 
 def match_reprTranscript_expressionLevel(
-    exprTrans: str, dict_reprTrans: dict, intermediate_file: str,
+    exprTrans: str, dict_reprTrans: dict, gtf_file: str,
 ):
     """Combine functions to replace transcripts from an expression level csv/tsv file 
        with representative transcripts 
@@ -218,11 +167,10 @@ def match_reprTranscript_expressionLevel(
         Raises:
             None          
     """
-    df_intermediate = repr.import_gtfSelection_to_df(intermediate_file)
-    df_geneTrans = transcripts_by_gene_inDf(df_intermediate)
+    df_gene_transcript = gene_and_transcript(gtf_file)
     df_exprTrans = tsv_or_csv_to_df(exprTrans)
     df_reprTrans = dict_reprTrans_to_df(dict_reprTrans)
-    df_exprLevel_byGene = exprLevel_byGene(df_exprTrans, df_geneTrans) 
+    df_exprLevel_byGene = exprLevel_byGene(df_exprTrans, df_gene_transcript) # error here
     df_match = match_byGene(df_reprTrans, df_exprLevel_byGene)
     df_match.rename(columns = {'reprTrans':'id', 'Expression_level':'level'}, inplace = True)
     return df_match
