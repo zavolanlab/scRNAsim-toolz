@@ -11,10 +11,16 @@ As a whole project, we implemented a procedure for sampling reads from mRNA sequ
 
 
 # Usage
-Input:
-- fasta_file
-- counts_file
-- sep
+CLI arguments:
+- fasta (required): Path to FASTA file with cDNA sequences
+- counts (required): Path to CSV/TSV file with sequence counts
+- output (required): Output file path
+
+- mean: Mean fragment length (default: 300)
+- std: Standard deviation fragment length (default: 60)
+- size: Chunk size for batch processing (default: 10000)
+- sep: Sequence counts file separator (default: ",")
+
 """Takes as input FASTA file of cDNA sequences, a CSV/TSV with sequence counts, and mean and std. dev. of fragment lengths. Outputs most terminal fragment (within desired length range) for each sequence."""
 
 Output:
