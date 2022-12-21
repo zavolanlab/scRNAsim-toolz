@@ -7,5 +7,5 @@ my_tests:
   # run tests
   script:
     - pip install .
-    - pip install -r requirements_dev.txt
+    - pip install -r requirements-dev.txt
     - pytest
