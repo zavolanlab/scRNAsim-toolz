@@ -2,6 +2,7 @@
 Generate cDNA based on mRNA transcript sequences and the coresponding priming probabilities. 
 
 ## Example usage
+A simple example can be run from the test_files directory:
 
     python ../cdna/cli.py -ifa yeast_example.fa -icpn copy_number_input.csv -igt Example_GTF_Input.GTF -ofa cDNA.fasta -ocsv cDNA.csv
 
