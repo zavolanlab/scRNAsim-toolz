@@ -46,7 +46,7 @@ The docker image is available on docker hub: https://hub.docker.com/r/grrchrr/re
 
 ```
 docker pull grrchrr/readsequencer
-docker run readsequencer --help
+docker run readsequencer readsequencer --help
 ```
 
 ## Contributors and Contact Information
