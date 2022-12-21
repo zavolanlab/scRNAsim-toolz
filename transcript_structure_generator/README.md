@@ -44,6 +44,7 @@ transcript-generator --prob_inclusion <probability_inclusion> [--log "INFO"] <tr
 
 where the transcripts file should be csv-formatted, the annotation file gtf-formatted and the inclusion probability for introns a float in the range [0,1]. The log parameter is optional and can be one of `["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]`. The default is `INFO`.
 
+Sample Transcripts and Annotation files can be found in the repository under main/tests/resources.
 
 # Development
 
