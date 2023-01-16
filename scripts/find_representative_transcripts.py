@@ -191,10 +191,13 @@ def gtf_file_writer (original_file, output_file):
                     if type_ == 'gene':
                         gene_id = find_in_attributs(attributes, 'gene_id')
                         output.append(entry)
-                    if type_ != 'gene':
+                    else:
                         transcript_id = find_in_attributs(attributes, 'transcript_id')
-                        if rep_transcript_dict[gene_id] == transcript_id:
-                            output.append(entry)
+                        try:
+                            if rep_transcript_dict[gene_id] == transcript_id:
+                                output.append(entry)
+                        except:
+                            print("error")
 
     with open(output_file, 'w') as last_file:
         last_file.write(output)
