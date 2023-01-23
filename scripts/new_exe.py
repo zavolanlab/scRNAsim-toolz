@@ -1,41 +1,57 @@
-### Called Packages ###
 import argparse
+import time
+import transcript_sampler as ts
 
-import transcript_extractor as te
-import exon_length_filter as elf
-import representative as rtcl
-import poisson_sampling as ps
-import writegtf as gt
-import match_reprtranscript_expressionlevel as ma
+# exemple execution : python C:\...\final_exe.py  --input_gtf  "C:\...\input_files\test.gtf" --input_csv "C:\...\input_files\expression.csv"  --output_gtf "C:\...\output\output_gtf.gtf"  --output_csv "C:\...\ouput\output_gtf.gtf" --n_to_sample 100
 
-python_version = "3.7.13"
-module_list =[argparse]
-modul_name_list = ["argparse"]
-### Functions ###
-def exe(input_file, csv, gtf, input_csv, transcript_nr,input_free = True):
-    file_name,source_pathway_name_2,deposit_pathway_name_2 = te.extract_transcript(input_file, Input_free = input_free)
-    inter_mediate_file_directory = file_name +"_intermediate_file.txt"
-    print("Transcripts are filtered based on transcript score. Please wait...")
-    pre_filter_representative_transcripts_dict = rtcl.find_repr_by_SupportLevel(inter_mediate_file_directory)
-    print("Transcripts filtered\n")
-    dictionary1 = elf.exon_length_filter(file_name,gen_dict= pre_filter_representative_transcripts_dict)
-    df_repr = ma.match_reprTranscript_expressionLevel(dict_reprTrans=dictionary1, exprTrans=input_csv, intermediate_file= inter_mediate_file_directory,)
-    print("Finiding match between representative transcripts and expression level file") 
+
+def exe(input_gtf, input_csv, output_gtf, output_csv, transcript_nr, input_free=True):
+    start = time.time()
+    dict_repr_trans = ts.get_rep_trans(input_gtf)
+    df_repr = ts.match_reprTranscript_expressionLevel(
+        dict_reprTrans=dict_repr_trans, exprTrans=input_csv, gtf_file=input_gtf
+    )
+    print("Finiding match between representative transcripts and expression level file")
     print("Poisson sampling of transcripts")
-    ps.transcript_sampling(transcript_nr, df_repr, csv)
+    ts.transcript_sampling(transcript_nr, df_repr, output_csv)
     print("output csv file ready")
     print("writing output gtf file")
-    gt.gtf_file_writer(input_file, csv, gtf)
-if __name__ == '__main__':
-    #te.version_control(module_list,modul_name_list,python_version)
+    ts.gtf_file_writer(input_gtf, dict_repr_trans, output_gtf)
+    end = time.time()
+    print("\nScript executed in {} sec\n".format(end - start))
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="transcript sampler",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("--annotation", required=True, help="gtf file with genome annotation")
-    parser.add_argument("--output_csv", required=True, help="output csv file")
-    parser.add_argument("--input_csv", required=True, help="output csv file")
-    parser.add_argument("--output_gtf", required=True, help="output gtf file")
-    parser.add_argument("--transcript_number", required=True, help="total number of transcripts to sample")
+    parser.add_argument(
+        "--input_gtf", required=True, help="gtf file with genome annotation"
+    )
+    parser.add_argument(
+        "--input_csv",
+        required=True,
+        help="csv or tsv file with transcript and their expression level ",
+    )
+    parser.add_argument(
+        "--output_gtf",
+        required=True,
+        help="output path for the new gtf file of representative transcripts",
+    )
+    parser.add_argument(
+        "--output_csv",
+        required=True,
+        help="output path for the new csv file of representative transcript and their sampled number",
+    )
+    parser.add_argument(
+        "--n_to_sample", required=True, help="total number of transcripts to sample"
+    )
     args = parser.parse_args()
-    exe(args.annotation, args.output_csv, args.output_gtf, args.input_csv, args.transcript_number)
+    exe(
+        args.input_gtf,
+        args.input_csv,
+        args.output_gtf,
+        args.output_csv,
+        args.n_to_sample,
+    )
