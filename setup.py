@@ -18,5 +18,8 @@ setup(
     author_email='mate.balajti@unibas.ch',
     description='Transcript sampler',
     packages=find_packages(),
-    install_requires=INSTALL_REQUIRES
+    install_requires=INSTALL_REQUIRES,
+    entry_points={
+        'console_scripts': ['transcript-sampler=transcript_sampler.cli:main']
+        }
 )

@@ -5,3 +5,8 @@
 temp/ 
 __pycache__
 output_files
+*_cache
+*egg-info/
+.coverage
+build/
+*/play.py

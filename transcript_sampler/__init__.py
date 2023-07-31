@@ -1,1 +1,1 @@
-"""Init.py."""
+"""Initialise package."""

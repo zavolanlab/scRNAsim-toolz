@@ -1,5 +1,6 @@
 argparse
 biopython
 gtfparse
+polars == 0.16.17
 numpy >= 1.23.3
 pandas >= 1.4.4
