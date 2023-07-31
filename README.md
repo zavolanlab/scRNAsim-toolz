@@ -1,6 +1,6 @@
 # Transcript Sampler
 
-This workflow sample representative transcripts per gene, in proportion to their relative abundance levels. Sampling is done by poisson sampling. 
+This workflow samples representative transcripts per gene, in proportion to their relative abundance levels. Sampling is done by Poisson sampling. 
 
 **This workflow takes as input:**
  - Path to genome annotation file in gtf format
@@ -15,10 +15,8 @@ This workflow sample representative transcripts per gene, in proportion to their
  
  **The workflow can be run via the command line as**
  
- `python scripts/new-exe.py --annotation {gtf input file} --output_csv {output csv file} --transcript_number {number of transcripts} --output_gtf {output gtf file} --input_csv {input csv file}`
+ `python transcript_sampler/new_exe.py --input_gtf={gtf input file} --input_csv={input csv file} --output_gtf={output gtf file} --output_csv={output csv file} --n_to_sample={number of transcripts}`
 
- Exemple : 
+ Example : 
 
- `python scripts\new_exe.py --annotation "input_files\test.gtf" --output_csv "output_files\output_csv.txt" --transcript_number 50  --output_gtf "output_files\output_gtf.gtf" --input_csv "input_files/expression.csv"`
-
-
+ `python transcript_sampler/new_exe.py --input_gtf="input_files/test.gtf" --input_csv="input_files/expression.csv" --output_gtf="output_files/output.gtf" --output_csv="output_files/output.csv" --n_to_sample=100`
