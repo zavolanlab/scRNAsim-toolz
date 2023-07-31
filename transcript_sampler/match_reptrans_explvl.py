@@ -9,13 +9,15 @@ LOG = logging.getLogger(__name__)
 
 
 class MatchReptransExplvl:
-    """Match representative transcript with expression level"""
+    """Match representative transcript with expression level."""
+
     def __init__(self):
-        pass
+        """Initiate."""
 
     @staticmethod
     def gtf_to_df(gtf_file: str) -> pd.DataFrame:
-        """
+        """Gtf to df.
+
         This function takes a .gtf file and converts it into a pandas DataFrame
         containing gene_id and their transcript_id.
 
@@ -74,13 +76,15 @@ class MatchReptransExplvl:
     def tsv_or_csv_to_df(input_txt: str) -> pd.DataFrame:
         """
         Convert a TSV or CSV file into a pandas DataFrame.
-        
+
         Args:
-            input_txt (str): TSV or CSV file containing transcript expression levels.
-        
+            input_txt (str): TSV or CSV file containing transcript expression
+            levels.
+
         Returns:
-            df_gene (pd.DataFrame): Pandas DataFrame with 'Transcript' and 'Expression_level' as columns.
-        
+            df_gene (pd.DataFrame): Pandas DataFrame with 'Transcript' and
+            'Expression_level' as columns.
+
         Raises:
             None
         """
@@ -139,7 +143,7 @@ class MatchReptransExplvl:
         df_merged = pd.merge(df_reprTranscript, df_expressionLevel_byGene, how="inner", on="Gene")
         df_clean = df_merged.loc[:, ["reprTrans", "Expression_level"]]
         return df_clean
-    
+
     def match_repr_transcript_expression_level(
         self, exprTrans: str, dict_reprTrans: dict, gtf_file: str,
     ):

@@ -1,4 +1,4 @@
-"""Find representative transcripts"""
+"""Find representative transcripts."""
 
 import logging
 
@@ -9,11 +9,12 @@ class FindRepTrans:
     """Find representative transcripts."""
 
     def __init__(self):
-        pass
+        """Initiate."""
 
     @staticmethod
     def attributes_converter(attributes: str) -> list:
-        """
+        """Attributes converter function.
+
         This funtion converts the "unstructured" ;-seperated part of
         the line into a list of identifiers and corresponding data,
         the structure of which can be used ot find the data easily e.g
@@ -35,7 +36,8 @@ class FindRepTrans:
 
     @staticmethod
     def find_in_attributes(attributes: list, look_for: str) -> str:
-        """
+        """Find in attributes function.
+
         This function finds a keyword and used that to locate the value of that
         keyword e.g key = gene_id, value = 'ENSMUSG00002074970',
         this works as they are next to each other in the attributes list.
@@ -56,7 +58,8 @@ class FindRepTrans:
 
     @staticmethod
     def reformat_reptrans(rep_trans_dict: dict) -> dict:
-        """
+        """Reformat dictionary.
+
         This function is meant to reformat dictionary of the representative
         transcripts into an dictionary with only one entry per key
         Input:
@@ -72,7 +75,8 @@ class FindRepTrans:
         return rep_transcripts
 
     def get_rep_trans(self, file_name: str) -> dict:
-        """
+        """Get representative transcripts.
+
         This is the main function of this script. It selects one
         representative transcript per gene based on a GTF annotation file.
         It does so by two criteria: the transcript support level and if
@@ -91,9 +95,8 @@ class FindRepTrans:
         Raises:
             ValueError: If an unexpected entry is encountered in the GTF file.
         """
-
         # setting default variables
-        rep_transcripts = {}
+        rep_transcripts = dict()
         cur_g_id = ""
         # [transcript_id, transcript_support_level, transcript_length]
         cur_best_trans = ["", 100, 0]
@@ -117,14 +120,14 @@ class FindRepTrans:
                 # looking for and processing exons entries
                 if entry[2] == "exon":
                     if cur_g_id != attributes[1]:
-                        LOG.error()
+                        LOG.error("Exon from an unexpected gene")
                         raise ValueError("Exon from an unexpected gene")
                     elif (
                         self.find_in_attributes(
                             attributes, "transcript_id"
                         ) != cur_tID
                         ):
-                        LOG.error()
+                        LOG.error("Exon from an unexpected transcript")
                         raise ValueError("Exon from an unexpected transcript")
 
                     # adding the length of the exon to the appropriate list and
@@ -141,7 +144,7 @@ class FindRepTrans:
                 elif entry[2] == "transcript":
                     # verify that the gen is correct
                     if cur_g_id != attributes[1]:
-                        LOG.error()
+                        LOG.error("Transcript from an unexpected gene")
                         raise ValueError("Transcript from an unexpected gene")
 
                     # finding the transcript id and the support level
@@ -193,14 +196,14 @@ class FindRepTrans:
 
                 # raises an error for unidentifiable entries
                 else:
-                    LOG.error()
+                    LOG.error("This entry could not be identified")
                     raise ValueError("This entry could not be identified")
 
             # adding the final gene to the dictionary
             if cur_g_id in rep_transcripts:
-                if (rep_transcripts[cur_g_id][1] > cur_best_trans[1]
-                    or (rep_transcripts[cur_g_id][1] == cur_best_trans[1]
-                        and rep_transcripts[cur_g_id][2] < cur_best_trans[2])):
+                if (rep_transcripts[cur_g_id][1] > cur_best_trans[1] or
+                        (rep_transcripts[cur_g_id][1] == cur_best_trans[1] and
+                        rep_transcripts[cur_g_id][2] < cur_best_trans[2])):
                     rep_transcripts[cur_g_id] = cur_best_trans
             else:
                 rep_transcripts[cur_g_id] = cur_best_trans
@@ -211,7 +214,8 @@ class FindRepTrans:
 
     def gtf_file_writer(self, original_file: str,
                         rep_transcript_dict: dict, output_file: str):
-        """
+        """Gtf file writer.
+
         This function writes the output GTF file.
         """
         output = []
