@@ -6,8 +6,9 @@ from pathlib import Path
 from tsg.main import sample_transcripts
 
 
-def setup_logging(loglevel: str = None) -> None:
-    """Set up logging. Loglevel can be one of ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].
+def setup_logging(loglevel: str) -> None:
+    """Set up logging. Loglevel can be one of \
+        ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"].
 
     Args:
         loglevel: Level of log output.
@@ -29,13 +30,14 @@ def setup_logging(loglevel: str = None) -> None:
             raise
 
     logging.basicConfig(
-        format='[%(asctime)s: %(levelname)s] %(message)s (module "%(module)s")',
+        format='[%(asctime)s: %(levelname)s] \
+            %(message)s (module "%(module)s")',
         level=numeric_level,
     )
 
 
-def build_arg_parser() -> argparse.ArgumentParser:
-    """Builds the argument parser.
+def build_arg_parser() -> argparse.Namespace:
+    """Build the argument parser.
 
     Args:
         1) path to the csv-file with the number of transcripts
@@ -71,7 +73,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--log",
         type=str,
         default="INFO",
-        help='Level of logging. Can be one of ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]',
+        help='Level of logging. Can be one of \
+            ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]',
     )
 
     args = parser.parse_args()
@@ -110,7 +113,8 @@ def output_filename(filename: str) -> str:
 
 
 def app():
-    """Gets the args, sets up the logging and starts the programm with the provided parameters.
+    """Get the args, sets up the logging \
+        and starts the programm with the provided parameters.
 
     Args:
         1) path to the csv-file with the number of transcripts

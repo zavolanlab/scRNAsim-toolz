@@ -1,5 +1,0 @@
-[FORMAT]
-max-line-length=120
-
-[BASIC]
-good-names=df, i, fh, id, s, d

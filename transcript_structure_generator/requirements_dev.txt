@@ -1,7 +1,9 @@
 matplotlib
 pandas
+pandas-stubs
 pip
 tqdm
+types-tqdm
 flake8-docstrings
 mypy
 flake8
