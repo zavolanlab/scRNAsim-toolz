@@ -1,15 +1,17 @@
+"""Receive command line arguments."""
+
 import argparse
 import logging
 
-from cdna import CDNAGen
+from cdna.cdna import CDNAGen
 
 
-def cdna_parser() -> None:
-    """Parser for cDNA generator
+def cdna_parser() -> CDNAGen:
+    """Parse sequences for cDNA generator.
 
     Parses command line arguments for cDNA generation.
 
-    Returns: None
+    Returns: CDNAGen instance
 
     """
     parser = argparse.ArgumentParser(
@@ -48,7 +50,8 @@ def cdna_parser() -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(
-        format='[%(asctime)s: %(levelname)s] %(message)s (module "%(module)s")',
+        format='[%(asctime)s: %(levelname)s] %(message)s \
+            (module "%(module)s")',
         level=logging.INFO,
     )
     LOG = logging.getLogger(__name__)

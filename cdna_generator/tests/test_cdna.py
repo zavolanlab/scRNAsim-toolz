@@ -1,19 +1,25 @@
-# imports
+"""Tests for cDNA functions."""
 import pytest
 from cdna.cdna import complement, seq_complement
+
 
 @pytest.mark.parametrize(
     "test_input,expected",
     [("A", "T")]
 )
-def test_complement_param(test_input, expected):  # we need to pass the lists to the test function...
+# we need to pass the lists to the test function...
+def test_complement_param(test_input, expected):
+    """Test complement() function."""
     assert complement(test_input) == expected
+
 
 @pytest.mark.parametrize(
     "test_input,expected",
     [("AA", "TT")]
 )
-def test_seq_complement_param(test_input, expected):  # we need to pass the lists to the test function...
+# we need to pass the lists to the test function...
+def test_seq_complement_param(test_input, expected):
+    """Test seq_complement() function."""
     assert seq_complement(test_input) == expected
 
 
@@ -23,13 +29,16 @@ def test_seq_complement_param(test_input, expected):  # we need to pass the list
     [(1, ValueError)]
 )
 def test_complement_param_failing(test_input, expected):
+    """Test complement() fail function."""
     with pytest.raises(expected):
         complement(test_input)
+
 
 @pytest.mark.parametrize(
     "test_input,expected",
     [("11", ValueError)]
 )
-def test_complement_param_failing(test_input, expected):
+def test_seq_complement_param_failing(test_input, expected):
+    """Test seq_complement() fail function."""
     with pytest.raises(expected):
         seq_complement(test_input)

@@ -1,18 +1,19 @@
+"""cDNA generator."""
 import warnings
-
-import pandas as pd
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
-from gtfparse import read_gtf
+from typing import Optional, List, Dict, Any
+import pandas as pd  # type: ignore
+from Bio import SeqIO  # type: ignore
+from Bio.Seq import Seq  # type: ignore
+from Bio.SeqRecord import SeqRecord  # type: ignore
+from gtfparse import read_gtf  # type: ignore
 
 # ignore warnings from read_gtf
 warnings.filterwarnings(action="ignore", category=FutureWarning)
 
 
 def complement(res: str) -> str:
-    """
-    Returns the cDNA complement of a given base pair
+    """Return the cDNA complement of a given base pair.
+
     Args:
         res: residue code.
 
@@ -21,16 +22,15 @@ def complement(res: str) -> str:
 
     """
     translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
-    if res not in translate_dict.keys():
+    if res not in translate_dict:
         print(f"Unknown character, {res}")
         raise ValueError
     return translate_dict[res]
 
 
-def seq_complement(sequence: str) -> str or None:
-    """
-    Returns the corresponding cDNA sequence by finding the complementary
-    base pairs and returning the reversed sequence.
+def seq_complement(sequence: str) -> Optional[str]:
+    """Return the corresponding cDNA sequence by finding the complementary \
+        base pairs and returning the reversed sequence.
 
     Args:
         sequence: sequence to be converted into cDNA.
@@ -40,16 +40,19 @@ def seq_complement(sequence: str) -> str or None:
     """
     if sequence is None:
         return None
-    _ = "".join([complement(char) for char in str(sequence)])[::-1]  # reverse string
+    _ = "".join([complement(char) for char in str(sequence)])[::-1]  # reverse string # noqa: E501
     return _
 
 
+# pylint: disable=R0902
 class CDNAGen:
-    """
-    Module that performs the cDNA synthesis.
-    """
+    """Perform the cDNA synthesis."""
 
-    def __init__(self, ifasta: str, igtf: str, icpn: str, ofasta: str, ocsv: str):
+    # pylint: disable=R0913
+    def __init__(
+        self, ifasta: str, igtf: str, icpn: str, ofasta: str, ocsv: str
+    ):
+        """Initialise function."""
         # inputs
         self.fasta = ifasta
         self.gtf = igtf
@@ -58,15 +61,15 @@ class CDNAGen:
         self.output_csv = ocsv
 
         # variables
-        self.csv_df = None
-        self.fasta_dict = None
-        self.fasta_records = None
-        self.gtf_df = None
+        self.csv_df = pd.DataFrame()
+        self.fasta_dict: Dict[str, Any] = {}
+        self.fasta_records: List[SeqRecord] = []
+        self.gtf_df = pd.DataFrame()
         self.run()
 
     def run(self) -> None:
-        """
-        Executes the cDNA workflow.
+        """Execute the cDNA workflow.
+
         Returns: None
 
         """
@@ -80,7 +83,7 @@ class CDNAGen:
         self.write_csv()
 
     def add_records(self) -> None:
-        """Adds data records to fasta file.
+        """Add data records to fasta file.
 
         Adds the copy number information to the fasta records.
 
@@ -88,7 +91,7 @@ class CDNAGen:
 
         """
         self.fasta_records = []
-        for index, row in self.gtf_df.iterrows():
+        for _, row in self.gtf_df.iterrows():
             if row["complement"] is not None:
                 copy_number = row["Transcript_Copy_Number"]
                 for _ in range(int(copy_number)):
@@ -101,8 +104,8 @@ class CDNAGen:
                     self.fasta_records.append(record)
 
     def add_sequences(self) -> None:
-        """
-        Adds the sequence for a given priming site.
+        """Add the sequence for a given priming site.
+
         Returns: None
 
         """
@@ -112,17 +115,17 @@ class CDNAGen:
         )
 
     def add_complement(self) -> None:
-        """
-        Adds the complementary cDNA sequence.
+        """Add the complementary cDNA sequence.
+
         Returns: None
 
         """
         self.gtf_df["complement"] = self.gtf_df["priming_site"].apply(
-            lambda x: seq_complement(x)
-        )
+            seq_complement
+            )
 
     def read_primingsite(self, sequence: str, end: int) -> None:
-        """Read a fasta file from a given start character
+        """Read a fasta file from a given start character.
 
         Reads a fasta sequence with ID (sequence) and returns the
         sequence starting from the index start.
@@ -151,7 +154,7 @@ class CDNAGen:
         self.fasta_dict = {x.name: x for x in records}
 
     def read_csv(self) -> None:
-        """Reads a given copy number csv file
+        """Read a given copy number csv file.
 
         Wrapper for Pandas read_csv.
 
@@ -159,24 +162,27 @@ class CDNAGen:
 
         """
         df_csv = pd.read_csv(self.cpn, index_col=False)
-        df_csv = df_csv.reset_index()  # make sure indexes pair with number of rows
+        df_csv = df_csv.reset_index()  # make sure indexes pair with number of rows # noqa: E501
         self.csv_df = df_csv
 
     def read_gtf(self) -> None:
         """Read and process the GTF file.
 
-        Reads a GTF file and determines copy numbers from normalized probabilities.
+        Reads a GTF file and determines copy numbers from \
+            normalized probabilities.
 
         Returns: None
 
         """
-        # returns GTF with essential columns such as "feature", "seqname", "start", "end"
-        # alongside the names of any optional keys which appeared in the attribute column
+        # returns GTF with essential columns such as \
+        # "feature", "seqname", "start", "end"
+        # alongside the names of any optional keys \
+        # which appeared in the attribute column
         gtf_df = read_gtf(self.gtf)
         gtf_df["Binding_Probability"] = pd.to_numeric(
             gtf_df["Binding_Probability"]
         )  # convert to numeric
-        df_normalization_bind_probablility = gtf_df.groupby("seqname")[
+        df_norm_bind_prob = gtf_df.groupby("seqname")[
             "Binding_Probability"
         ].sum()  # extract binding probability
         count = 0
@@ -194,7 +200,7 @@ class CDNAGen:
             id_csv = str(row["seqname"]).split("_")[1]
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             gtf_df.loc[index, "Normalized_Binding_Probability"] = (
-                row["Binding_Probability"] / df_normalization_bind_probablility[id_]
+                row["Binding_Probability"] / df_norm_bind_prob[id_]
             )
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             csv_transcript_copy_number = self.csv_df.loc[
@@ -211,7 +217,7 @@ class CDNAGen:
         self.gtf_df = gtf_df
 
     def write_fasta(self) -> None:
-        """Writes cDNA fasta records to file.
+        """Write cDNA fasta records to file.
 
         Wrapper for SeqIO.write.
 
@@ -222,14 +228,14 @@ class CDNAGen:
         print(f"Fasta file successfully written to: {self.output_fasta}")
 
     def write_csv(self) -> None:
-        """Writes the copy number information to a csv file.
+        """Write the copy number information to a csv file.
 
         Wrapper for Pandas to_csv.
 
         Returns: None
 
         """
-        self.gtf_df[["cdna_ID", "Transcript_Copy_Number"]].to_csv(
-            self.output_csv, index=False
-        )
-        print(f"Copy number csv file successfully written to: {self.output_csv}")
+        df_to_save = self.gtf_df[["cdna_ID", "Transcript_Copy_Number"]]
+        df_to_save.to_csv(self.output_csv, index=False)
+        print(f"Copy number csv file successfully written to: \
+              {self.output_csv}")
