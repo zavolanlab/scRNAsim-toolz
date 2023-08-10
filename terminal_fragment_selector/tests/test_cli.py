@@ -27,5 +27,5 @@ def test_file():
 
 def test_main():
     """Test main() function."""
-    with pytest.raises(TypeError):
-        main("")
+    with pytest.raises(SystemExit):
+        main()

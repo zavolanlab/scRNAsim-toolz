@@ -23,5 +23,4 @@ def check_positive(value: str) -> int:
     except ValueError as exc:
         raise argparse.ArgumentTypeError(f"""Expected positive integer,
                                          got: {value}""") from exc
-    else:
-        return ivalue
+    return ivalue

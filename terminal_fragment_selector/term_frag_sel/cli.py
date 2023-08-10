@@ -18,13 +18,15 @@ logging.basicConfig(
 logger = logging.getLogger("main")
 
 
-def main(args: argparse.Namespace):
+def main():
     """Use CLI arguments to fragment sequences and output text file \
     with selected terminal fragments.
 
     Args:
         args (parser): list of arguments from CLI.
     """
+    args = parse_arguments()
+
     if not isinstance(args, argparse.Namespace):
         raise TypeError("Input should be argparse.Namespace")
 
@@ -38,8 +40,10 @@ def main(args: argparse.Namespace):
     logger.info("Fragmentation of %s...", args.fasta)
     splits = np.arange(0, len(list(fasta))+args.size, args.size)
 
-    for i, split in enumerate(splits):
-        fasta_dict = fasta[split:splits[i+1]]
+    for i in range(len(splits) - 1):
+        split = splits[i]
+        keys = list(fasta.keys())[split:splits[i+1]]
+        fasta_dict = {key: fasta[key] for key in keys}
         term_frags = fragmentation(fasta_dict, seq_counts,
                                    args.mean, args.std)
 
@@ -132,6 +136,4 @@ if __name__ == '__main__':
         level=logging.INFO,
     )
     logger = logging.getLogger(__name__)
-
-    arguments = parse_arguments()
-    main(arguments)
+    main()

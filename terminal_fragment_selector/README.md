@@ -29,8 +29,7 @@ Output:
 To install package, run
 
 ```
-pip install -r requirements.txt
-pip install -r requirements_dev.txt
+pip install .
 ```
 
 
