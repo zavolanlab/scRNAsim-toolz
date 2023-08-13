@@ -3,10 +3,17 @@
 import argparse
 import logging
 
-from cdna.cdna import CDNAGen
+logging.basicConfig(
+    format='[%(asctime)s: %(levelname)s] %(message)s \
+        (module "%(module)s")',
+    level=logging.INFO,
+)
+LOG = logging.getLogger(__name__)
+
+from cdna.cdna import CDNAGen  # noqa: E402,E501 # pylint:disable=wrong-import-position
 
 
-def cdna_parser() -> CDNAGen:
+def main():
     """Parse sequences for cDNA generator.
 
     Parses command line arguments for cDNA generation.
@@ -35,27 +42,16 @@ def cdna_parser() -> CDNAGen:
         "-ocsv", "--output_csv", help="output fasta file", required=True
     )
     args = parser.parse_args()
-    #  Print parser arguments
-    print(" \n".join(f"{k}={v}" for k, v in vars(args).items()))
-    print()
-    cdna_inst = CDNAGen(
+
+    LOG.info("Running cDNA generator...")
+    CDNAGen(
         ifasta=args.input_fasta,
         igtf=args.input_gtf,
         icpn=args.input_copy_number,
         ocsv=args.output_csv,
         ofasta=args.output_fasta,
     )
-    return cdna_inst
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format='[%(asctime)s: %(levelname)s] %(message)s \
-            (module "%(module)s")',
-        level=logging.INFO,
-    )
-    LOG = logging.getLogger(__name__)
-    print("**********************")
-    print("Running cDNA generator")
-    print("**********************")
-    cdna_parser()
+    main()

@@ -1,16 +1,29 @@
+"""Set up project."""
+from pathlib import Path
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+project_root_dir = Path(__file__).parent.resolve()
+
+with open(project_root_dir / "requirements.txt",
+          "r", encoding="utf-8") as f:
+    INSTALL_REQUIRED = f.read().splitlines()
+
+URL = ('https://git.scicore.unibas.ch/zavolan_group/'
+       'tools/cdna-generator')
 
 setup(
-    name='cdna',
-    url='https://gitlab.com/my_user_name/my_package.git',
-    author='My Name',
-    author_email='me@email.org',
-    description='Brief package description',
+    name='cdna-generator',
+    version='0.1.1',
+    url=URL,
     license='MIT',
-    version='1.0.0',
-    packages=find_packages(),  # this will autodetect Python packages from the directory tree, e.g., in `code/`
-    install_requires=required,  # add here packages that are required for your package to run, including version or range of versions
+    author='Eric Boittier, Bastian Wagner, Quentin Badolle',
+    author_email='me@email.org',
+    description='cDNA generator',
+    packages=find_packages(),
+    install_required=INSTALL_REQUIRED,
+    entry_points={
+        'console_scripts': [
+            'cdna-generator=cdna.cli:main'
+            ]
+        }
 )

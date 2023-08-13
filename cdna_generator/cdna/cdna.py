@@ -1,11 +1,14 @@
 """cDNA generator."""
 import warnings
+import logging
 from typing import Optional, List, Dict, Any
 import pandas as pd  # type: ignore
 from Bio import SeqIO  # type: ignore
 from Bio.Seq import Seq  # type: ignore
 from Bio.SeqRecord import SeqRecord  # type: ignore
 from gtfparse import read_gtf  # type: ignore
+
+LOG = logging.getLogger(__name__)
 
 # ignore warnings from read_gtf
 warnings.filterwarnings(action="ignore", category=FutureWarning)
@@ -23,7 +26,7 @@ def complement(res: str) -> str:
     """
     translate_dict = {"A": "T", "T": "A", "U": "A", "G": "C", "C": "G"}
     if res not in translate_dict:
-        print(f"Unknown character, {res}")
+        LOG.warning("Unknown character, %s", res)
         raise ValueError
     return translate_dict[res]
 
@@ -40,7 +43,9 @@ def seq_complement(sequence: str) -> Optional[str]:
     """
     if sequence is None:
         return None
-    _ = "".join([complement(char) for char in str(sequence)])[::-1]  # reverse string # noqa: E501
+    _ = "".join([
+        complement(char) for char in str(sequence)
+        ])[::-1]  # reverse string
     return _
 
 
@@ -179,6 +184,9 @@ class CDNAGen:
         # alongside the names of any optional keys \
         # which appeared in the attribute column
         gtf_df = read_gtf(self.gtf)
+
+        gtf_df = gtf_df.to_pandas()  # convert polars df to pandas df
+
         gtf_df["Binding_Probability"] = pd.to_numeric(
             gtf_df["Binding_Probability"]
         )  # convert to numeric
@@ -225,7 +233,7 @@ class CDNAGen:
 
         """
         SeqIO.write(self.fasta_records, self.output_fasta, "fasta")
-        print(f"Fasta file successfully written to: {self.output_fasta}")
+        LOG.info("Fasta file successfully written to: %s", self.output_fasta)
 
     def write_csv(self) -> None:
         """Write the copy number information to a csv file.
@@ -237,5 +245,5 @@ class CDNAGen:
         """
         df_to_save = self.gtf_df[["cdna_ID", "Transcript_Copy_Number"]]
         df_to_save.to_csv(self.output_csv, index=False)
-        print(f"Copy number csv file successfully written to: \
-              {self.output_csv}")
+        LOG.info("Copy number csv file successfully written to: %s",
+                 self.output_csv)
