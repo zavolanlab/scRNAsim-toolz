@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 16 14:17:06 2022
+Changed on Fr Dec 23 14:34:20 2022
 
-@author: baerma
+@author: RobinC
 """
 
 class CreatePrimer:
@@ -13,8 +13,7 @@ class CreatePrimer:
         self.primer_length = primerlength
         self.primer_sequence = 'T'*self.primer_length
         self.lines = [f'<{self.name}', self.primer_sequence]
-        #print(self.primer)
-        #return self.primer
+
     
     def create_fasta(self):
         with open(f'{self.name}.fasta', 'w') as f:

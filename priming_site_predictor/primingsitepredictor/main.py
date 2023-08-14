@@ -1,10 +1,16 @@
+"""
+Changed on Tue Dec 20 14:06:20 2022
+
+@author: RobinC
+"""
 import sys
 from createprimer import CreatePrimer
 from postprocessing import PostProcessRIBlast
 
+
 def main():
     generate_RIBlast_input()
-    create_gtf()
+
         
 
 def generate_RIBlast_input():
@@ -19,10 +25,6 @@ def generate_RIBlast_input():
 def create_gtf():
     gtf_file = PostProcessRIBlast().output
     print(gtf_file)
-
-
-
-main()
 
 if __name__ == '__main__':
     main()

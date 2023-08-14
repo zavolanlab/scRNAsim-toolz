@@ -60,15 +60,10 @@ class PostProcessRIBlast():
 
         for index in self.interaction_df.index:
             self.output = self.output + str(self.interaction_df[3][index]+'\t' + 'RIBlast' + '\t' + 'Priming_site' + '\t' + self.interaction_df[13][index] + '\t' + self.interaction_df[12][index] + '\t' + '.' + '\t' + '+' + '\t' + '.' + '\t' + f'Interaction_Energy "{self.interaction_df["Normalised_interaction_energy"][index]}"' + '\n')
-<<<<<<< HEAD
         
-        with open('output_transcripts_df.txt', 'w') as f:
+        with open('output_transcripts_df.GTF', 'w') as f:
             f.write(self.output)
-            
+            return(self.output)
         
-=======
 
-        return(self.output)
->>>>>>> 9d8e928323a99c5e86557c4b53ab93aaf8f5beb5
-        
-#print(PostProcessRIBlast().output)
+print(PostProcessRIBlast().output)
