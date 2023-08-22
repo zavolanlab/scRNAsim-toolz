@@ -5,7 +5,8 @@ Created on Tue Dec 20 14:06:20 2022
 """
 
 # Imports
-import os, sys
+import os
+import sys
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
@@ -29,8 +30,8 @@ class TestMain(unittest.TestCase):
         except ImportError:
             self.fail("Failed to import PostProcessRIBlast")
 
-    def test_generate_RIBlast_input(self):
-        """Test funciton for the method generate_RIBlast_input()"""
+    def test_generate_riblast_input(self):
+        """Test funciton for the method generate_riblast_input()"""
 
         # Call the CreatePrimer() method and the create_fasta() method
         primer = cp.CreatePrimer()
@@ -40,8 +41,8 @@ class TestMain(unittest.TestCase):
         primer_filename = primer.name+".fasta"
         transcript_filename = "transcripts.fasta"
 
-        # Call the generate_RIBlast_input() method
-        result = mn.generate_RIBlast_input()
+        # Call the generate_riblast_input() method
+        result = mn.generate_riblast_input()
 
         assert result == [primer_filename, transcript_filename]
 
@@ -82,7 +83,7 @@ class TestMain(unittest.TestCase):
         transcripts_filename = "transcripts.fasta"
 
         # Get the results for the called methods
-        result1 = mn.generate_RIBlast_input()
+        result1 = mn.generate_riblast_input()
         result2 = mn.create_gtf()
 
         # Open the expected output
