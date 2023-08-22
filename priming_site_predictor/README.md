@@ -1,20 +1,49 @@
-
 # Priming Site Predictor of Transcript Sequences
-Priming Site Predictor which uses a seed-and-extension algorithm (*RIblast*:https://github.com/fukunagatsu/RIblast) to *Predict Priming Sites* of oligo dT primers in target sequences. Further, *Binding Energies* are calculated and classified with a threshold value. Additionally, the binding sites are associated with *Binding Probabilities* and stored in a *GTF File* for further processes.
+
+## Overview
+Priming Site Predictor which uses a seed-and-extension algorithm (*RIblast*: https://github.com/fukunagatsu/RIblast) to *Predict Priming Sites* of oligo dT primers in target sequences. Furthermore, *Binding Energies* are calculated and classified with a threshold value. Additionally, the binding sites are associated with *Binding Probabilities* and stored in a *gtf file* for further processes.
 
 ## Version
 Version 0.1.0 (2022/11/15)
 
 ## Acknowledgements
-We used the Riblast algorithm created by Tsukasa Fukunaga (https://github.com/fukunagatsu ). 
+We used the RIblast algorithm created by Tsukasa Fukunaga (https://github.com/fukunagatsu). 
+
+## Installation from github 
+Priming Site Predictor requires Python 3.9 or later.
+
+Install Priming Site Predictor from GitLab using:
+
+```
+git clone https://git.scicore.unibas.ch/zavolan_group/tools/priming-site-predictor.git
+cd priming-site-predictor
+pip install . 
+```
 
 ## Usage
+```
+usage: primingsitepredictor [-h] [-f FASTA_FILE] [-p PRIMER_SEQUENCE] [-e ENERGY_CUTOFF] [-r RIBLAST_OUTPUT] [-o OUTPUT_FILENAME]
+
+Compute potential priming sites using RIBlast.
+
+options:
+  -h, --help            show this help message and exit
+  -f FASTA_FILE, --fasta-file FASTA_FILE
+                        Fasta-formatted file of transcript sequences
+  -p PRIMER_SEQUENCE, --primer-sequence PRIMER_SEQUENCE
+                        Primer sequence
+  -e ENERGY_CUTOFF, --energy-cutoff ENERGY_CUTOFF
+                        Energy cutoff for interactions
+  -r RIBLAST_OUTPUT, --riblast-output RIBLAST_OUTPUT
+                        Path to RIBlast output file
+  -o OUTPUT_FILENAME, --output-filename OUTPUT_FILENAME
+                        Path where the output gtf should be written
+```
 
 ## Example
-
-## Command and Options
-
-## Output file format
+```
+primingsitepredictor -f tests/test_files/test_fasta.fasta -p tests/test_files/primer1.fasta -e 0.002 -r tests/test_files/RIBlast_output_example.txt -o tests/test_output.gtf
+```
 
 ## License
 This software is released under the MIT License, see LICENSE.txt.
