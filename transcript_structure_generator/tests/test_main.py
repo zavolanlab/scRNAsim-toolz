@@ -1,6 +1,6 @@
 """Tests for main module."""
 
-import pandas as pd
+import pandas as pd  # type: ignore
 from tsg.main import Gtf, TranscriptGenerator, dict_to_str, str_to_dict
 
 

@@ -30,8 +30,8 @@ def setup_logging(loglevel: str) -> None:
             raise
 
     logging.basicConfig(
-        format='[%(asctime)s: %(levelname)s] \
-            %(message)s (module "%(module)s")',
+        format=('[%(asctime)s: %(levelname)s] '
+                '%(message)s (module "%(module)s")'),
         level=numeric_level,
     )
 

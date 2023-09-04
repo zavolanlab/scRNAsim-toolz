@@ -3,9 +3,7 @@
 import logging
 
 import numpy as np
-import pandas as pd
-from tqdm import tqdm
-
+import pandas as pd  # type: ignore
 
 LOG = logging.getLogger(__name__)
 
@@ -31,15 +29,17 @@ def read_abundances(transcripts_file: str) -> pd.DataFrame:
 
 
 def filter_df(gtf_df: pd.DataFrame, transcripts: list) -> pd.DataFrame:
-    """Filter annotations to include only exons \
-        with the highest transcript support level, i.e. TSL1.
+    """Filter dataframe.
+
+    Filter annotations to include only exons
+    with the highest transcript support level, i.e. TSL1.
 
     `feature` column is filtered on value "exon" and
-    `free_text` column is filtered to include the string \
+    `free_text` column is filtered to include the string
         denoting the highest transcript support level
     ('transcript_support_level "1"').
 
-    If a list of transcript IDs is given, `free_text` column \
+    If a list of transcript IDs is given, `free_text` column
         is filtered to include one of the IDs.
 
     Args:
@@ -47,7 +47,7 @@ def filter_df(gtf_df: pd.DataFrame, transcripts: list) -> pd.DataFrame:
         transcript: list of transcript IDs
 
     Returns:
-        A pd.DataFrame containing only rows with exon annotations \
+        A pd.DataFrame containing only rows with exon annotations
             of highest transcript support level and,
         if provided, belonging to one of the given transcripts
     """
@@ -55,7 +55,7 @@ def filter_df(gtf_df: pd.DataFrame, transcripts: list) -> pd.DataFrame:
         transcripts = []
     df_filter = gtf_df[
         (gtf_df["feature"] == "exon")
-        & (gtf_df["free_text"].str.contains('transcript_support_level "1"'))
+        & (gtf_df["free_text"].str.contains('transcript_support_level "1'))
     ]
     if len(transcripts) > 0:
         df_filter = df_filter[df_filter["free_text"].str.contains(
@@ -68,7 +68,7 @@ def filter_df(gtf_df: pd.DataFrame, transcripts: list) -> pd.DataFrame:
 def str_to_dict(gene_string: str) -> dict:
     """Split between key/value pairs.
 
-    Split string based on delimiter ';' into items, remove empty items and \
+    Split string based on delimiter ';' into items, remove empty items and
         split items on delimiter ' ' into
     key/value pairs. Remove quotes from value strings and create a dictionary.
 
@@ -92,9 +92,9 @@ def dict_to_str(gene_dict: dict) -> str:
 
     Takes e.g. dictionary {'gene_id': 'GENE1', 'transcript_id': 'TRANSCRIPT1'}
     and returns string 'gene_id "GENE1"; transcript_id "TRANSCRIPT1";'.
-    Key/value pairs are joined by space to form an item and items are \
+    Key/value pairs are joined by space to form an item and items are
         joinded by ';' to form a string.
-    If a value is Not a Number (nan), the key/value pair is omitted \
+    If a value is Not a Number (nan), the key/value pair is omitted
         from the string.
 
     Args:
@@ -115,13 +115,15 @@ def dict_to_str(gene_dict: dict) -> str:
 
 
 def reverse_parse_free_text(df_all: pd.DataFrame) -> pd.DataFrame:
-    """Reverse parsing of gtf based pd.DataFrame to include only columns that \
-        are well defnined by gtf-file standards.
+    """Reverse parse a gtf based pd.DataFrame.
+
+    The data frame will include only columns that
+    are well defnined by gtf-file standards.
 
     The first 8 defined columns are constant as defined by gtf-file standards.
-    Further columns are assumed to be parsed free-text columns \
+    Further columns are assumed to be parsed free-text columns
         (see Gtf.parse_free_text()).
-    The parsed free-text columns are aggregated as a dictionary and \
+    The parsed free-text columns are aggregated as a dictionary and
         the dictionry is parsed as a string in gtf format.
 
     Args:
@@ -165,8 +167,9 @@ def write_gtf(gtf_df: pd.DataFrame, filename: str) -> None:
 
 
 def write_header(annotations_file: str) -> None:
-    """Write the header of an annotations file, consisting of the \
-        tab delimited column names.
+    """Write the header of an annotations file.
+
+    It consists of the tab delimited column names.
 
     Args:
         annotations_file: Filename to write header to.
@@ -182,7 +185,7 @@ class Gtf:
         dtypes: A dictionary containing column names and respective data types.
         parsed: A boolean indicating if the pd.DataFrame is parsed.
         original_columns: A list of columns not touched by parsing.
-        free_text_columns: A list of columns created during parsing \
+        free_text_columns: A list of columns created during parsing
             of column `free_text`.
     """
 
@@ -240,7 +243,7 @@ class Gtf:
         Part of initialization is:
         Set dataframe attribute
         Check which columns belong to the free-text part of the gtf-file.
-        Check if there are no columns called free-text and if so, sets \
+        Check if there are no columns called free-text and if so, sets
             the value of parsed attribute to TRUE.
 
         Args:
@@ -254,11 +257,11 @@ class Gtf:
             self.parsed = True
 
     def parse_key_value(self):
-        """Parse key/value pairs from `free_text` column into column `key` \
-            with row entry `value`.
+        """Parse key/value pairs.
 
-        Creates a dataframe with columns for keys in the free-text column \
-            instead of `free_text` column.
+        From `free_text` column into column `key` with row entry `value`.
+        Creates a dataframe with columns for keys in the free-text column
+        instead of `free_text` column.
         Saves it to Gtf.df attribute.
         """
         assert self.parsed is False
@@ -316,16 +319,15 @@ class TranscriptGenerator:
         strands = transcript_df["strand"].unique()
         if len(transcript_df) == 0:
             LOG.warning(
-                "Transcript %s can't be sampled. \
-                    Annotation is missing", transcript_id
+                "Transcript \"%s\" can't be sampled: "
+                "Annotation is missing or TSL is not 1.", transcript_id
             )
             instance = None
         elif len(strands) > 1:
             LOG.warning(
-                "Transcript %s can't be sampled. Transcript generator \
-                    is not implemented for transcripts with \
-                        exons annotated on different strands",
-                transcript_id,
+                "Transcript \"%s\" can't be sampled: Transcript generator is "
+                "not implemented for transcripts with exons annotated on "
+                "different strands.", transcript_id,
             )
             instance = None
         else:
@@ -351,8 +353,8 @@ class TranscriptGenerator:
     def get_inclusions(self) -> np.ndarray:
         """Generate inclusions array.
 
-        Each column corresponds to one sample and the number of columns \
-            corresponds to the number of samples.
+        Each column corresponds to one sample and the number of columns
+        corresponds to the number of samples.
 
         Returns:
             A boolean np.array, where True means intron inclusion.
@@ -368,16 +370,18 @@ class TranscriptGenerator:
         return inclusion_arr
 
     def get_unique_inclusions(self) -> tuple[list, np.ndarray, np.ndarray]:
-        """Inclusion of unique intron inclusion via arrays and counts and \
-            name generation of each unique count.
+        """Get unique inclusions.
+
+        Inclusion of unique intron inclusion via arrays and counts and
+        name generation of each unique count.
 
         Args:
 
         Returns:
             - List of names for generated exons.
-            - A boolean np.array where columns correspond to generated \
+            - A boolean np.array where columns correspond to generated
                 transcripts and rows to intron inclusion.
-            - A np.array containing sample number per generated inclusions, \
+            - A np.array containing sample number per generated inclusions,
                 i.e. transcript.
         """
         inclusion_arr = self.get_inclusions()
@@ -398,8 +402,10 @@ class TranscriptGenerator:
     def get_df(
             self, inclusions: np.ndarray, transcript_id: str
             ) -> pd.DataFrame:
-        """Take as input a dataframe filtered to one transcript and \
-            a boolean vector denoting intron inclusions.
+        """Get dataframe.
+
+        Take as input a dataframe filtered to one transcript and
+        a boolean vector denoting intron inclusions.
 
         Args:
             inclusions: A boolean vector denoting intron inclusion.
@@ -467,7 +473,7 @@ class TranscriptGenerator:
         data_frame = reverse_parse_free_text(data_frame)
 
         write_gtf(data_frame, filename)
-        LOG.debug("Transcript %s sampled", self.ts_id)
+        LOG.debug("Transcript \"%s\" sampled.", self.ts_id)
 
 
 def sample_transcripts(
@@ -477,19 +483,21 @@ def sample_transcripts(
     output_transcripts_file: str,
     output_annotations_file: str,
 ):
-    """Read input files, iterate over transcript IDs, \
-        sample each transcript and save results.
+    """Sample transcripts.
+
+    Read input files, iterate over transcript IDs,
+    sample each transcript and save results.
 
     Args:
-        input_transcripts_file: Filename of transcript abundances, \
+        input_transcripts_file: Filename of transcript abundances,
             needs to be csv or tsv.
-        input_annotations_file: Filename of annotations, \
+        input_annotations_file: Filename of annotations,
             needs to be gtf.
-        prob_inclusion: Probability of intron inclusion, \
+        prob_inclusion: Probability of intron inclusion,
             needs to be float in range [0,1].
-        output_transcripts_file: Filename of file to write \
+        output_transcripts_file: Filename of file to write
             sampled transcripts to.
-        output_annotations_file: Filename of file to write \
+        output_annotations_file: Filename of file to write
             generated annotations to.
     """
     LOG.info("Probability of intron inclusion: %s", str(prob_inclusion))
@@ -509,7 +517,7 @@ def sample_transcripts(
     # Set up output file, write header once and append data in loop
     write_header(output_annotations_file)
 
-    for _, row in tqdm(transcripts.iterrows()):
+    for _, row in transcripts.iterrows():
         transcript_id = row["id"]
         transcript_count = row["count"]
 
