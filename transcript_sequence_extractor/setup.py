@@ -1,22 +1,29 @@
-from setuptools import setup, find_packages
+"""Set up project."""
 from pathlib import Path
+from setuptools import setup, find_packages
 
 project_root_dir = Path(__file__).parent.resolve()
+with open(project_root_dir / "requirements.txt",
+          "r", encoding="utf-8") as file:
+    INSTALL_REQUIRES = file.read().splitlines()
 
-with open(project_root_dir / "requirements.txt", "r", encoding="utf-8") as _file:
-    INSTALL_REQUIRES = _file.read().splitlines()
+URL = ('https://git.scicore.unibas.ch/zavolan_group/'
+       'tools/transcript-sequence-extractor')
 
 setup(
-    name='sequence_extractor',
+    name='transcript-sequence-extractor',
+    version='0.1.0',
+    url=URL,
+    license='MIT',
     author='Samuel Mondal',
     author_email='samuel.mondal@unibas.ch',
-    url='https://git.scicore.unibas.ch/zavolan_group/tools/transcript-sequence-extractor',
-    license='MIT',
-    version='0.0.1',
-    description='Extracts transcript sequences from gtf file and adds polyA tail to the output sequence',
+    description=('Extracts transcript sequences from gtf file'
+                 'and adds polyA tail to the output sequence'),
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
-    entrypoints={
-        'console_scripts': ['sequence_extractor=sequence_extractor.cli:main']
+    entry_points={
+        'console_scripts': [
+            'sequence-extractor=sequence_extractor.cli:main'
+            ]
         }
 )

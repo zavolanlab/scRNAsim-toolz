@@ -1,9 +1,28 @@
-import pytest
-import exon_concatenation from exon_concatenation
+"""Test exon_concatenation.py."""
+from pathlib import Path
+from sequence_extractor.exon_concatenation import exon_concatenation
 
-test_fasta_1 = "test_files/test_1.fa"
-test_fasta_2 = "test_files/test_2.fa"
+test_dir = Path(__file__).parent.resolve()
+
+test_fasta_1 = test_dir / "test_files" / "test_1.fa"
+test_fasta_2 = test_dir / "test_files" / "test_2.fa"
+
 
 def test_exon_concatenation():
-    assert exon_concatenation(test_fasta_1) == expected_list_of_tuples
-    assert exon_concatenation(test_fasta_2) == expected
+    """Test exon_concatenation function."""
+    # Test for test_fasta_1
+    expected_fasta_1 = [
+        (">ENST00000673477", "TTTCGCCTGCGCAGTGGTCCTGGCCACCGGCTCGCGGCGCGTGGAGGCTGCTCCCAGCCGCGCCCGAGTCAGACTCGGGTGGGGGTCCCGGTTACGCCAAGGAGGCCCTGAATCTGGCGCAGATGCAGGAGCAGACGCTGCAGTTGGAGCAACAGTCCAAGCTCAAA"),
+        (">ENST00000378391", "AAATACTGACGGACGTGGAAGTGTCGCCCCAGGAAGGCTGCATCACAAAGTCTCCGAAGACCTGGGCAGTGAGAAGTTCTGCGTGGATGCAAATCAGGCGGGGG"),
+    ]
+
+    result_fasta_1 = exon_concatenation(test_fasta_1)
+    assert result_fasta_1 == expected_fasta_1
+
+    # Test for test_fasta_2
+    expected_fasta_2 = [
+        (">ENST00000673477", "ACGGCTGGCACCTTGTTTGGGGAAGGATTCCGTGCCTTTGTGACAGACCGGGACAAAGTGACTGGCTGGGCTGACGCTGCTGGCTGTCGGGGTCTACTCAGCCAAGAATGCGATCAGCCGGCGGCTCCTCAGTCGACCCCAGGACGTGCTGGAGGGTGTTGTGCTTAGT"),
+    ]
+
+    result_fasta_2 = exon_concatenation(test_fasta_2)
+    assert result_fasta_2 == expected_fasta_2

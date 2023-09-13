@@ -1,7 +1,7 @@
-pytest~=7.2
-coverage~=6.5
-black~=22.10
-flake8~=6.0
-flake8-docstrings~=1.6
-mypy~=0.991
-pylint~=2.15
+pytest
+coverage
+black>=22.10
+flake8
+flake8-docstrings
+mypy
+pylint

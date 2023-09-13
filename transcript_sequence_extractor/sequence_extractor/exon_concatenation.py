@@ -1,19 +1,24 @@
-"""Script containing the function to concatenate exons and output the results in a list of tuples."""
+"""Concatenate exons and output the results in a list of tuples."""
 
 
 def exon_concatenation(
     post_bedtools_fasta: str,
 ) -> list:
-    """Concatenate all sequences starting with identical transcripit ID and outputs it as a list with sequence header (Transcript ID) and concatenated sequences as tuples.
+    """Concatenate exons.
+
+    Concatenate all sequences starting with identical transcript ID and
+    output it as a list with sequence header (Transcript ID) and
+    concatenated sequences as tuples.
 
     Args:
-        post_bedtools_fasta: The name of the fasta file obtained after bedtools has been run
+        post_bedtools_fasta: The name of the fasta file obtained after
+                             bedtools has been run
 
     Returns:
         A list containing transcript ID and concatenated exons in tuples.
     """
     with open(post_bedtools_fasta, "r", encoding="utf-8") as fasta:
-        annotation = []
+        annotation: list = []
         fasta_format_list = []
         for line1, line2 in zip(fasta, fasta):
             if len(annotation) == 0:

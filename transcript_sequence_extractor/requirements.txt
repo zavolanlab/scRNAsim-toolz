@@ -1,3 +1,4 @@
- pandas~=1.5
- numpy~=1.23
- gtfparse~=1.2
+numpy>=1.23.3
+pandas>=1.4.4
+gtfparse
+polars==0.16.17
