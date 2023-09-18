@@ -1,12 +1,13 @@
+"""Main module for read sequencer."""
 from random import choices
 from collections.abc import Generator, Iterator
-from Bio import SeqIO
-from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
+from Bio import SeqIO  # type: ignore
+from Bio.Seq import Seq  # type: ignore
+from Bio.SeqRecord import SeqRecord  # type: ignore
 
 
 class ReadSequencer:
-    """ReadSequencer class
+    """ReadSequencer class.
 
     Args:
         fasta: path fasta file
@@ -22,23 +23,22 @@ class ReadSequencer:
 
     def __init__(
         self,
-        fasta: str = None,
-        output: str = None,
+        fasta=None,
+        output=None,
         read_length: int = 150,
         chunk_size: int = 10000,
     ) -> None:
-
+        """Initialise class."""
         self.fasta = fasta
         self.output = output
         self.read_length = read_length
         self.chunk_size = chunk_size
         self.random = False
         self.bases = ("A", "T", "C", "G")
-        self.n_sequences = None
+        self.n_sequences: int
 
     def get_n_sequences(self) -> None:
-        """
-        Helper function to detect number of sequences present in set fasta file.
+        """Detect number of sequences present in set fasta file.
 
         Returns:
              None
@@ -46,8 +46,7 @@ class ReadSequencer:
         self.n_sequences = len(list(SeqIO.parse(self.fasta, "fasta")))
 
     def define_random_sequences(self, n_seq: int) -> None:
-        """
-        Defines random sequences.
+        """Define random sequences.
 
         Args:
              n_seq: number of random sequences to be generated
@@ -59,8 +58,7 @@ class ReadSequencer:
         self.n_sequences = n_seq
 
     def generate_random_sequence(self, length: int) -> Seq:
-        """
-        Generates random sequence.
+        """Generate random sequence.
 
         Args:
             length: length of sequence
@@ -73,7 +71,7 @@ class ReadSequencer:
         return seq
 
     def resize_sequence(self, record: SeqRecord) -> SeqRecord:
-        """Resizes sequence
+        """Resize sequence.
 
         Resizes sequence according to set read length. If sequence is
          shorter than read length, fills up with random nucleotides.
@@ -93,7 +91,7 @@ class ReadSequencer:
         return record.seq
 
     def batch_iterator(self, iterator: Iterator, batch_size: int) -> Generator:
-        """Generates batch iterator.
+        """Generate batch iterator.
 
         This is a generator function, and it returns lists of the
         entries from the supplied iterator.  Each list will have
@@ -114,7 +112,7 @@ class ReadSequencer:
                 batch = []
 
     def run_sequencing(self) -> None:
-        """Runs sequencing.
+        """Run sequencing.
 
         Runs read sequencing of specified sequences from input fasta file or
          generates random sequences for a given read length. If number of
@@ -125,7 +123,7 @@ class ReadSequencer:
         """
         if self.random:
             if self.n_sequences <= self.chunk_size:
-                with open(self.output, "w") as output_handle:
+                with open(self.output, "w", encoding="utf-8") as output_handle:
                     for i in range(self.n_sequences):
                         record = SeqRecord(
                             self.generate_random_sequence(self.read_length),
@@ -134,35 +132,44 @@ class ReadSequencer:
                         SeqIO.write(record, output_handle, "fasta")
             else:
                 batch_generator = self.batch_iterator(
-                    range(self.n_sequences), self.chunk_size
+                    iter(range(self.n_sequences)), self.chunk_size
                 )
                 for i, batch in enumerate(batch_generator):
-                    filename = self.output.replace(".fasta", "") + "_chunk_%i.fasta" % (
-                        i + 1
+                    filename = (
+                        self.output.replace(".fasta", "") +
+                        f"_chunk_{i + 1}.fasta"
                     )
-                    with open(filename, "w") as output_handle:
-                        for j, k in enumerate(batch):
+                    with open(
+                        filename, "w", encoding="utf-8"
+                    ) as output_handle:
+                        for j, _ in enumerate(batch):
                             record = SeqRecord(
-                                self.generate_random_sequence(self.read_length),
+                                self.generate_random_sequence(
+                                    self.read_length
+                                ),
                                 id="random_seq: " + str(j + 1),
                             )
                             SeqIO.write(record, output_handle, "fasta")
         else:
             if self.n_sequences <= self.chunk_size:
-                with open(self.fasta) as input_handle, open(
-                    self.output, "w"
+                with open(self.fasta, encoding="utf-8") as input_handle, open(
+                    self.output, "w", encoding="utf-8"
                 ) as output_handle:
                     for record in SeqIO.parse(input_handle, "fasta"):
                         record.seq = self.resize_sequence(record)
                         SeqIO.write(record, output_handle, "fasta")
 
             else:
-                record_iter = SeqIO.parse(open(self.fasta), "fasta")
-                for i, batch in enumerate(
-                    self.batch_iterator(record_iter, self.chunk_size)
-                ):
-                    filename = self.output.replace(".fasta", "") + "_chunk_%i.fasta" % (i + 1)
-                    for j, record in enumerate(batch):
-                        batch[j].seq = self.resize_sequence(record)
-                    with open(filename, "w") as handle:
-                        SeqIO.write(batch, handle, "fasta")
+                with open(self.fasta, encoding="utf-8") as file:
+                    record_iter = SeqIO.parse(file, "fasta")
+                    for i, batch in enumerate(
+                        self.batch_iterator(record_iter, self.chunk_size)
+                    ):
+                        filename = (
+                            self.output.replace(".fasta", "") +
+                            f"_chunk_{i + 1}.fasta"
+                        )
+                        for j, record in enumerate(batch):
+                            record.seq = self.resize_sequence(record)
+                        with open(filename, "w", encoding="utf-8") as handle:
+                            SeqIO.write(batch, handle, "fasta")
