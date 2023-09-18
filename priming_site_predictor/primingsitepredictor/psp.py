@@ -1,6 +1,7 @@
 """Main module for Priming Site Predictor."""
 import math
 import logging
+import re
 import pandas as pd  # type: ignore
 
 LOG = logging.getLogger(__name__)
@@ -8,10 +9,10 @@ LOG = logging.getLogger(__name__)
 
 # pylint: disable=R0903
 class CreatePrimer:
-    """Create an instance of a primer of a desired length \
-        and primer name which can be saved as a fasta file.
+    """Create an instance of a primer of a desired length and name.
 
-    By default the length is 15 and name is primer.
+    The primer is saved as a fasta file.
+    By default, the length is 15 and the name is "primer".
     """
 
     def __init__(self, name='primer', primerlength=15):
@@ -60,10 +61,12 @@ class PrimingSitePredictor:
             raw_interactions = file.readlines()[firstline:]
         number_entries = len(raw_interactions)
 
-        for i in range(0, number_entries-1):
-            current_interaction = raw_interactions[i].strip(
-                ' \n').replace('(', '').replace(')', '').replace(
-                '-', ',').replace(':', ',').split(',')
+        for i in range(0, number_entries):
+            pattern = r'(?<=[0-9])-(?=[0-9])'
+            current_interaction = re.sub(pattern, ',', raw_interactions[i])
+            current_interaction = current_interaction.strip(
+                ' \n').replace('(', '').replace(
+                    ')', '').replace(':', ',').split(',')
             interaction_list.append(current_interaction)
 
         return interaction_list

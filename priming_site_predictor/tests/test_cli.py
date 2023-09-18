@@ -2,6 +2,7 @@
 import unittest
 from unittest.mock import patch
 from primingsitepredictor import cli
+from primingsitepredictor.cli import setup_logging
 
 
 class TestCli(unittest.TestCase):
@@ -75,3 +76,11 @@ class TestCli(unittest.TestCase):
                 ]):
             with self.assertRaises(SystemExit):
                 cli.parse_args()
+
+
+class TestSetupLogging:
+    """Test ``setup_logging()`` function."""
+
+    def test_log_level_default(self):
+        """Call without args."""
+        setup_logging()

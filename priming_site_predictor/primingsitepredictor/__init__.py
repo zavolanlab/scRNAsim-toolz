@@ -1,1 +1,1 @@
-"""Initialize package."""
+"""Initialise package."""

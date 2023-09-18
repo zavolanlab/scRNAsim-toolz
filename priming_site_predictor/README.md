@@ -6,10 +6,7 @@ Priming Site Predictor which uses a seed-and-extension algorithm (*RIblast*: htt
 ## Version
 Version 0.1.0 (2022/11/15)
 
-## Acknowledgements
-We used the RIblast algorithm created by Tsukasa Fukunaga (https://github.com/fukunagatsu). 
-
-## Installation from github 
+## Installation from GitLab
 Priming Site Predictor requires Python 3.9 or later.
 
 Install Priming Site Predictor from GitLab using:
@@ -17,7 +14,11 @@ Install Priming Site Predictor from GitLab using:
 ```
 git clone https://git.scicore.unibas.ch/zavolan_group/tools/priming-site-predictor.git
 cd priming-site-predictor
-pip install . 
+```
+Create scRNA-seq-simulation conda environment:
+```
+conda env create --file environment.yml
+conda activate scrna-seq-sim
 ```
 
 ## Usage
@@ -53,6 +54,9 @@ This software is released under the MIT License, see LICENSE.txt.
 
 ## Contributors
 Max Bär, Sophie Schnider, Robin Christen (University of Basel)
+
+## Acknowledgements
+We used the RIblast algorithm created by Tsukasa Fukunaga (https://github.com/fukunagatsu). 
 
 ## Reference
 Tsukasa Fukunaga and Michiaki Hamada. "RIblast: An ultrafast RNA-RNA interaction prediction system based on a seed-and-extension approach." btx287, Bioinformatics (2017)
