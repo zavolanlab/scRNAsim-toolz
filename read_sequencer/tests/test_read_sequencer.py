@@ -1,9 +1,11 @@
-import pytest
+"""Test read_sequencer.py."""
 import os
 import glob
 from readsequencer.read_sequencer import ReadSequencer
 
+
 def test_init_default():
+    """Test default initation."""
     sequencer = ReadSequencer()
     assert sequencer.fasta is None
     assert sequencer.read_length == 150
@@ -13,6 +15,7 @@ def test_init_default():
 
 
 def test_run_random():
+    """Test random run."""
     sequencer = ReadSequencer(
         output="./tests/fasta_testfile/results.fasta")
     sequencer.define_random_sequences(n_seq=100)
@@ -23,7 +26,9 @@ def test_run_random():
     sequencer.run_sequencing()
     os.remove("./tests/fasta_testfile/results.fasta")
 
+
 def test_run_random_chunks():
+    """Test random run chunks."""
     # setup class
     sequencer = ReadSequencer(
         output="./tests/fasta_testfile/results.fasta",
@@ -44,6 +49,7 @@ def test_run_random_chunks():
 
 
 def test_run_sequencing():
+    """Test sequencing run."""
     sequencer = ReadSequencer(
         fasta="./tests/fasta_testfile/50_seqs_50_1000_bp.fasta",
         output="./tests/fasta_testfile/results.fasta",
@@ -59,7 +65,9 @@ def test_run_sequencing():
     for file in result_file:
         os.remove(file)
 
+
 def test_run_sequencing_chunks():
+    """Test run sequencing chunks."""
     # setup class
     sequencer = ReadSequencer(
         fasta="./tests/fasta_testfile/50_seqs_50_1000_bp.fasta",
@@ -78,6 +86,3 @@ def test_run_sequencing_chunks():
     assert len(result_files) == 5
     for file in result_files:
         os.remove(file)
-
-
-
