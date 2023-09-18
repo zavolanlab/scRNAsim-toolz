@@ -1,5 +1,5 @@
 """Tests for cDNA functions."""
-import pytest
+import pytest  # type: ignore
 from cdna.cdna import complement, seq_complement
 
 
