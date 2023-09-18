@@ -1,7 +1,7 @@
 """Test utils.py functions."""
-import pandas as pd
+import pandas as pd  # type: ignore
 import pytest
-from Bio import SeqIO
+from Bio import SeqIO  # type: ignore
 
 from term_frag_sel.fragmentation import fragmentation
 
