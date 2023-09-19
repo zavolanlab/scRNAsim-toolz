@@ -1,1 +1,1 @@
-"""Tests for the package tsg."""
+"""Initialise tests."""

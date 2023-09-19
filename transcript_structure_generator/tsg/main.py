@@ -308,6 +308,7 @@ class Gtf:
 class TranscriptGenerator:
     """Class to sample a transcript."""
 
+    # pylint: disable=W0613
     def __new__(
         cls,
         transcript_id: str,

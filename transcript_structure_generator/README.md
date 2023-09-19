@@ -6,11 +6,11 @@ We hope that others would find use for this transcript_structure generator that 
 
 # Installation
 
-To install the Python virtual environment, run
+To install package, run
 
 ```
-conda env create --file environment.yml
-conda activate transcript-structure-generator
+pip install "setuptools>=62.1.0"
+pip install .
 ```
 
 # Usage
@@ -27,44 +27,16 @@ Output:
 	- id of original transcript (without intron inclusions)
 	- count
 
-To install package, run
+
+To generate the sampled transcripts, run
 
 ```
-pip install "setuptools>=62.1.0"
-pip install .
-```
-
-To generate the sampled transcripts, open a new shell, activate your environment and run
-
-```
-conda activate transcript-structure-generator
-
-transcript-generator --prob-inclusion <probability_inclusion> [--log "INFO"] <transcripts_file> <annotations_file>
+transcript-structure-generator --prob-inclusion <probability_inclusion> [--log "INFO"] <transcripts_file> <annotations_file>
 ```
 
 where the transcripts file should be csv-formatted, the annotation file gtf-formatted and the inclusion probability for introns a float in the range [0,1]. The log parameter is optional and can be one of `["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]`. The default is `INFO`.
 
 Sample Transcripts and Annotation files can be found in the repository under main/tests/resources.
-
-# Development
-
-To perform all tests, make sure your environment corresponds to the `environment.yml` file and run
-
-```
-pytest tests
-```
-
-To build Docker image, run
-
-```
-docker build -t transcript-app .
-```
-
-Afterwards, you can use the Docker image like so
-
-```
-docker run transcript-app --prob_inclusion <probability_inclusion> [--log "INFO"] <transcripts_file> <annotations_file>
-```
 
 # License
 
