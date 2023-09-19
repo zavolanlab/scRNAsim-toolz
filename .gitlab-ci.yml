@@ -29,6 +29,6 @@ lint-test-job:   # This job also runs in the test stage.
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    # - flake8 --docstring-convention google transcript_sampler/ tests/
-    # - pylint transcript_sampler/ tests/
-    # - mypy transcript_sampler/
+    - flake8 --docstring-convention google transcript_sampler/ tests/
+    - pylint transcript_sampler/ tests/
+    - mypy transcript_sampler/ tests/

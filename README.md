@@ -47,4 +47,4 @@ options:
 
 Example : 
 
-`transcript_sampler --input_gtf="tests/input_files/test.gtf" --input_csv="tests/input_files/expression.csv" --output_gtf="output_files/output.gtf" --output_csv="output_files/output.csv" --n_to_sample=100`
+`transcript-sampler --input_gtf="tests/inputs/test.gtf" --input_csv="tests/inputs/expression.csv" --output_gtf="output_files/output.gtf" --output_csv="output_files/output.csv" --n_to_sample=100`

@@ -1,10 +1,11 @@
 """Find representative transcripts."""
-
 import logging
+from typing import Union
 
 LOG = logging.getLogger(__name__)
 
 
+# pylint: disable=R0912,R0915
 class FindRepTrans:
     """Find representative transcripts."""
 
@@ -12,7 +13,7 @@ class FindRepTrans:
         """Initiate."""
 
     @staticmethod
-    def attributes_converter(attributes: str) -> list:
+    def attributes_converter(attributes):
         """Attributes converter function.
 
         This funtion converts the "unstructured" ;-seperated part of
@@ -23,7 +24,7 @@ class FindRepTrans:
         Input:
             attributes = str() # the unstructured part of the entry
         Output:
-            attributes = list() # cleaned list with the \
+            attributes = list() # cleaned list with the
                                   characteristics described above
         """
         attributes = (
@@ -51,10 +52,9 @@ class FindRepTrans:
         if look_for in attributes:
             index = attributes.index(look_for) + 1
             return attributes[index]
-        else:
-            LOG.warning('No %s in the entry, the return was set to NA',
-                        look_for)
-            return "NA"
+        LOG.warning('No %s in the entry, the return was set to NA',
+                    look_for)
+        return "NA"
 
     @staticmethod
     def reformat_reptrans(rep_trans_dict: dict) -> dict:
@@ -96,8 +96,11 @@ class FindRepTrans:
             ValueError: If an unexpected entry is encountered in the GTF file.
         """
         # setting default variables
-        rep_transcripts = dict()
+        rep_transcripts: dict = {}
         cur_g_id = ""
+        cur_t_id = ""
+        pot_best_trans: list = []
+        cur_best_trans: list = []
         # [transcript_id, transcript_support_level, transcript_length]
         cur_best_trans = ["", 100, 0]
 
@@ -122,11 +125,11 @@ class FindRepTrans:
                     if cur_g_id != attributes[1]:
                         LOG.error("Exon from an unexpected gene")
                         raise ValueError("Exon from an unexpected gene")
-                    elif (
+                    if (
                         self.find_in_attributes(
                             attributes, "transcript_id"
-                        ) != cur_tID
-                        ):
+                        ) != cur_t_id
+                    ):
                         LOG.error("Exon from an unexpected transcript")
                         raise ValueError("Exon from an unexpected transcript")
 
@@ -136,7 +139,6 @@ class FindRepTrans:
                         pot_best_trans[2] += int(entry[4]) - int(entry[3])
                         if pot_best_trans[2] > cur_best_trans[2]:
                             cur_best_trans = pot_best_trans
-                            pot_best_trans = False
                     else:
                         cur_best_trans[2] += int(entry[4]) - int(entry[3])
 
@@ -148,10 +150,10 @@ class FindRepTrans:
                         raise ValueError("Transcript from an unexpected gene")
 
                     # finding the transcript id and the support level
-                    cur_tID = self.find_in_attributes(
+                    cur_t_id = self.find_in_attributes(
                         attributes, "transcript_id"
                         )
-                    t_supp_lvl = self.find_in_attributes(
+                    t_supp_lvl: Union[int, str] = self.find_in_attributes(
                         attributes, "transcript_support_level"
                         )
 
@@ -161,21 +163,22 @@ class FindRepTrans:
                     if t_supp_lvl == "NA":
                         t_supp_lvl = 100
                     else:
-                        if t_supp_lvl.isdigit():
+                        if isinstance(
+                            t_supp_lvl, str
+                        ) and t_supp_lvl.isdigit():
                             t_supp_lvl = int(t_supp_lvl)
                         else:
                             t_supp_lvl = 100
 
                     # decides if the transcript has potential to become the
                     # representative transcript
-                    if t_supp_lvl < cur_best_trans[1] or cur_best_trans[0] == "":
-                        cur_best_trans = [cur_tID, t_supp_lvl, 0]
-                        pot_best_trans = False
-                        ignor_trans = False
+                    if (
+                        t_supp_lvl < cur_best_trans[1] or
+                        cur_best_trans[0] == ""
+                    ):
+                        cur_best_trans = [cur_t_id, t_supp_lvl, 0]
                     elif t_supp_lvl == cur_best_trans[1]:
-                        pot_best_trans = [cur_tID, t_supp_lvl, 0]
-                    else:
-                        ignor_trans = True
+                        pot_best_trans = [cur_t_id, t_supp_lvl, 0]
 
                 # looking for and processing gene entries
                 elif entry[2] == "gene":
@@ -203,7 +206,7 @@ class FindRepTrans:
             if cur_g_id in rep_transcripts:
                 if (rep_transcripts[cur_g_id][1] > cur_best_trans[1] or
                         (rep_transcripts[cur_g_id][1] == cur_best_trans[1] and
-                        rep_transcripts[cur_g_id][2] < cur_best_trans[2])):
+                         rep_transcripts[cur_g_id][2] < cur_best_trans[2])):
                     rep_transcripts[cur_g_id] = cur_best_trans
             else:
                 rep_transcripts[cur_g_id] = cur_best_trans
@@ -220,8 +223,8 @@ class FindRepTrans:
         """
         output = []
 
-        with open(original_file, "r", encoding="utf-8") as f:
-            for line in f:
+        with open(original_file, "r", encoding="utf-8") as file:
+            for line in file:
                 if line.startswith("#"):
                     continue
 
@@ -242,51 +245,3 @@ class FindRepTrans:
 
         with open(output_file, "w", encoding="utf-8") as last_file:
             last_file.writelines(output)
-
-
-# def _test():
-#     """
-#     This funtion is meant to be run for test
-#     Output:
-#         file with the dictionary generated based on the test file
-#     """
-#     file_name = "test.gtf"
-#     rt = get_rep_trans(file_name)
-#     expected_result = {"ENSG00000160072": "ENST00000472194",
-#                        "ENSG00000234396": "ENST00000442483",
-#                        "ENSG00000225972": "ENST00000416931",
-#                        "ENSG00000224315": "ENST00000428803",
-#                        "ENSG00000198744": "ENST00000416718",
-#                        "ENSG00000279928": "ENST00000624431",
-#                        "ENSG00000228037": "ENST00000424215",
-#                        'ENSG00000142611': 'ENST00000378391'}
-#     if rt != expected_result:
-#         print("The test failed due to not yielding the same results")
-#         print("The results the program got\n", rt)
-#         print("The expected results\n", expected_result)
-#     else:
-#         print("The test was successful")
-
-
-# # Execution part #
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser(
-#         description="find_representativ_transcripts",
-#         formatter_class=argparse.ArgumentDefaultsHelpFormatter
-#         )
-#     parser.add_argument("-file_name", required=True,
-#                         help="gtf file with genome annotation")
-#     parser.add_argument("-t", required=False, default=False,
-#                         help="to run the test input -t True")
-#     args = parser.parse_args()
-
-#     # standadize the file_name inlude .gtf#
-#     file_name = args.file_name
-#     i_gtf = file_name.find(".gtf")
-#     if i_gtf == -1:
-#         file_name += ".gtf"
-
-#     if args.t:
-#         _test()
-#     else:
-#         get_rep_trans(file_name)

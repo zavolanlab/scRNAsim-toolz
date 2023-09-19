@@ -1,9 +1,10 @@
 """Tests functions."""
 import os
-import pandas as pd
+import pandas as pd  # type: ignore
 import numpy as np
 
 
+# pylint: disable=C0103
 def find_path(filename: str) -> str:
     """Find the path to a file.
 
@@ -35,7 +36,7 @@ def find_output():
         None
     """
     absolute_path = os.path.dirname(__file__)
-    test_file = "ReprTrans_ExpressionLevel.tsv"
+    test_file = "inputs/test_ref_output.tsv"
     full_path = os.path.join(absolute_path, test_file)
     return full_path
 

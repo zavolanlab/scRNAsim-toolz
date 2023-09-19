@@ -1,6 +1,6 @@
 argparse
 biopython
+polars==0.16.17
 gtfparse
-polars == 0.16.17
-numpy >= 1.23.3
-pandas >= 1.4.4
+numpy>=1.23.3
+pandas>=1.4.4
