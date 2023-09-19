@@ -1,0 +1,7 @@
+pytest
+coverage
+black>=22.10
+flake8
+flake8-docstrings
+mypy
+pylint
