@@ -13,7 +13,6 @@ build-job:       # First stage deployment and installation of dependencies.
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    - echo "Dependencies successfully deployed."
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -30,6 +29,6 @@ lint-test-job:   # Test Stage
     - pip install -r requirements.txt
     - pip install -r requirements_dev.txt
     - pip install -e .
-    - flake8 --docstring-convention google sequence_extractor/
-    - pylint sequence_extractor/
-    - mypy sequence_extractor/
+    - flake8 --docstring-convention google sequence_extractor/ tests/
+    - pylint sequence_extractor/ tests/
+    - mypy sequence_extractor/ tests/
