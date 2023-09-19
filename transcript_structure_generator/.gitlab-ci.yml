@@ -1,0 +1,34 @@
+default:
+  tags:
+    - docker
+  image: python:3.10-slim-buster
+
+stages:          # List of employment runs, starts with build ends with deploy. 
+  - build
+  - test
+
+build-job:       # First stage deployment and installation of dependencies. 
+  stage: build   # Build Stage
+  script:
+    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt
+    - pip install -e .
+
+unit-test-job:   # Test Stage
+  stage: test        # Starts when the above build stages finishes installing dependencies.
+  script:
+    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt
+    - pip install -e .
+    - coverage run --source tsg -m pytest
+    - coverage report -m
+
+lint-test-job:   # Test Stage
+  stage: test    # Deploys and runs all 3 linters.
+  script:
+    - pip install -r requirements.txt
+    - pip install -r requirements_dev.txt
+    - pip install -e .
+    - flake8 --docstring-convention google tsg/ tests/
+    - pylint tsg/ tests/
+    - mypy tsg/ tests/
