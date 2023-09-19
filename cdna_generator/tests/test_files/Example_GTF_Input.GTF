@@ -1,0 +1,6 @@
+Transcript_1	RIBlast	Priming_site	10	25	.	+	.	Accessibility_Energy "1.49"; Hybridization_Energy "-9.76"; Interaction_Energy "-8.74"; Number_of_binding_sites "2"; Binding_Probability "0.12"
+Transcript_1	RIBlast	Priming_site	640	655	.	+	.	Accessibility_Energy "1.71"; Hybridization_Energy "-9.12"; Interaction_Energy "-8.34"; Number_of_binding_sites "2"; Binding_Probability "0.05"
+Transcript_2	RIBlast	Priming_site	3	18	.	+	.	Accessibility_Energy "1.21"; Hybridization_Energy "-5.12"; Interaction_Energy "-2.34"; Number_of_binding_sites "1"; Binding_Probability "0.15"
+Transcript_3	RIBlast	Priming_site	5	35	.	+	.	Accessibility_Energy "1.21"; Hybridization_Energy "-5.12"; Interaction_Energy "-2.34"; Number_of_binding_sites "1"; Binding_Probability "0.25"
+Transcript_4	RIBlast	Priming_site	5	35	.	+	.	Accessibility_Energy "1.21"; Hybridization_Energy "-5.12"; Interaction_Energy "-2.34"; Number_of_binding_sites "1"; Binding_Probability "0.15"
+Transcript_5	RIBlast	Priming_site	5	35	.	+	.	Accessibility_Energy "1.21"; Hybridization_Energy "-5.12"; Interaction_Energy "-2.34"; Number_of_binding_sites "1"; Binding_Probability "0.15"
