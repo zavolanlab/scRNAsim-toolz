@@ -1,6 +1,6 @@
 """Set up project."""
 from pathlib import Path
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages  # type: ignore
 
 project_root_dir = Path(__file__).parent.resolve()
 with open(project_root_dir / "requirements.txt",
