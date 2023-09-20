@@ -1,4 +1,4 @@
-name: scrna-seq-sim
+name: scrnasim
 channels:
   - defaults
   - bioconda
