@@ -1,7 +1,7 @@
 """Test cli.py."""
-import pytest
+import pytest  # type: ignore
 from cli_test_helpers import ArgvContext, shell  # type: ignore
-import readsequencer.cli
+from ...scRNAsim_toolz.read_sequencer import cli  # type: ignore
 
 
 def test_entrypoint():
@@ -13,7 +13,7 @@ def test_entrypoint():
 def test_usage_no_args():
     """Test if CLI aborts w/o arguments, displaying usage instructions."""
     with ArgvContext('readsequencer'), pytest.raises(SystemExit):
-        readsequencer.cli.main()
+        cli.main()
 
     result = shell('readsequencer')
 

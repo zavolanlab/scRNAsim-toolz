@@ -4,9 +4,10 @@ from unittest.mock import patch, mock_open
 from unittest import mock
 import math
 import pandas as pd  # type: ignore
-import pytest
-from primingsitepredictor.psp import CreatePrimer
-from primingsitepredictor.psp import PrimingSitePredictor
+import pytest  # type: ignore
+from ...scRNAsim_toolz.priming_site_predictor.psp import (  # type: ignore
+    CreatePrimer, PrimingSitePredictor
+)
 
 
 class TestCreatePrimer(unittest.TestCase):

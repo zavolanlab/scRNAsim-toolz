@@ -1,9 +1,0 @@
-matplotlib
-pandas
-pip
-mypy
-flake8
-flake8-docstrings
-pytest
-pylint
-coverage

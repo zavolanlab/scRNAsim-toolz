@@ -1,7 +1,7 @@
 """Sample transcripts by Poisson-sampling."""
 
-import pandas as pd   # type: ignore
-import numpy as np
+import pandas as pd  # type: ignore
+import numpy as np  # type: ignore
 
 
 # pylint: disable=R0903

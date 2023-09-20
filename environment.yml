@@ -1,21 +1,12 @@
 name: scrnasim
 channels:
-  - defaults
-  - bioconda
   - conda-forge
+  - bioconda
 dependencies:
-  - argparse
   - biopython>=1.78
-  - black
-  - coverage
-  - flake8
-  - flake8-docstrings
-  - gtfparse
   - polars==0.16.17
-  - mypy
+  - gtfparse
   - numpy>=1.23.3
-  - pylint
-  - pytest
   - nextflow
   - pandas>=1.4.4
   - pip>=20.2.3

@@ -1,3 +1,0 @@
-gtfparse
-biopython
-pandas

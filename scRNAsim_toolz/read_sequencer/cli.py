@@ -1,7 +1,7 @@
 """Receive command line arguments."""
 import argparse
 import logging
-from readsequencer.read_sequencer import ReadSequencer
+from .read_sequencer import ReadSequencer
 
 logging.basicConfig(
     format='[%(asctime)s: %(levelname)s] %(message)s \

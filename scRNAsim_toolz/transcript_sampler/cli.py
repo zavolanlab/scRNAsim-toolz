@@ -9,9 +9,9 @@ logging.basicConfig(
     level=logging.INFO,
     )
 
-from transcript_sampler.find_reptrans import FindRepTrans  # noqa: E402,E501 # pylint:disable=wrong-import-position
-from transcript_sampler.match_reptrans_explvl import MatchReptransExplvl  # noqa: E402,E501 # pylint:disable=wrong-import-position
-from transcript_sampler.poisson_sampling import SampleTranscript  # noqa: E402,E501 # pylint:disable=wrong-import-position
+from .find_reptrans import FindRepTrans  # noqa: E402,E501 # pylint:disable=wrong-import-position # type: ignore
+from .match_explvl import MatchReptransExplvl  # noqa: E402,E501 # pylint:disable=wrong-import-position
+from .poisson_sampling import SampleTranscript  # noqa: E402,E501 # pylint:disable=wrong-import-position
 
 find_rep_trans = FindRepTrans()
 match_reptrs_explvl = MatchReptransExplvl()

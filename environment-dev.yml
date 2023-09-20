@@ -1,0 +1,14 @@
+name: scrnasim
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - black
+  - coverage
+  - flake8
+  - flake8-docstrings
+  - mypy
+  - pylint
+  - pytest
+  - pip:
+    - -e .

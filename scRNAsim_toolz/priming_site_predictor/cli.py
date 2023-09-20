@@ -1,8 +1,8 @@
 """Receive command line arguments."""
 import argparse
 import logging
-from primingsitepredictor.psp import CreatePrimer
-from primingsitepredictor.psp import PrimingSitePredictor
+from .psp import CreatePrimer
+from .psp import PrimingSitePredictor
 
 LOG = logging.getLogger(__name__)
 

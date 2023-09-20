@@ -1,7 +1,9 @@
 """Test read_sequencer.py."""
 import os
 import glob
-from readsequencer.read_sequencer import ReadSequencer
+from ...scRNAsim_toolz.read_sequencer.read_sequencer import (  # type: ignore
+    ReadSequencer
+)
 
 
 def test_init_default():

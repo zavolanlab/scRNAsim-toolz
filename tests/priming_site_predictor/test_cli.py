@@ -1,8 +1,10 @@
 """Test functions for cli.py."""
 import unittest
 from unittest.mock import patch
-from primingsitepredictor import cli
-from primingsitepredictor.cli import setup_logging
+from ...scRNAsim_toolz.priming_site_predictor import cli  # type: ignore
+from ...scRNAsim_toolz.priming_site_predictor.cli import (  # type: ignore
+    setup_logging
+)
 
 
 class TestCli(unittest.TestCase):

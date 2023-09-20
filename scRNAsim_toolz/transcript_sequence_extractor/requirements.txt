@@ -1,4 +1,0 @@
-numpy>=1.23.3
-pandas>=1.4.4
-gtfparse
-polars==0.16.17

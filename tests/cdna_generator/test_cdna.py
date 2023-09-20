@@ -1,6 +1,8 @@
 """Tests for cDNA functions."""
 import pytest  # type: ignore
-from cdna.cdna import complement, seq_complement
+from ...scRNAsim_toolz.cdna_generator.cdna import (  # type: ignore
+    complement, seq_complement
+)
 
 
 @pytest.mark.parametrize(

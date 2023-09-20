@@ -10,7 +10,7 @@ logging.basicConfig(
 )
 LOG = logging.getLogger(__name__)
 
-from cdna.cdna import CDNAGen  # noqa: E402,E501 # pylint:disable=wrong-import-position
+from .cdna import CDNAGen  # noqa: E402,E501 # pylint:disable=wrong-import-position
 
 
 def main():
