@@ -2,6 +2,7 @@
 import argparse
 import time
 import logging
+from scRNAsim_toolz.version import __version__
 
 logging.basicConfig(
     format='[%(asctime)s: %(levelname)s] %(message)s \
@@ -45,6 +46,10 @@ def main():
         "-n", "--n_to_sample", required=True, default=None,
         help="Total number of transcripts to sample"
         )
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
+    )
     args = parser.parse_args()
 
     log = logging.getLogger("main")

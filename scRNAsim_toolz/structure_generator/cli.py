@@ -2,7 +2,7 @@
 import argparse
 import logging
 from pathlib import Path
-
+from scRNAsim_toolz.version import __version__
 from .main import sample_transcripts
 
 
@@ -76,7 +76,10 @@ def build_arg_parser() -> argparse.Namespace:
         help='Level of logging. Can be one of \
             ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]',
     )
-
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
+    )
     args = parser.parse_args()
 
     assert args.prob_inclusion >= 0

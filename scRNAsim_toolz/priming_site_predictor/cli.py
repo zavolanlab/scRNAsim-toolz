@@ -3,6 +3,7 @@ import argparse
 import logging
 from .psp import CreatePrimer
 from .psp import PrimingSitePredictor
+from scRNAsim_toolz.version import __version__
 
 LOG = logging.getLogger(__name__)
 
@@ -65,6 +66,10 @@ def parse_args():
         "-o", "--output-filename",
         help="Path where the output gtf should be written"
         )
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
+    )
     args = parser.parse_args()
 
     return args
