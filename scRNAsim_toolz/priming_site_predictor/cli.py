@@ -1,9 +1,9 @@
 """Receive command line arguments."""
 import argparse
 import logging
+from scRNAsim_toolz.version import __version__
 from .psp import CreatePrimer
 from .psp import PrimingSitePredictor
-from scRNAsim_toolz.version import __version__
 
 LOG = logging.getLogger(__name__)
 
