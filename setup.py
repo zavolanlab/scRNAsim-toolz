@@ -15,7 +15,7 @@ with open(project_root_dir / "requirements.txt",
     INSTALL_REQUIRES = fh.read().splitlines()
 
 setup(
-    name="scrnasim",
+    name="scrnasim_toolz",
     version=__version__,
     description=(
         "Repository for the tools used by scRNAsim"

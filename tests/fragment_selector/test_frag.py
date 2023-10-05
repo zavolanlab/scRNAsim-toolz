@@ -1,14 +1,15 @@
 """Test utils.py functions."""
+from pathlib import Path
 import pandas as pd  # type: ignore
 import pytest  # type: ignore
 from Bio import SeqIO  # type: ignore
-
-from ...scRNAsim_toolz.fragment_selector.fragmentation import (  # type: ignore
+from scRNAsim_toolz.fragment_selector.fragmentation import (
     fragmentation
 )
 
-FASTA_FILE = "tests/test_files/test.fasta"
-CSV_FILE = "tests/test_files/test.csv"
+TEST_FILES_DIR = Path(__file__).resolve().parent / "test_files"
+FASTA_FILE = TEST_FILES_DIR / "test.fasta"
+CSV_FILE = TEST_FILES_DIR / "test.csv"
 
 fasta_dict = {}
 with open(FASTA_FILE, "r", encoding="utf-8") as handle:

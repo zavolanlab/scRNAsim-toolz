@@ -5,7 +5,7 @@ from unittest import mock
 import math
 import pandas as pd  # type: ignore
 import pytest  # type: ignore
-from ...scRNAsim_toolz.priming_site_predictor.psp import (  # type: ignore
+from scRNAsim_toolz.priming_site_predictor.psp import (
     CreatePrimer, PrimingSitePredictor
 )
 

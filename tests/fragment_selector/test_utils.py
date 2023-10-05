@@ -1,8 +1,7 @@
 """Test utils.py functions."""
 import argparse
 import pytest  # type: ignore
-
-from ...scRNAsim_toolz.fragment_selector.utils import (  # type: ignore
+from scRNAsim_toolz.fragment_selector.utils import (
     check_positive
 )
 

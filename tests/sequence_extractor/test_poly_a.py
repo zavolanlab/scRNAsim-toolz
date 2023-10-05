@@ -1,6 +1,6 @@
 """Test poly_a.py script."""
 import numpy as np  # type: ignore
-from ...scRNAsim_toolz.sequence_extractor.poly_a import (  # type: ignore
+from scRNAsim_toolz.sequence_extractor.poly_a import (
     poly_a_generator, poly_a_addition_to_fasta_list
 )
 

@@ -1,16 +1,17 @@
 """Test cli.py functions."""
+from pathlib import Path
 import pytest  # type: ignore
-
-from ...scRNAsim_toolz.fragment_selector.cli import (  # type: ignore
+from scRNAsim_toolz.fragment_selector.cli import (
     file_validation, main
 )
 
-FASTA_FILE = "tests/test_files/test.fasta"
-CSV_FILE = "tests/test_files/test.csv"
-TAB_FILE = "tests/test_files/test_tab.csv"
+TEST_FILES_DIR = Path(__file__).resolve().parent / "test_files"
+FASTA_FILE = TEST_FILES_DIR / "test.fasta"
+CSV_FILE = TEST_FILES_DIR / "test.csv"
+TAB_FILE = TEST_FILES_DIR / "test_tab.csv"
 
-_, csv_counts = file_validation(FASTA_FILE, CSV_FILE, ",")
-_, tab_counts = file_validation(FASTA_FILE, TAB_FILE, "\t")
+_, csv_counts = file_validation(str(FASTA_FILE), str(CSV_FILE), ",")
+_, tab_counts = file_validation(str(FASTA_FILE), str(TAB_FILE), "\t")
 
 
 def test_file():
