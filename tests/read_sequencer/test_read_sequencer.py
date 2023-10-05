@@ -1,6 +1,5 @@
 """Test read_sequencer.py."""
 import os
-import glob
 from pathlib import Path
 from scRNAsim_toolz.read_sequencer.read_sequencer import (
     ReadSequencer

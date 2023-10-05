@@ -2,6 +2,7 @@
 import unittest
 from unittest.mock import patch, mock_open
 from unittest import mock
+import os
 import math
 import pandas as pd  # type: ignore
 import pytest  # type: ignore
@@ -95,6 +96,7 @@ class TestPrimingSitePredictor(unittest.TestCase):
             print(expected_output)
             # self.assertEqual(self.post_processor.generate_gtf(),
             # expected_output)
+        os.remove("test_output.gtf")
 
     def test_calculate_energy(self):
         """Test the calculate_energy() method."""

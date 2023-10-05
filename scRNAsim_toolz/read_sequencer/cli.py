@@ -1,8 +1,8 @@
 """Receive command line arguments."""
 import argparse
 import logging
-from .read_sequencer import ReadSequencer
 from scRNAsim_toolz.version import __version__
+from .read_sequencer import ReadSequencer
 
 logging.basicConfig(
     format='[%(asctime)s: %(levelname)s] %(message)s \
