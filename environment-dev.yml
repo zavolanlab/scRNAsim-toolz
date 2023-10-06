@@ -10,6 +10,5 @@ dependencies:
   - mypy
   - pylint
   - pytest
-  - cli_test_helpers
   - pip:
     - -e .
