@@ -1,6 +1,7 @@
 """scRNAsim package definition."""
 from pathlib import Path
 from setuptools import setup, find_packages  # type: ignore
+from scRNAsim_toolz.version import __version__
 
 # Read long description from file
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -14,8 +15,8 @@ with open(project_root_dir / "requirements.txt",
     INSTALL_REQUIRES = fh.read().splitlines()
 
 setup(
-    name="scrnasim",
-    version="0.1.0",
+    name="scrnasim_toolz",
+    version=__version__,
     description=(
         "Repository for the tools used by scRNAsim"
     ),

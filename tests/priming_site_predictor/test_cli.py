@@ -1,8 +1,8 @@
 """Test functions for cli.py."""
 import unittest
 from unittest.mock import patch
-from ...scRNAsim_toolz.priming_site_predictor import cli  # type: ignore
-from ...scRNAsim_toolz.priming_site_predictor.cli import (  # type: ignore
+from scRNAsim_toolz.priming_site_predictor import cli
+from scRNAsim_toolz.priming_site_predictor.cli import (
     setup_logging
 )
 

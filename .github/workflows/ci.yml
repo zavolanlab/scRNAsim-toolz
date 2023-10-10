@@ -30,7 +30,7 @@ jobs:
           auto-activate-base: false
       
       - name: Update scrnasim env with dev packages
-        run: mamba env update -n scrnasim -f environment.dev.yml
+        run: mamba env update -n scrnasim -f environment-dev.yml
       
       - name: display environment info
         run: |
@@ -67,7 +67,7 @@ jobs:
           auto-activate-base: false
       
       - name: update scrnasim env with dev packages
-        run: mamba env update -n scrnasim -f environment.dev.yml
+        run: mamba env update -n scrnasim -f environment-dev.yml
       
       - name: display environment info
         run: |

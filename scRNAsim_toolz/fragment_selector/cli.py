@@ -5,7 +5,7 @@ from pathlib import Path
 from Bio import SeqIO  # type: ignore
 import numpy as np  # type: ignore
 import pandas as pd  # type: ignore
-
+from scRNAsim_toolz.version import __version__
 
 from .fragmentation import fragmentation
 from .utils import check_positive
@@ -124,6 +124,10 @@ def parse_arguments() -> argparse.Namespace:
                         help="Chunk size for batch processing")
     parser.add_argument('--sep', required=False, default=",",
                         help="Sequence counts file separator.")
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
+    )
     args = parser.parse_args()
 
     return args

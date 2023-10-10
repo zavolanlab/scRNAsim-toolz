@@ -1,6 +1,7 @@
 """CLI to be run on output fasta file from bedtools getfasta."""
 import argparse
 import logging
+from scRNAsim_toolz.version import __version__
 from .pre_bedtools import pre_bedtools_mode
 from .exon_concat import exon_concatenation
 from .poly_a import poly_a_addition_to_fasta_list
@@ -82,7 +83,10 @@ def parse_args():
         dest="output_bed_file",
         help="Bed file with only exons with strandedness"
              "taken into account for 'pre_bedtools' mode.")
-
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
+    )
     args = parser.parse_args()
     return args
 

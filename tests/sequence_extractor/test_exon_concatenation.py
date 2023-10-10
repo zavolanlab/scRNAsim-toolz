@@ -1,6 +1,6 @@
 """Test exon_concatenation.py."""
 from pathlib import Path
-from ...scRNAsim_toolz.sequence_extractor.exon_concat import (  # type: ignore
+from scRNAsim_toolz.sequence_extractor.exon_concat import (
     exon_concatenation
 )
 

@@ -1,6 +1,7 @@
 """Receive command line arguments."""
 import argparse
 import logging
+from scRNAsim_toolz.version import __version__
 from .psp import CreatePrimer
 from .psp import PrimingSitePredictor
 
@@ -65,6 +66,10 @@ def parse_args():
         "-o", "--output-filename",
         help="Path where the output gtf should be written"
         )
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
+    )
     args = parser.parse_args()
 
     return args

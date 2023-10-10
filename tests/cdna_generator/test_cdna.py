@@ -1,6 +1,6 @@
 """Tests for cDNA functions."""
 import pytest  # type: ignore
-from ...scRNAsim_toolz.cdna_generator.cdna import (  # type: ignore
+from scRNAsim_toolz.cdna_generator.cdna import (
     complement, seq_complement
 )
 

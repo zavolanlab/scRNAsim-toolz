@@ -1,6 +1,7 @@
 """Receive command line arguments."""
 import argparse
 import logging
+from scRNAsim_toolz.version import __version__
 from .read_sequencer import ReadSequencer
 
 logging.basicConfig(
@@ -51,6 +52,10 @@ def main():
         default=10000,
         type=int,
         help="chunk_size for batch processing",
+    )
+    parser.add_argument(
+        '-v', '--version', action='version',
+        version=f'scRNAsim version: {__version__}'
     )
     args = parser.parse_args()
     LOG.info("Read sequencer started.")

@@ -1,8 +1,14 @@
 """Tests for main module."""
+from pathlib import Path
 import pandas as pd  # type: ignore
-from ...scRNAsim_toolz.structure_generator.main import (  # type: ignore
-    Gtf, TranscriptGenerator, dict_to_str, str_to_dict
+from scRNAsim_toolz.structure_generator.main import (
+    Gtf,
+    TranscriptGenerator,
+    dict_to_str,
+    str_to_dict
 )
+
+TEST_FILES_DIR = Path(__file__).resolve().parent / "test_files"
 
 
 class TestFreeTextParsing:
@@ -59,7 +65,7 @@ class TestGtf:
     def test_init(self):
         """Test for init function."""
         annotations = Gtf()
-        annotations.read_file("tests/resources/Annotation1.gtf")
+        annotations.read_file(str(TEST_FILES_DIR / "Annotation1.gtf"))
 
         assert annotations.parsed is False
         assert annotations.original_columns == self.cols
@@ -68,7 +74,7 @@ class TestGtf:
     def test_parsed(self):
         """Test for parsed function."""
         annotations = Gtf()
-        annotations.read_file("tests/resources/Annotation1.gtf")
+        annotations.read_file(str(TEST_FILES_DIR / "Annotation1.gtf"))
         annotations.parse_key_value()
 
         assert annotations.parsed is True

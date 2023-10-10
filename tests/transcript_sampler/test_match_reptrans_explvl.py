@@ -4,10 +4,10 @@ import pandas as pd  # type: ignore
 import numpy as np  # type: ignore
 from pandas.testing import assert_frame_equal  # type: ignore
 
-from ...scRNAsim_toolz.transcript_sampler.match_explvl import (  # type: ignore
+from scRNAsim_toolz.transcript_sampler.match_explvl import (
     MatchReptransExplvl as match
 )
-import test_functions as tFun  # type: ignore
+import tests.transcript_sampler.test_functions as tFun
 
 
 class TestMatchReptrans:
