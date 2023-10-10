@@ -1,4 +1,4 @@
-"""scRNAsim package definition."""
+"""scRNAsim-toolz package definition."""
 from pathlib import Path
 from setuptools import setup, find_packages  # type: ignore
 from scRNAsim_toolz.version import __version__
@@ -15,19 +15,19 @@ with open(project_root_dir / "requirements.txt",
     INSTALL_REQUIRES = fh.read().splitlines()
 
 setup(
-    name="scrnasim_toolz",
+    name="scrnasim-toolz",
     version=__version__,
     description=(
         "Repository for the tools used by scRNAsim"
     ),
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
-    url="https://github.com/zavolanlab/htsinfer",
+    url="https://github.com/zavolanlab/scRNAsim-toolz",
     author="Zavolan Lab, Biozentrum, University of Basel",
     maintainer="Máté Balajti",
     maintainer_email="mate.balajti@unibas.ch",
     project_urls={
-        "Repository": "https://github.com/zavolanlab/scRNAsim_toolz",
+        "Repository": "https://github.com/zavolanlab/scRNAsim-toolz",
     },
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
