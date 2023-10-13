@@ -103,11 +103,11 @@ class PrimingSitePredictor:
 
         for index in interaction_df.index:
             result += (
-                str(interaction_df[3][index])
+                str(interaction_df.iloc[:, 3][index])
                 + '\tRIBlast\tPriming_site\t'
-                + str(interaction_df[13][index])
+                + str(interaction_df.iloc[:, 13][index])
                 + '\t'
-                + str(interaction_df[12][index])
+                + str(interaction_df.iloc[:, 12][index])
                 + '\t.\t+\t.\t'
                 + 'Interaction_Energy' + '\t'
                 + str(interaction_df[
