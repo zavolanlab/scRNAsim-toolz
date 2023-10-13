@@ -5,3 +5,4 @@ polars==0.16.17
 gtfparse
 setuptools
 cli_test_helpers
+pyarrow
