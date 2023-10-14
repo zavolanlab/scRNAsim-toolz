@@ -10,5 +10,3 @@ dependencies:
   - mypy
   - pylint
   - pytest
-  - pip:
-    - -e .
