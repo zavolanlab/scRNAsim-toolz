@@ -166,18 +166,6 @@ def write_gtf(gtf_df: pd.DataFrame, filename: str) -> None:
     )
 
 
-def write_header(annotations_file: str) -> None:
-    """Write the header of an annotations file.
-
-    It consists of the tab delimited column names.
-
-    Args:
-        annotations_file: Filename to write header to.
-    """
-    with open(annotations_file, "w", encoding="utf_8") as file_header:
-        file_header.write("\t".join(Gtf.dtypes.keys()) + "\n")
-
-
 class Gtf:
     """Class to read transcripts annotations file into a Gtf object.
 
@@ -515,8 +503,6 @@ def sample_transcripts(
     LOG.info("Done parsing...")
 
     LOG.info("Start sampling transcripts...")
-    # Set up output file, write header once and append data in loop
-    write_header(output_annotations_file)
 
     for _, row in transcripts.iterrows():
         transcript_id = row["id"]
