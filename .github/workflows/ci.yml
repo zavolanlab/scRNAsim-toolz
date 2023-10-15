@@ -107,12 +107,12 @@ jobs:
         uses: philips-software/docker-ci-scripts@v5.1.0
         with:
           dockerfile: .
-          image-name: "balajtimate/scrnasim-toolz"
-          tags: "latest ${{ env.TAG }}"
+          image-name: "scrnasim-toolz"
+          tags: balajtimate/scrnasim-toolz:latest
           push-branches: 'add_docker'
         env:
-          REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_LOGIN }}
-          REGISTRY_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
+          REGISTRY_USERNAME: ${{ github.actor }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_ORGANIZATION: ${{ secrets.DOCKERHUB_LOGIN }}
           GITHUB_ORGANIZATION: ${{ github.repository_owner }}
 
