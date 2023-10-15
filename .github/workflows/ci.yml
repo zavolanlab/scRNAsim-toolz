@@ -113,6 +113,7 @@ jobs:
         env:
           REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_LOGIN }}
           REGISTRY_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
+          DOCKER_ORGANIZATION: ${{ secrets.DOCKERHUB_LOGIN }}
           GITHUB_ORGANIZATION: ${{ github.repository_owner }}
 
       - name: Verify that image was pushed
