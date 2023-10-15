@@ -16,8 +16,7 @@ LABEL maintainer="Máté Balajti <mate.balajti@unibas.ch>"
 # COPY THE YAML & INSTALL SOFTWARE WITH CONDA
 WORKDIR /usr/src/app
 COPY ./ ./
-RUN conda env create --file environment.yml \
-    && conda clean --all
+RUN conda env create --file environment.yml
 
 # VARIABLES
 ARG WORKDIR="/home/USER"
