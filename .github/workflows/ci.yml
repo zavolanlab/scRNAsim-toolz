@@ -91,8 +91,7 @@ jobs:
     name: build and publish app image
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'push' && 
-      github.ref == 'refs/heads/add_docker'
+      github.event_name == 'push'
 
     steps:
 
@@ -110,7 +109,7 @@ jobs:
           dockerfile: .
           image-name: "balajtimate/scrnasim-toolz"
           tags: "latest ${{ env.TAG }}"
-          push-branches: 'refs/heads/add_docker'
+          push-branches: 'add_docker'
         env:
           REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_LOGIN }}
           REGISTRY_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
