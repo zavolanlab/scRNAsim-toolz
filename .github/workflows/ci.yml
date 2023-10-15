@@ -108,7 +108,8 @@ jobs:
         with:
           dockerfile: .
           image-name: "scrnasim-toolz"
-          tags: "latest ${{ env.TAG }}"
+          push: true
+          tags: balajtimate/scrnasim-toolz:latest
           push-branches: 'add_docker'
         env:
           REGISTRY_USERNAME: ${{ github.actor }}
