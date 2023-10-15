@@ -102,17 +102,19 @@ jobs:
         run: |
           echo "TAG=$(date '+%Y%m%d')" >> $GITHUB_ENV
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
+      - name: build and publish image
+        id: docker
+        uses: philips-software/docker-ci-scripts@v5.1.0
         with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: balajtimate/scrnasim-toolz:latest
+          dockerfile: .
+          image-name: "scrnasim-toolz"
+          tags: "latest ${{ env.TAG }}"
           push-branches: 'add_docker'
+        env:
+          REGISTRY_USERNAME: ${{ github.actor }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_ORGANIZATION: balajtimate
+          GITHUB_ORGANIZATION: balajtimate
 
       - name: Verify that image was pushed
         run: |
