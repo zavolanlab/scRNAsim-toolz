@@ -107,15 +107,14 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           dockerfile: .
-          image-name: "scrnasim-toolz"
+          image-name: "balajtimate/scrnasim-toolz"
           push: true
-          tags: balajtimate/scrnasim-toolz:latest
+          tags: "balajtimate/scrnasim-toolz:latest"
           push-branches: 'add_docker'
-        env:
-          REGISTRY_USERNAME: ${{ github.actor }}
-          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_ORGANIZATION: balajtimate
-          GITHUB_ORGANIZATION: balajtimate
+        # env:
+        #   REGISTRY_USERNAME: ${{ github.actor }}
+        #   REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   DOCKER_ORGANIZATION: balajtimate
 
       - name: Verify that image was pushed
         run: |
