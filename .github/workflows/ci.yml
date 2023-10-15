@@ -104,7 +104,7 @@ jobs:
 
       - name: build and publish image
         id: docker
-        uses: philips-software/docker-ci-scripts@v5.1.0
+        uses: docker/build-push-action@v5
         with:
           dockerfile: .
           image-name: "scrnasim-toolz"
