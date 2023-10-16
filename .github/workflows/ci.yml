@@ -114,7 +114,7 @@ jobs:
           REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_LOGIN }}
           REGISTRY_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
           DOCKER_ORGANIZATION: ${{ secrets.DOCKERHUB_ORG }}
-          GITHUB_ORGANIZATION: balajtimate
+          GITHUB_ORGANIZATION: ${{ github.repository_owner }}
 
       - name: Verify that image was pushed
         run: |
