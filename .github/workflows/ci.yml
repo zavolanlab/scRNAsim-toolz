@@ -17,7 +17,7 @@ jobs:
         shell: bash -l {0}
 
     steps:
-      - name: check out repository
+      - name: Check out repository
         uses: actions/checkout@v4
          
       - name: Setup Conda/Mamba
@@ -25,14 +25,14 @@ jobs:
         with:
           mamba-version: "*"
           auto-update-conda: true
-          activate-environment: scrnasim
+          activate-environment: scrnasim-toolz
           environment-file: environment.yml
           auto-activate-base: false
       
-      - name: Update scrnasim env with dev packages
-        run: mamba env update -n scrnasim -f environment-dev.yml
+      - name: Update scrnasim-toolz env with dev packages
+        run: mamba env update -n scrnasim-toolz -f environment-dev.yml
       
-      - name: display environment info
+      - name: Display environment info
         run: |
           conda info -a
           conda list
@@ -54,32 +54,32 @@ jobs:
 
     steps:
     
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
          
-      - name: setup Conda/Mamba
+      - name: Setup Conda/Mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
           mamba-version: "*"
           auto-update-conda: true
-          activate-environment: scrnasim
+          activate-environment: scrnasim-toolz
           environment-file: environment.yml
           auto-activate-base: false
       
-      - name: update scrnasim env with dev packages
-        run: mamba env update -n scrnasim -f environment-dev.yml
+      - name: Update scrnasim-toolz env with dev packages
+        run: mamba env update -n scrnasim-toolz -f environment-dev.yml
       
-      - name: display environment info
+      - name: Display environment info
         run: |
           conda info -a
           conda list
       
-      - name: run unit tests
+      - name: Run unit tests
         run: |
           coverage run --source scRNAsim_toolz -m pytest
           coverage xml
 
-      - name: submit coverage report
+      - name: Submit coverage report
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -96,14 +96,14 @@ jobs:
 
     steps:
 
-      - name: check out repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: generate tag
+      - name: Generate tag
         run: |
           echo "TAG=$(date '+%Y%m%d')" >> $GITHUB_ENV
 
-      - name: build and publish image
+      - name: Build and publish image
         id: docker
         uses: philips-software/docker-ci-scripts@v5.1.0
         with:
