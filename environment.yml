@@ -1,4 +1,4 @@
-name: scrnasim
+name: scrnasim-toolz
 channels:
   - conda-forge
   - bioconda
