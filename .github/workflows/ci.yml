@@ -107,7 +107,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           dockerfile: .
-          image-name: "balajtimate/scrnasim-toolz"
+          image-name: "scrnasim-toolz"
           push: true
           tags: "balajtimate/scrnasim-toolz:latest"
           push-branches: 'add_docker'
