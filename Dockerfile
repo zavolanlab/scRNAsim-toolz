@@ -31,9 +31,8 @@ RUN groupadd -r ${GROUP} && useradd --no-log-init -r -g ${GROUP} ${USER}
 WORKDIR ${WORKDIR}
 RUN chown -R ${USER}:${GROUP} ${WORKDIR} && chmod 700 ${WORKDIR}
 USER ${USER}
-RUN echo "source activate scrnasim" > ~/.bashrc
-ENV PATH /opt/conda/envs/scrnasim/bin:$PATH
+RUN echo "source activate scrnasim-toolz" > ~/.bashrc
+ENV PATH /opt/conda/envs/scrnasim-toolz/bin:$PATH
 
 # SET ENTRYPOINT
-ENTRYPOINT ["transcript-sampler"]
-CMD ["-v"]
+CMD ["transcript-sampler", "-v"]
