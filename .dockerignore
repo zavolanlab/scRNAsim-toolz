@@ -1,0 +1,8 @@
+*
+!scRNAsim_toolz/
+!tests/
+!setup.py
+!requirements.txt
+!environment.yml
+!LICENSE
+!README.md
