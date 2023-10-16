@@ -25,12 +25,12 @@ jobs:
         with:
           mamba-version: "*"
           auto-update-conda: true
-          activate-environment: scrnasim
+          activate-environment: scrnasim-toolz
           environment-file: environment.yml
           auto-activate-base: false
       
-      - name: Update scrnasim env with dev packages
-        run: mamba env update -n scrnasim -f environment-dev.yml
+      - name: Update scrnasim-toolz env with dev packages
+        run: mamba env update -n scrnasim-toolz -f environment-dev.yml
       
       - name: Display environment info
         run: |
@@ -62,12 +62,12 @@ jobs:
         with:
           mamba-version: "*"
           auto-update-conda: true
-          activate-environment: scrnasim
+          activate-environment: scrnasim-toolz
           environment-file: environment.yml
           auto-activate-base: false
       
-      - name: Update scrnasim env with dev packages
-        run: mamba env update -n scrnasim -f environment-dev.yml
+      - name: Update scrnasim-toolz env with dev packages
+        run: mamba env update -n scrnasim-toolz -f environment-dev.yml
       
       - name: Display environment info
         run: |
