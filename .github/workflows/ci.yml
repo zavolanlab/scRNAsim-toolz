@@ -10,82 +10,82 @@ on:
  
 jobs:
 
-  # static-code-analysis:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       shell: bash -l {0}
+  static-code-analysis:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
 
-  #   steps:
-  #     - name: check out repository
-  #       uses: actions/checkout@v4
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v4
          
-  #     - name: Setup Conda/Mamba
-  #       uses: conda-incubator/setup-miniconda@v2
-  #       with:
-  #         mamba-version: "*"
-  #         auto-update-conda: true
-  #         activate-environment: scrnasim
-  #         environment-file: environment.yml
-  #         auto-activate-base: false
+      - name: Setup Conda/Mamba
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          mamba-version: "*"
+          auto-update-conda: true
+          activate-environment: scrnasim
+          environment-file: environment.yml
+          auto-activate-base: false
       
-  #     - name: Update scrnasim env with dev packages
-  #       run: mamba env update -n scrnasim -f environment-dev.yml
+      - name: Update scrnasim env with dev packages
+        run: mamba env update -n scrnasim -f environment-dev.yml
       
-  #     - name: display environment info
-  #       run: |
-  #         conda info -a
-  #         conda list
+      - name: display environment info
+        run: |
+          conda info -a
+          conda list
 
-  #     - name: flake8
-  #       run: flake8
+      - name: flake8
+        run: flake8
 
-  #     - name: pylint
-  #       run: pylint --rcfile pylint.cfg setup.py scRNAsim_toolz/
+      - name: pylint
+        run: pylint --rcfile pylint.cfg setup.py scRNAsim_toolz/
 
-  #     - name: mypy
-  #       run: mypy scRNAsim_toolz
+      - name: mypy
+        run: mypy scRNAsim_toolz
 
-  # unit-testing:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       shell: bash -l {0}
+  unit-testing:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
 
-  #   steps:
+    steps:
     
-  #     - name: checkout repository
-  #       uses: actions/checkout@v4
+      - name: checkout repository
+        uses: actions/checkout@v4
          
-  #     - name: setup Conda/Mamba
-  #       uses: conda-incubator/setup-miniconda@v2
-  #       with:
-  #         mamba-version: "*"
-  #         auto-update-conda: true
-  #         activate-environment: scrnasim
-  #         environment-file: environment.yml
-  #         auto-activate-base: false
+      - name: setup Conda/Mamba
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          mamba-version: "*"
+          auto-update-conda: true
+          activate-environment: scrnasim
+          environment-file: environment.yml
+          auto-activate-base: false
       
-  #     - name: update scrnasim env with dev packages
-  #       run: mamba env update -n scrnasim -f environment-dev.yml
+      - name: update scrnasim env with dev packages
+        run: mamba env update -n scrnasim -f environment-dev.yml
       
-  #     - name: display environment info
-  #       run: |
-  #         conda info -a
-  #         conda list
+      - name: display environment info
+        run: |
+          conda info -a
+          conda list
       
-  #     - name: run unit tests
-  #       run: |
-  #         coverage run --source scRNAsim_toolz -m pytest
-  #         coverage xml
+      - name: run unit tests
+        run: |
+          coverage run --source scRNAsim_toolz -m pytest
+          coverage xml
 
-  #     - name: submit coverage report
-  #       uses: codecov/codecov-action@v2
-  #       with:
-  #         token: ${{ secrets.CODECOV_TOKEN }}
-  #         files: ./coverage.xml
-  #         verbose: true
-  #         fail_ci_if_error: false
+      - name: submit coverage report
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          verbose: true
+          fail_ci_if_error: false
 
   publish:
     name: build and publish app image
@@ -113,7 +113,7 @@ jobs:
         env:
           REGISTRY_USERNAME: ${{ secrets.DOCKERHUB_LOGIN }}
           REGISTRY_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
-          DOCKER_ORGANIZATION: balajtimate
+          DOCKER_ORGANIZATION: ${{ secrets.DOCKERHUB_ORG }}
           GITHUB_ORGANIZATION: ${{ github.repository_owner }}
 
       - name: Verify that image was pushed
