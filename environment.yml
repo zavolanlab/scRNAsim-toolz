@@ -20,4 +20,4 @@ dependencies:
   - pylint
   - pytest
   - pip:
-    - -e .
+    - '-e .'
