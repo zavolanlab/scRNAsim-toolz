@@ -26,7 +26,7 @@ jobs:
           python-version: "3.10"
           mamba-version: "*"
           auto-update-conda: true
-          activate-environment: scrnasim-toolz
+          activate-environment: "scrnasim-toolz"
           environment-file: environment-dev.yml
           auto-activate-base: false
             
@@ -61,7 +61,7 @@ jobs:
           python-version: "3.10"
           mamba-version: "*"
           auto-update-conda: true
-          activate-environment: scrnasim-toolz
+          activate-environment: "scrnasim-toolz"
           environment-file: environment-dev.yml
           auto-activate-base: false
       
