@@ -25,13 +25,11 @@ jobs:
         with:
           python-version: "3.10"
           mamba-version: "*"
+          auto-update-conda: true
           activate-environment: scrnasim-toolz
-          environment-file: environment.yml
+          environment-file: environment-dev.yml
           auto-activate-base: false
-      
-      - name: Update scrnasim-toolz env with dev packages
-        run: mamba env update -n scrnasim-toolz -f environment-dev.yml
-      
+            
       - name: Display environment info
         run: |
           conda info -a
@@ -60,10 +58,11 @@ jobs:
       - name: Setup Conda/Mamba
         uses: conda-incubator/setup-miniconda@v2
         with:
+          python-version: "3.10"
           mamba-version: "*"
           auto-update-conda: true
           activate-environment: scrnasim-toolz
-          environment-file: environment.yml
+          environment-file: environment-dev.yml
           auto-activate-base: false
       
       - name: Update scrnasim-toolz env with dev packages
