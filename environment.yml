@@ -1,15 +1,14 @@
-name: scrnasim
+name: scrnasim-toolz
 channels:
   - conda-forge
   - bioconda
 dependencies:
+  - pip>=20.2.3
   - biopython>=1.78
   - polars==0.16.17
   - gtfparse
   - numpy>=1.23.3
-  - nextflow
   - pandas>=1.4.4
-  - pip>=20.2.3
   - python>=3.6, <=3.10
   - pyarrow
   - pip:
