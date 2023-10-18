@@ -3,6 +3,14 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
+  - pip>=20.2.3
+  - biopython>=1.78
+  - polars==0.16.17
+  - gtfparse
+  - numpy>=1.23.3
+  - pandas>=1.4.4
+  - python>=3.6, <=3.10
+  - pyarrow
   - black
   - coverage
   - flake8

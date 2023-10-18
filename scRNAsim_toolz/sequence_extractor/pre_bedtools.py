@@ -43,5 +43,5 @@ def pre_bedtools_mode(args):
         args.output_bed_file = "default_output.bed"
 
     pd.concat([gtf_df_pos, gtf_df_neg]).to_csv(
-        args.output_bed_file, sep="\t", index=False
+        args.output_bed_file, sep="\t", index=False, header=False
     )  # gtf_df_pos and gtf_df_neg must be dataframes
