@@ -8,8 +8,16 @@ dependencies:
   - polars==0.16.17
   - gtfparse
   - numpy>=1.23.3
+  - nextflow
   - pandas>=1.4.4
   - python>=3.6, <=3.10
   - pyarrow
+  - black
+  - coverage
+  - flake8
+  - flake8-docstrings
+  - mypy
+  - pylint
+  - pytest
   - pip:
-    - -e .
+    - '-e .'
