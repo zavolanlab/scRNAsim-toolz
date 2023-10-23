@@ -173,15 +173,15 @@ class CDNAGen:
     def read_gtf(self) -> None:
         """Read and process the GTF file.
 
-        Reads a GTF file and determines copy numbers from \
-            normalized probabilities.
+        Reads a GTF file and determines copy numbers from
+        normalized probabilities.
 
         Returns: None
 
         """
-        # returns GTF with essential columns such as \
+        # returns GTF with essential columns such as
         # "feature", "seqname", "start", "end"
-        # alongside the names of any optional keys \
+        # alongside the names of any optional keys
         # which appeared in the attribute column
         gtf_df = read_gtf(self.gtf)
 
@@ -204,7 +204,7 @@ class CDNAGen:
                 count += 1
             else:
                 count = 0  # reset count
-                # CVS transcript ID
+            # CSV transcript ID
             id_csv = str(row["seqname"]).split("_")[1]
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             gtf_df.loc[index, "Normalized_Binding_Probability"] = (
@@ -212,16 +212,17 @@ class CDNAGen:
             )
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             csv_transcript_copy_number = self.csv_df.loc[
-                self.csv_df["ID of transcript"] == int(id_csv),
-                "Transcript copy number",
+                self.csv_df.iloc[:, 1] == int(id_csv), "Transcript copy number",
             ].iloc[0]  # pop the first value in the frame
             gtf_df.loc[index, "Transcript_Copy_Number"] = round(
                 csv_transcript_copy_number
                 * gtf_df.loc[index, "Normalized_Binding_Probability"]
             )
+            gtf_df.loc[index, "Transcript_Copy_Number"]
             gtf_df.loc[index, "cdna_ID"] = f"{id_}_{count}"
             prev_id = id_
 
+        gtf_df['Transcript_Copy_Number'] = gtf_df['Transcript_Copy_Number'].astype(int)
         self.gtf_df = gtf_df
 
     def write_fasta(self) -> None:
@@ -244,6 +245,7 @@ class CDNAGen:
 
         """
         df_to_save = self.gtf_df[["cdna_ID", "Transcript_Copy_Number"]]
-        df_to_save.to_csv(self.output_csv, index=False)
+        # Stop outputting header
+        df_to_save.to_csv(self.output_csv, index=False, header=False)
         LOG.info("Copy number csv file successfully written to: %s",
                  self.output_csv)
