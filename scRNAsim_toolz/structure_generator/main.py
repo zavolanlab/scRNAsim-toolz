@@ -439,6 +439,12 @@ class TranscriptGenerator:
         """
         ids, _, counts = self.get_unique_inclusions()
         with open(filename, "a", encoding="utf_8") as file_handle:
+            # Add header to output csv for cdna-generator
+            if file_handle.tell() == 0:
+                file_handle.write(
+                    "ID of transcript,ID of parent transcript,Transcript copy number\n"
+                )
+
             for transcript_id, transcript_count in zip(ids, counts):
                 file_handle.write(
                     f"{transcript_id},{self.ts_id},{transcript_count}\n"
