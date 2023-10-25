@@ -75,24 +75,45 @@ class PrimingSitePredictor:
         """Create interaction df."""
         interaction_list = self.create_list_from_output()
         interaction_df = pd.DataFrame(interaction_list)
-        interaction_df['Number_of_interactions'] = int(0)
-        interaction_df['Interaction_Energy'] = float(0)
-        transcript = 3
-        energy = 5
+        # Add header row to interaction_df
+        interaction_df.columns = [
+            'Id',
+            'Query_name',
+            'Query_length',
+            'Target_name',
+            'Target_length',
+            'Accessibility_Energy',
+            'Hybridization_Energy',
+            'Interaction_Energy',
+            'Query_start_bp',
+            'Query_end_bp',
+            'Target start',
+            'Target end']
+        interaction_df['Number_of_binding_sites'] = int(0)
+        interaction_df['Binding_Energy'] = float(0)
+        transcript = 'Target_name'
+        energy = 'Accessibility_Energy'
 
         for _ in interaction_df.index:
-            interaction_df['Number_of_interactions'] = interaction_df[
+            interaction_df['Number_of_binding_sites'] = interaction_df[
                 transcript
                 ].apply(
                 lambda x: interaction_df[transcript].value_counts()[x]
             )
-            interaction_df['Interaction_Energy'] = interaction_df[
+            interaction_df['Binding_Energy'] = interaction_df[
                 energy
                 ].apply(self.calculate_energy)
 
         LOG.info("Calculating normalised interaction energies...")
-        interaction_df['Normalised_interaction_energy'] = interaction_df[
-            'Interaction_Energy']/interaction_df['Number_of_interactions']
+        interaction_df['Binding_Probability'] = interaction_df[
+            'Binding_Energy']/interaction_df['Number_of_binding_sites']
+
+        # Round energy columns
+        column_indices = [5, 6, 7, 13, 14]
+        for index in column_indices:
+            interaction_df.iloc[:, index] = interaction_df.iloc[
+                :, index
+            ].astype(float).round(2)
 
         return interaction_df
 
@@ -101,19 +122,15 @@ class PrimingSitePredictor:
         interaction_df = self.create_pandas_df()
         result = str()
 
-        for index in interaction_df.index:
+        for _, row in interaction_df.iterrows():
             result += (
-                str(interaction_df.iloc[:, 3][index])
-                + '\tRIBlast\tPriming_site\t'
-                + str(interaction_df.iloc[:, 13][index])
-                + '\t'
-                + str(interaction_df.iloc[:, 12][index])
-                + '\t.\t+\t.\t'
-                + 'Interaction_Energy' + '\t'
-                + str(interaction_df[
-                    "Normalised_interaction_energy"
-                    ][index])
-                + '\n'
+                f'{row.iloc[3]}\tRIBlast\tPriming_site\t'
+                f'{row.iloc[10]}\t{row.iloc[11]}\t.\t+\t.\t'
+                'Accessibility_Energy ' + f'"{row.iloc[5]}"; '
+                'Hybridization_Energy ' + f'"{row.iloc[6]}"; '
+                'Interaction_Energy ' + f'"{row.iloc[7]}"; '
+                'Number_of_binding_sites ' + f'"{row.iloc[12]}"; '
+                'Binding_Probability ' + f'"{row.iloc[14]}"\n'
             )
 
         LOG.info("Generating output gtf file...")
