@@ -26,11 +26,16 @@ def main():
         description="Generate cDNA sequences based on primer probabilities.",
     )
     parser.add_argument(
-        "-ifa", "--input_fasta", help="genome fasta file", required=True
+        "-ifa",
+        "--input_fasta",
+        help="genome fasta file",
+        required=True
     )
-    parser.add_argument("-igtf", "--input_gtf", help="gtf file", required=True)
     parser.add_argument(
-        "-ofa", "--output_fasta", help="output fasta file", required=True
+        "-igtf",
+        "--input_gtf",
+        help="gtf file",
+        required=True
     )
     parser.add_argument(
         "-icpn",
@@ -39,7 +44,16 @@ def main():
         required=True,
     )
     parser.add_argument(
-        "-ocsv", "--output_csv", help="output fasta file", required=True
+        "-ofa",
+        "--output_fasta",
+        help="output fasta file",
+        required=True
+    )
+    parser.add_argument(
+        "-ocsv",
+        "--output_csv",
+        help="output fasta file",
+        required=True
     )
     parser.add_argument(
         '-v', '--version', action='version',

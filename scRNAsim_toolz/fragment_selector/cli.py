@@ -49,8 +49,8 @@ def main():
 
         logger.info("Writing batch %s sequences to %s...", i, args.output)
         with open(args.output, 'a', encoding="utf-8") as out_file:
-            for line in term_frags:
-                out_file.write(f"{line}\n")
+            for i, line in enumerate(term_frags, 1):
+                out_file.write(f">Terminal fragment {i}\n{line}\n")
 
 
 def file_validation(fasta_file: str,
