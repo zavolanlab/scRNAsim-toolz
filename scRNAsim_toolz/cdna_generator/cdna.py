@@ -212,17 +212,19 @@ class CDNAGen:
             )
             # Calculate Normalized_Binding_Probability and add to GTF dataframe
             csv_transcript_copy_number = self.csv_df.loc[
-                self.csv_df.iloc[:, 1] == int(id_csv), "Transcript copy number",
+                self.csv_df.iloc[:, 1] == int(id_csv),
+                "Transcript copy number",
             ].iloc[0]  # pop the first value in the frame
             gtf_df.loc[index, "Transcript_Copy_Number"] = round(
                 csv_transcript_copy_number
                 * gtf_df.loc[index, "Normalized_Binding_Probability"]
             )
-            gtf_df.loc[index, "Transcript_Copy_Number"]
             gtf_df.loc[index, "cdna_ID"] = f"{id_}_{count}"
             prev_id = id_
 
-        gtf_df['Transcript_Copy_Number'] = gtf_df['Transcript_Copy_Number'].astype(int)
+        gtf_df['Transcript_Copy_Number'] = gtf_df[
+            'Transcript_Copy_Number'
+        ].astype(int)
         self.gtf_df = gtf_df
 
     def write_fasta(self) -> None:

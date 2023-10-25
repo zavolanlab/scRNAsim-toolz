@@ -442,7 +442,8 @@ class TranscriptGenerator:
             # Add header to output csv for cdna-generator
             if file_handle.tell() == 0:
                 file_handle.write(
-                    "ID of transcript,ID of parent transcript,Transcript copy number\n"
+                    "ID of transcript,ID of parent transcript,"
+                    "Transcript copy number\n"
                 )
 
             for transcript_id, transcript_count in zip(ids, counts):
