@@ -1,53 +1,37 @@
 # Read Sequencer
 
-## Overview
-
-Read Sequencer is a python package to simulate sequencing. 
-It reads fasta files, simulate sequencing with specified read length and writes the resulting sequences into a new fasta file.
-
-
-## Installation from github 
-
-Read Sequencer requires Python 3.9 or later.
-
-Install Read Sequencer from Github using:
-
-```
-git clone https://git.scicore.unibas.ch/zavolan_group/tools/read-sequencer.git
-cd read-sequencer
-pip install . 
-```
-
 ## Usage
-
 ```
-usage: readsequencer [-h] [-i INPUT] [-r READ_LENGTH] [-n N_RANDOM] [-s CHUNK_SIZE] output 
+usage: read-sequencer [-h] [-i INPUT] [-r READ_LENGTH] [-n N_RANDOM] [-s CHUNK_SIZE] [-v] output
+
 Simulates sequencing of DNA sequences specified by an FASTA file.
 
 positional arguments:
   output                path to FASTA file
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -i INPUT, --input INPUT
                         path to FASTA file
   -r READ_LENGTH, --read-length READ_LENGTH
                         read length for sequencing
   -n N_RANDOM, --n_random N_RANDOM
-                        n random sequences. Just used if input fasta file is not specified.
+                        n random sequences. Just used if inputfasta file is not specified.
   -s CHUNK_SIZE, --chunk-size CHUNK_SIZE
                         chunk_size for batch processing
-
 ```
 
-## Docker
-
-The docker image is available on docker hub: https://hub.docker.com/r/grrchrr/readsequencer
-
+Examples:
 ```
-docker pull grrchrr/readsequencer
-docker run readsequencer readsequencer --help
+read-sequencer -i tests/read_sequencer/files/50_seqs_50_1000_bp.fasta -r 100 sequenced_reads.fa
+read-sequencer -n 50 -r 100 random_reads.fa
 ```
+
+## Overview
+
+Read Sequencer is a python package to simulate sequencing. 
+It reads fasta files, simulate sequencing with specified read length and writes the resulting sequences into a new fasta file.
+
 
 ## Contributors and Contact Information
 

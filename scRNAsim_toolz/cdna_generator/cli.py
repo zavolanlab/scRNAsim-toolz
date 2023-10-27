@@ -22,7 +22,7 @@ def main():
 
     """
     parser = argparse.ArgumentParser(
-        prog="cDNA generator",
+        prog="cdna-generator",
         description="Generate cDNA sequences based on primer probabilities.",
     )
     parser.add_argument(

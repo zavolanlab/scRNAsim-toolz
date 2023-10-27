@@ -31,7 +31,7 @@ class MatchReptransExplvl:
         Raises:
             None
         """
-        df_gtf = read_gtf(gtf_file,).to_pandas()
+        df_gtf = read_gtf(gtf_file, result_type="pandas")
         df_gtf = df_gtf[df_gtf["feature"] == "transcript"]
         df_gtf = df_gtf[["gene_id", "transcript_id"]]
         df_gtf = df_gtf.rename(columns={

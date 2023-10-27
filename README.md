@@ -1,4 +1,27 @@
-# Simulating single cell RNA library generation (scRNA-seq)
+# scRNAsim: Simulating single cell RNA (scRNA-seq) library generation 
+The projects implements a simulation of single cell RNA sequencing (scRNA-seq), accounting for some common sources noise that complicate the analysis of the resulting data.
+
+### Setting up the virtual environment
+
+Create and activate the environment with necessary dependencies with Conda:
+
+```bash
+conda env create -f environment.yml
+conda activate scrnasim-toolz
+```
+
+### Tools
+
+The tools available in this repo are:
+1. Transcript sampler
+2. Structure generator
+3. Sequence extractor
+4. Priming site predictor
+5. cDNA generator
+6. Fragment selector
+7. Read sequencer
+
+### Description
 
 Although all cells in a multicellular organism carry the same genomic information, they differ a lot in their function, due to the fact that they are equipped with distinct toolboxes of molecular functions, implemented by different proteins and RNAs. Thus, being able to detect and measure the abundance of gene products (RNAs and/or proteins) in individual cells holds the key to understanding how organisms are organized and function. In the past decade, much progress has been made in the development of technologies for single cell RNA sequencing. They make use of microfluidic devices that allow RNA-seq sample preparation for individual cells encapsulated in droplets, followed by pooling of the resulting DNA fragments and sequencing. The broadly used 10x Genomics technology uses oligo-dT primers to initiate the cDNA sequencing from the poly(A) tails of fragmented RNAs. Subsequent sequencing yields *libraries* of relatively short (100-200 nucleotides) *reads* that come predominantly from the 3’ ends of RNAs given the priming on the poly(A) tail. As in the ideal case (no amplification bias) each read came from the end of one mRNA, simply counting the reads that map to mRNAs of individual genes provides estimates of the expression levels of those genes within the respective cell. Currently, typical data sets cover thousands of genes in tens-to-hundreds of thousands of cells. However, we are still far from being able to prepare ideal libraries, for many reasons. First, as gene expression is a bursty, stochastic process, there will be fluctuations in the number of RNAs (corresponding to a given gene) that are present in any one cell at the time of sampling, even when the time-average of those RNA numbers were to be the same across cells. Secondly, the sample preparation steps are carried out by various enzymes with limited efficiency. This leads to substantial fluctuations in the number of molecules that are “captured” for a gene in a given cell, even if all cells were to have the same abundance of these molecules at the time of sampling. Third, the biochemical reactions that are part of sample preparation do not have absolute specificity. A clear example is the priming of the cDNA synthesis with oligo(dT): although the primer is intended for the poly(A) tails at the 3’ ends of RNAs, it is clear that the primer also binds to A-rich stretches that are internal to transcripts, and especially located in intronic regions. Finally, a conceptual issue with the single cell data is that one cannot apply the principle of averaging measurement values across replicate experiments to obtain more precise estimates, because we do not know which cells could be considered replicates of each other (if that is at all conceivable).
 

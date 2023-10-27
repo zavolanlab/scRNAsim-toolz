@@ -130,7 +130,9 @@ class PrimingSitePredictor:
                 'Hybridization_Energy ' + f'"{row.iloc[6]}"; '
                 'Interaction_Energy ' + f'"{row.iloc[7]}"; '
                 'Number_of_binding_sites ' + f'"{row.iloc[12]}"; '
-                'Binding_Probability ' + f'"{row.iloc[14]}"\n'
+                # Not actually the binding probability, which is the
+                # normalized binding energy
+                'Binding_Probability ' + f'"{row.iloc[13]}"\n'
             )
 
         LOG.info("Generating output gtf file...")
