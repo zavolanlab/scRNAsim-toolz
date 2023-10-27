@@ -1,4 +1,3 @@
-seqname	source	feature	start	end	score	strand	frame	free_text
 1	havana	exon	1980	2000	.	-	.	gene_id "GENE2"; transcript_id "TRANSCRIPT2_0"; exon_number "1"; exon_id "ENSE00001890219"; transcript_support_level "1";
 1	havana	exon	1900	1950	.	-	.	gene_id "GENE2"; transcript_id "TRANSCRIPT2_0"; exon_number "2"; exon_id "ENSE00003507205"; transcript_support_level "1";
 1	havana	exon	1800	1850	.	-	.	gene_id "GENE2"; transcript_id "TRANSCRIPT2_0"; exon_number "3"; exon_id "ENSE00003477500"; transcript_support_level "1";

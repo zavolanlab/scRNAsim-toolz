@@ -19,5 +19,7 @@ dependencies:
   - mypy
   - pylint
   - pytest
+  - bedtools
+  - riblast
   - pip:
     - '-e .'

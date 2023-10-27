@@ -23,8 +23,15 @@ options:
 ```
 
 Example:
+```
+sequence-extractor --mode pre_bedtools --input-gtf-file tests/sequence_extractor/files/test.gtf --output-bed-file tests/sequence_extractor/files/output.bed
+gunzip -k tests/sequence_extractor/files/human.chr1.fa.gz 
+bedtools getfasta -fi tests/sequence_extractor/files/human.chr1.fa -bed tests/sequence_extractor/files/output.bed -name -s -fo tests/sequence_extractor/files/output.fasta
+sequence-extractor --mode post_bedtools --input-fasta-file tests/sequence_extractor/files/output.fasta --polyA-length 250 --output-file-name polyA_output.fa
 
-`sequence-extractor --mode post_bedtools --input-fasta-file tests/sequence_extractor/files/post_bedtools_test.fa --polyA-length 250 --output-file-name polyA_output.fa`
+sequence-extractor --mode post_bedtools --input-fasta-file tests/sequence_extractor/files/post_bedtools_test.fa --polyA-length 250 --output-file-name polyA_output.fa
+```
+
 ## Overview 
 
 Given a gtf specification of transcript exon/intron structures and the genome sequence, construct the nucleotide sequence of the transcripts and add poly(A) tails.

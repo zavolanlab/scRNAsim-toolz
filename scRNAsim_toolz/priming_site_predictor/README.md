@@ -21,6 +21,12 @@ options:
 ```
 
 Example:
+
+RIblast usage:
+```
+RIblast db -i tests/priming_site_predictor/files/riblast_test_files/dbRNA_test.fa -o tests/priming_site_predictor/files/riblast_test_files/test_db
+RIblast ris -i tests/priming_site_predictor/files/riblast_test_files/queryRNA_test.fa -o tests/priming_site_predictor/files/RIBlast_output_example.txt -d tests/priming_site_predictor/files/riblast_test_files/test_db
+```
 ```
 priming-site-predictor --riblast-output tests/priming_site_predictor/files/RIBlast_output_example.txt --output-filename priming_sites.gtf
 ```
