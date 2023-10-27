@@ -17,7 +17,7 @@ LOG = logging.getLogger(__name__)
 def main():
     """Use CLI arguments to simulate sequencing."""
     parser = argparse.ArgumentParser(
-        prog="readsequencer",
+        prog="read-sequencer",
         description="Simulates sequencing of DNA sequences specified \
             by an FASTA file.",
     )

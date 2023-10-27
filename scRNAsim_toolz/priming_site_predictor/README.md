@@ -1,25 +1,32 @@
 # Priming Site Predictor of Transcript Sequences
 
+## Usage
+```
+usage: priming-site-predictor [-h] [-f FASTA_FILE] [-p PRIMER_SEQUENCE] [-e ENERGY_CUTOFF] [-r RIBLAST_OUTPUT] [-o OUTPUT_FILENAME] [-v]
+
+Compute potential priming sites using RIBlast.
+
+options:
+  -h, --help            show this help message and exit
+  -f FASTA_FILE, --fasta-file FASTA_FILE
+                        Fasta-formatted file of transcript sequences
+  -p PRIMER_SEQUENCE, --primer-sequence PRIMER_SEQUENCE
+                        Primer sequence
+  -e ENERGY_CUTOFF, --energy-cutoff ENERGY_CUTOFF
+                        Energy cutoff for interactions
+  -r RIBLAST_OUTPUT, --riblast-output RIBLAST_OUTPUT
+                        Path to RIBlast output file
+  -o OUTPUT_FILENAME, --output-filename OUTPUT_FILENAME
+                        Path where the output gtf should be written
+```
+
+Example:
+```
+priming-site-predictor --riblast-output tests/priming_site_predictor/files/RIBlast_output_example.txt --output-filename priming_sites.gtf
+```
+
 ## Overview
 Priming Site Predictor which uses a seed-and-extension algorithm (*RIblast*: https://github.com/fukunagatsu/RIblast) to *Predict Priming Sites* of oligo dT primers in target sequences. Furthermore, *Binding Energies* are calculated and classified with a threshold value. Additionally, the binding sites are associated with *Binding Probabilities* and stored in a *gtf file* for further processes.
-
-## Version
-Version 0.1.0 (2022/11/15)
-
-## Installation from GitLab
-Priming Site Predictor requires Python 3.9 or later.
-
-Install Priming Site Predictor from GitLab using:
-
-```
-git clone https://git.scicore.unibas.ch/zavolan_group/tools/priming-site-predictor.git
-cd priming-site-predictor
-```
-Create scRNA-seq-simulation conda environment:
-```
-conda env create --file environment.yml
-conda activate scrna-seq-sim
-```
 
 ## Usage
 ```

@@ -1,7 +1,31 @@
+# Sequence Extractor
 
-# Extract transcript sequences
+## Usage
+```
+usage: sequence-extractor [-h] --mode {pre_bedtools,post_bedtools} [-i INPUT_FASTA_FILE] [-o OUTPUT_FILE_NAME] [-p POLY_A_LENGTH] [--input-gtf-file INPUT_GTF_FILE] [--output-bed-file OUTPUT_BED_FILE] [-v]
 
-### Project aim: 
+extracts transcript sequences from genome sequence andouputs transcripts with PolyA tail added to them
+
+options:
+  -h, --help            show this help message and exit
+  --mode {pre_bedtools,post_bedtools}
+                        Select the mode of operation('pre_bedtools' or 'post_bedtools').
+  -i INPUT_FASTA_FILE, --input-fasta-file INPUT_FASTA_FILE
+                        Fasta-formatted file obtained from bedtools
+  -o OUTPUT_FILE_NAME, --output-file-name OUTPUT_FILE_NAME
+                        Name of the output fasta file
+  -p POLY_A_LENGTH, --polyA-length POLY_A_LENGTH
+                        Length of the polyA tail to be added (def: 250)
+  --input-gtf-file INPUT_GTF_FILE
+                        Ordered and processed gtf file for 'pre_bedtools' mode.
+  --output-bed-file OUTPUT_BED_FILE
+                        Bed file with only exons with strandednesstaken into account for 'pre_bedtools' mode.
+```
+
+Example:
+
+`sequence-extractor --mode post_bedtools --input-fasta-file tests/sequence_extractor/files/post_bedtools_test.fa --polyA-length 250 --output-file-name polyA_output.fa`
+## Overview 
 
 Given a gtf specification of transcript exon/intron structures and the genome sequence, construct the nucleotide sequence of the transcripts and add poly(A) tails.
 
@@ -37,22 +61,6 @@ b. This is based on length of tail (sample a length of 250 nucleotides)
 c. It needs to take into account the probability (weight/relative frequency) of each nucleotide (with A having the largest frequency defined)- this will be saved as a dictionary. {‘A’:freqA,‘U’:freqU,‘G’:freqG,‘C’:freqC}  
 d. Append via e.g. str.join(), str.ljust()  
 e. Output the final transcript sequences as a .fasta file. (Final Output)  
-
-
-## Installation 
-
-TBA 
-  
-
-## Usage/Examples
-
-```python script 
-  transcript_sequence_extractor
-  --input_fasta_file `genome fasta file`
-  --input_gtf `gtf file`
-  --output_file_name  `output fasta file`
-```
-  
 
 
 ## License
