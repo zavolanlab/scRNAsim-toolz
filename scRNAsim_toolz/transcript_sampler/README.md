@@ -22,8 +22,9 @@ options:
 
 Example : 
 
-`transcript-sampler --input_gtf tests/transcript_sampler/files/test.gtf --input_csv tests/transcript_sampler/files/expression.csv --output_gtf sampled.gtf --output_csv sampled.csv --n_to_sample 100`
-
+```
+transcript-sampler --input_gtf tests/transcript_sampler/files/test.gtf --input_csv tests/transcript_sampler/files/expression.csv --output_gtf sampled.gtf --output_csv sampled.csv --n_to_sample 100
+```
 
 ## Overview
 This workflow samples representative transcripts per gene, in proportion to their relative abundance levels. Sampling is done by Poisson sampling. 
